@@ -1,6 +1,7 @@
 # Azure Application Gateway - Terraform Module
 ![Testing module](https://github.com/aztfm/terraform-azurerm-application-gateway/workflows/Testing%20module/badge.svg?branch=main)
 [![TF Registry](https://img.shields.io/badge/terraform-registry-blueviolet.svg)](https://registry.terraform.io/modules/aztfm/application-gateway/azurerm/)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/aztfm/terraform-azurerm-application-gateway)
 
 ## Version compatibility
 
