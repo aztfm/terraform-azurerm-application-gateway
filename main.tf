@@ -77,6 +77,19 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
+  dynamic "probe" {
+    for_each = var.probes
+    content {
+      name                = probe.value.name
+      host                = lookup(probe.value, "host", null)
+      protocol            = probe.value.protocol
+      path                = probe.value.path
+      interval            = probe.value.interval
+      timeout             = probe.value.timeout
+      unhealthy_threshold = probe.value.unhealthy_threshold
+    }
+  }
+
   dynamic "backend_http_settings" {
     for_each = var.backend_http_settings
     content {

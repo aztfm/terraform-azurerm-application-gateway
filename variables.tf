@@ -45,6 +45,12 @@ variable "http_listeners" {
   description = "List of objects that represent the configuration of each http listener."
   # http_listeners = [{ name = "", frontend_ip_configuration = "", port = "", protocol = "", host_name = "", ssl_certificate_name = "" }]
 }
+variable "probes" {
+  type        = list(map(string))
+  default     = []
+  description = ""
+  # probes = [{ name = "", host = "", protocol = "", path = "", interval = "", timeout = "", unhealthy_threshold = "" }]
+}
 variable "backend_http_settings" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each backend http settings."
