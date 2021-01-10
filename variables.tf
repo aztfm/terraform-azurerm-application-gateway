@@ -29,6 +29,11 @@ variable "backend_address_pools" {
   description = "List of objects that represent the configuration of each backend address pool."
   # backend_address_pools = [{ name = "", ip_addresses = "" }]
 }
+variable "identity_ids" {
+  type        = list(string)
+  default     = []
+  description = ""
+}
 variable "http_listeners" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each http listener."

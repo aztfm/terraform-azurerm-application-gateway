@@ -50,6 +50,11 @@ resource "azurerm_application_gateway" "appgw" {
     port = 443
   }
 
+  identity {
+    type         = "UserAssigned"
+    identity_ids = var.identity_ids
+  }
+
   dynamic "http_listener" {
     for_each = var.http_listeners
     content {
@@ -68,6 +73,8 @@ resource "azurerm_application_gateway" "appgw" {
       port                  = backend_http_settings.value.port
       protocol              = backend_http_settings.value.protocol
       request_timeout       = backend_http_settings.value.request_timeout
+      host_name             = lookup(backend_http_settings.value, "host_name", null)
+      probe_name            = lookup(backend_http_settings.value, "probe_name", null)
     }
   }
 
