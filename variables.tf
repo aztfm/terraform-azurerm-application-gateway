@@ -32,12 +32,12 @@ variable "backend_address_pools" {
 variable "identity_ids" {
   type        = list(string)
   default     = []
-  description = ""
+  description = "Specifies a list with a single user managed identity id to be assigned to the Application Gateway."
 }
 variable "ssl_certificates" {
   type        = list(map(string))
   default     = []
-  description = ""
+  description = "List of objects that represent the configuration of each ssl certificate."
   # ssl_certificates = [{ name = "", data = "", password = "", key_vault_secret_id = "" }]
 }
 variable "http_listeners" {
@@ -48,7 +48,7 @@ variable "http_listeners" {
 variable "probes" {
   type        = list(map(string))
   default     = []
-  description = ""
+  description = "List of objects that represent the configuration of each probe."
   # probes = [{ name = "", host = "", protocol = "", path = "", interval = "", timeout = "", unhealthy_threshold = "" }]
 }
 variable "backend_http_settings" {
