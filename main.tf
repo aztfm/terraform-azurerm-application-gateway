@@ -72,6 +72,8 @@ resource "azurerm_application_gateway" "appgw" {
       frontend_ip_configuration_name = "${http_listener.value.frontend_ip_configuration}-frontend-ip-configuration"
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
+      host_name                      = lookup(http_listener.value, "hostname", null)
+      ssl_certificate_name           = lookup(http_listener.value, "pfx_name", null)
     }
   }
 

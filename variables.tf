@@ -43,7 +43,7 @@ variable "ssl_certificates" {
 variable "http_listeners" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each http listener."
-  # http_listeners = [{ name = "", port = "", protocol = "" }]
+  # http_listeners = [{ name = "", frontend_ip_configuration = "", port = "", protocol = "", host_name = "", ssl_certificate_name = "" }]
 }
 variable "backend_http_settings" {
   type        = list(map(string))
