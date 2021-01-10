@@ -34,6 +34,12 @@ variable "identity_ids" {
   default     = []
   description = ""
 }
+variable "ssl_certificates" {
+  type        = list(map(string))
+  default     = []
+  description = ""
+  # ssl_certificates = [{ name = "", data = "", password = "", key_vault_secret_id = "" }]
+}
 variable "http_listeners" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each http listener."

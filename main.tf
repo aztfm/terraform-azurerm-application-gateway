@@ -55,6 +55,16 @@ resource "azurerm_application_gateway" "appgw" {
     identity_ids = var.identity_ids
   }
 
+  dynamic "ssl_certificate" {
+    for_each = var.ssl_certificates
+    content {
+      name                = ssl_certificate.value.name
+      data                = lookup(ssl_certificate.value, "data", null)
+      password            = lookup(ssl_certificate.value, "password", null)
+      key_vault_secret_id = lookup(ssl_certificate.value, "key_vault_secret_id", null)
+    }
+  }
+
   dynamic "http_listener" {
     for_each = var.http_listeners
     content {
