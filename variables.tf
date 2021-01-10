@@ -54,7 +54,7 @@ variable "probes" {
 variable "backend_http_settings" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each backend http settings."
-  # backend_http_settings = [{ name = "", port = "", protocol = "", request_timeout = "" }]
+  # backend_http_settings = [{ name = "", port = "", protocol = "", request_timeout = "", host_name = "", probe_name = "" }]
 }
 variable "request_routing_rules" {
   type        = list(map(string))
