@@ -15,14 +15,15 @@ The following parameters are supported:
 
 | Name                        | Description                                                                            |        Type         | Default | Required |
 | --------------------------- | -------------------------------------------------------------------------------------- | :-----------------: | :-----: | :------: |
-| name                        | The name of the route table.                                                           |      `string`       |   n/a   |   yes    |
-| resource\_group\_name       | The name of the resource group in which to create the route table.                     |      `string`       |   n/a   |   yes    |
-| location                    | The location/region where the route table is created.                                  |      `string`       |   n/a   |   yes    |
+| name                        | The name of the Application Gateway.                                                   |      `string`       |   n/a   |   yes    |
+| resource\_group\_name       | The name of the resource group in which to create the Application Gateway.             |      `string`       |   n/a   |   yes    |
+| location                    | The location/region where the Application Gateway is created.                          |      `string`       |   n/a   |   yes    |
 | sku                         | A mapping with the sku configuration of the application gateway.                       |    `map(string)`    |   n/a   |   yes    |
 | subnet\_id                  | The ID of the Subnet which the Application Gateway should be connected to.             |      `string`       |   n/a   |   yes    |
 | frontend\_ip\_configuration | A mapping the front ip configuration.                                                  |    `map(string)`    |   n/a   |   yes    |
-| backend_address_pools       | List of objects that represent the configuration of each backend address pool.         | `list(map(string))` |   n/a   |   yes    |
+| backend\_address\_pools     | List of objects that represent the configuration of each backend address pool.         | `list(map(string))` |   n/a   |   yes    |
 | identity\_id                | Specifies a single user managed identity id to be assigned to the Application Gateway. |      `string`       |  null   |    no    |
+| ssl\_certificates           | List of objects that represent the configuration of each ssl certificate.              | `list(map(string))` |   []    |    no    |
 | http\_listeners             | List of objects that represent the configuration of each http listener.                | `list(map(string))` |   n/a   |   yes    |
 | backend\_http\_settings     | List of objects that represent the configuration of each backend http settings.        | `list(map(string))` |   n/a   |   yes    |
 | request\_routing\_rules     | List of objects that represent the configuration of each backend request routing rule. | `list(map(string))` |   n/a   |   yes    |
@@ -53,6 +54,16 @@ The `backend_address_pools` supports the following:
 | ------------- | ------------------------------------------------------------------------ | :------: | :-----: | :------: |
 | name          | The name of the Backend Address Pool.                                    | `string` |   n/a   |   yes    |
 | ip\_addresses | A list of IP Addresses which should be part of the Backend Address Pool. | `string` | `null`  |    no    |
+
+##
+The `ssl_certificates` supports the following:
+
+| Name                | Description                                                                                                                                                                                         |   Type   | Default | Required |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------: | :-----: | :------: |
+| name                | The Name of the SSL certificate that is unique within this Application Gateway.                                                                                                                     | `string` |   n/a   |   yes    |
+| data                | PFX certificate. Required if key_vault_secret_id is not set.                                                                                                                                        | `string` | `null`  |    no    |
+| password            | Password for the pfx file specified in data. Required if data is set.                                                                                                                               | `string` | `null`  |    no    |
+| key_vault_secret_id | Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for keyvault to use this feature. Required if data is not set. | `string` | `null`  |    no    |
 
 ##
 The `http_listeners` supports the following:
