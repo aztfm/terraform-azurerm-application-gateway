@@ -1,4 +1,4 @@
-## 1.1.0 (Unreleased)
+## 1.1.0 (January 24, 2021)
 
 FEATURES:
 
@@ -20,6 +20,10 @@ FEATURES:
 * **New Parameter:** `probe.unhealthy_threshold`
 * **New Parameter:** `backend_http_settings.host_name`
 * **New Parameter:** `backend_http_settings.probe_name`
+
+BUG FIXES:
+
+* **Output tags**: Now have a correct output of the different tags.
 
 ## 1.0.0 (December 30, 2020)
 
