@@ -35,6 +35,6 @@ output "request_routing_rules" {
   description = "Blocks containing configuration of each request routing rule."
 }
 output "tags" {
-  value       = azurerm_application_gateway.appgw.tags.*
+  value       = azurerm_application_gateway.appgw.tags
   description = "The tags assigned to the resource."
 }
