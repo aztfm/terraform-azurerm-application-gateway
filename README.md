@@ -22,6 +22,7 @@ The following parameters are supported:
 | subnet\_id                  | The ID of the Subnet which the Application Gateway should be connected to.             |      `string`       |   n/a   |   yes    |
 | frontend\_ip\_configuration | A mapping the front ip configuration.                                                  |    `map(string)`    |   n/a   |   yes    |
 | backend_address_pools       | List of objects that represent the configuration of each backend address pool.         | `list(map(string))` |   n/a   |   yes    |
+| identity\_id                | Specifies a single user managed identity id to be assigned to the Application Gateway. |      `string`       |  null   |    no    |
 | http\_listeners             | List of objects that represent the configuration of each http listener.                | `list(map(string))` |   n/a   |   yes    |
 | backend\_http\_settings     | List of objects that represent the configuration of each backend http settings.        | `list(map(string))` |   n/a   |   yes    |
 | request\_routing\_rules     | List of objects that represent the configuration of each backend request routing rule. | `list(map(string))` |   n/a   |   yes    |

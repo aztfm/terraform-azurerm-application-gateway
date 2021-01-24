@@ -52,7 +52,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = var.identity_ids
+    identity_ids = [var.identity_id]
   }
 
   dynamic "ssl_certificate" {

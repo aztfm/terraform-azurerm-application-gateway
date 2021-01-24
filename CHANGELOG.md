@@ -2,7 +2,7 @@
 
 FEATURES:
 
-* **New Parameter:** `identity_ids`
+* **New Parameter:** `identity_id`
 * **New Parameter:** `ssl_certificates`
 * **New Parameter:** `ssl_certificates.name`
 * **New Parameter:** `ssl_certificates.data`

@@ -29,10 +29,10 @@ variable "backend_address_pools" {
   description = "List of objects that represent the configuration of each backend address pool."
   # backend_address_pools = [{ name = "", ip_addresses = "" }]
 }
-variable "identity_ids" {
-  type        = list(string)
-  default     = []
-  description = "Specifies a list with a single user managed identity id to be assigned to the Application Gateway."
+variable "identity_id" {
+  type        = string
+  default     = null
+  description = "Specifies a user managed identity id to be assigned to the Application Gateway."
 }
 variable "ssl_certificates" {
   type        = list(map(string))
