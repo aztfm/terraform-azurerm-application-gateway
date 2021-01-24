@@ -29,15 +29,32 @@ variable "backend_address_pools" {
   description = "List of objects that represent the configuration of each backend address pool."
   # backend_address_pools = [{ name = "", ip_addresses = "" }]
 }
+variable "identity_id" {
+  type        = string
+  default     = null
+  description = "Specifies a user managed identity id to be assigned to the Application Gateway."
+}
+variable "ssl_certificates" {
+  type        = list(map(string))
+  default     = []
+  description = "List of objects that represent the configuration of each ssl certificate."
+  # ssl_certificates = [{ name = "", data = "", password = "", key_vault_secret_id = "" }]
+}
 variable "http_listeners" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each http listener."
-  # http_listeners = [{ name = "", port = "", protocol = "" }]
+  # http_listeners = [{ name = "", frontend_ip_configuration = "", port = "", protocol = "", host_name = "", ssl_certificate_name = "" }]
+}
+variable "probes" {
+  type        = list(map(string))
+  default     = []
+  description = "List of objects that represent the configuration of each probe."
+  # probes = [{ name = "", host = "", protocol = "", path = "", interval = "", timeout = "", unhealthy_threshold = "" }]
 }
 variable "backend_http_settings" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each backend http settings."
-  # backend_http_settings = [{ name = "", port = "", protocol = "", request_timeout = "" }]
+  # backend_http_settings = [{ name = "", port = "", protocol = "", request_timeout = "", host_name = "", probe_name = "" }]
 }
 variable "request_routing_rules" {
   type        = list(map(string))

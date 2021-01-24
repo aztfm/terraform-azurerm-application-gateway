@@ -1,3 +1,30 @@
+## 1.1.0 (January 24, 2021)
+
+FEATURES:
+
+* **New Parameter:** `identity_id`
+* **New Parameter:** `ssl_certificates`
+* **New Parameter:** `ssl_certificates.name`
+* **New Parameter:** `ssl_certificates.data`
+* **New Parameter:** `ssl_certificates.password`
+* **New Parameter:** `ssl_certificates.key_vault_secret_id`
+* **New Parameter:** `http_listeners.host_name`
+* **New Parameter:** `http_listeners.ssl_certificate_name`
+* **New Parameter:** `probe`
+* **New Parameter:** `probe.name`
+* **New Parameter:** `probe.host`
+* **New Parameter:** `probe.protocol`
+* **New Parameter:** `probe.path`
+* **New Parameter:** `probe.interval`
+* **New Parameter:** `probe.timeout`
+* **New Parameter:** `probe.unhealthy_threshold`
+* **New Parameter:** `backend_http_settings.host_name`
+* **New Parameter:** `backend_http_settings.probe_name`
+
+BUG FIXES:
+
+* **Output tags**: Now have a correct output of the different tags.
+
 ## 1.0.0 (December 30, 2020)
 
 FEATURES:

@@ -50,6 +50,21 @@ resource "azurerm_application_gateway" "appgw" {
     port = 443
   }
 
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [var.identity_id]
+  }
+
+  dynamic "ssl_certificate" {
+    for_each = var.ssl_certificates
+    content {
+      name                = ssl_certificate.value.name
+      data                = lookup(ssl_certificate.value, "data", null)
+      password            = lookup(ssl_certificate.value, "password", null)
+      key_vault_secret_id = lookup(ssl_certificate.value, "key_vault_secret_id", null)
+    }
+  }
+
   dynamic "http_listener" {
     for_each = var.http_listeners
     content {
@@ -57,6 +72,21 @@ resource "azurerm_application_gateway" "appgw" {
       frontend_ip_configuration_name = "${http_listener.value.frontend_ip_configuration}-frontend-ip-configuration"
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
+      host_name                      = lookup(http_listener.value, "host_name", null)
+      ssl_certificate_name           = lookup(http_listener.value, "ssl_certificate_name", null)
+    }
+  }
+
+  dynamic "probe" {
+    for_each = var.probes
+    content {
+      name                = probe.value.name
+      host                = lookup(probe.value, "host", null)
+      protocol            = probe.value.protocol
+      path                = probe.value.path
+      interval            = probe.value.interval
+      timeout             = probe.value.timeout
+      unhealthy_threshold = probe.value.unhealthy_threshold
     }
   }
 
@@ -68,6 +98,8 @@ resource "azurerm_application_gateway" "appgw" {
       port                  = backend_http_settings.value.port
       protocol              = backend_http_settings.value.protocol
       request_timeout       = backend_http_settings.value.request_timeout
+      host_name             = lookup(backend_http_settings.value, "host_name", null)
+      probe_name            = lookup(backend_http_settings.value, "probe_name", null)
     }
   }
 

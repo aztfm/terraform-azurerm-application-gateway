@@ -18,6 +18,10 @@ output "backend_address_pools" {
   value       = azurerm_application_gateway.appgw.backend_address_pool
   description = "Blocks containing configuration of each backend address pool."
 }
+output "ssl_certificates" {
+  value       = azurerm_application_gateway.appgw.ssl_certificate
+  description = "Blocks containing configuration of each ssl certificate."
+}
 output "http_listeners" {
   value       = azurerm_application_gateway.appgw.http_listener
   description = "Blocks containing configuration of each http listener."
@@ -31,6 +35,6 @@ output "request_routing_rules" {
   description = "Blocks containing configuration of each request routing rule."
 }
 output "tags" {
-  value       = azurerm_application_gateway.appgw.tags.*
+  value       = azurerm_application_gateway.appgw.tags
   description = "The tags assigned to the resource."
 }
