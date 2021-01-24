@@ -50,9 +50,12 @@ resource "azurerm_application_gateway" "appgw" {
     port = 443
   }
 
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [var.identity_id]
+  dynamic "identity" {
+    for_each = var.identity_id != null ? [""] : []
+    content {
+      type         = "UserAssigned"
+      identity_ids = [var.identity_id]
+    }
   }
 
   dynamic "ssl_certificate" {
