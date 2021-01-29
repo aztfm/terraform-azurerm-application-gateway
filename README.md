@@ -19,11 +19,12 @@ The following parameters are supported:
 | resource\_group\_name       | The name of the resource group in which to create the Application Gateway.             |      `string`       |   n/a   |   yes    |
 | location                    | The location/region where the Application Gateway is created.                          |      `string`       |   n/a   |   yes    |
 | sku                         | A mapping with the sku configuration of the application gateway.                       |    `map(string)`    |   n/a   |   yes    |
+| autoscale_configuration     |                                                                                        |    `map(string)`    |  `{}`   |    no    |
 | subnet\_id                  | The ID of the Subnet which the Application Gateway should be connected to.             |      `string`       |   n/a   |   yes    |
 | frontend\_ip\_configuration | A mapping the front ip configuration.                                                  |    `map(string)`    |   n/a   |   yes    |
 | backend\_address\_pools     | List of objects that represent the configuration of each backend address pool.         | `list(map(string))` |   n/a   |   yes    |
 | identity\_id                | Specifies a single user managed identity id to be assigned to the Application Gateway. |      `string`       |  null   |    no    |
-| ssl\_certificates           | List of objects that represent the configuration of each ssl certificate.              | `list(map(string))` |   `[]`    |    no    |
+| ssl\_certificates           | List of objects that represent the configuration of each ssl certificate.              | `list(map(string))` |  `[]`   |    no    |
 | http\_listeners             | List of objects that represent the configuration of each http listener.                | `list(map(string))` |   n/a   |   yes    |
 | backend\_http\_settings     | List of objects that represent the configuration of each backend http settings.        | `list(map(string))` |   n/a   |   yes    |
 | request\_routing\_rules     | List of objects that represent the configuration of each backend request routing rule. | `list(map(string))` |   n/a   |   yes    |
@@ -36,7 +37,7 @@ The `sku` supports the following:
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------: | :-----: | :------: |
 | tier     | The Tier of the SKU to use for this Application Gateway. Possible values are `Standard`, `Standard_v2`, `WAF` and `WAF_v2`.                                                      | `string` |   n/a   |   yes    |
 | size     | The Size to use for this Application Gateway. Possible values are `Standard_Small`, `Standard_Medium`, `Standard_Large`, `Standard_v2`, `WAF_Medium`, `WAF_Large`, and `WAF_v2`. | `string` |   n/a   |   yes    |
-| capacity | The Capacity to use for this Application Gateway. When using a V1 SKU this value must be between 1 and 32, and 1 to 125 for a V2 SKU.                                            | `string` |   n/a   |   yes    |
+| capacity | The Capacity to use for this Application Gateway. When using a V1 SKU this value must be between 1 and 32, and 1 to 125 for a V2 SKU.                                            | `string` | `null`  |    no    |
 
 ##
 The `frontend_ip_configuration` supports the following:
