@@ -5,6 +5,10 @@ FEATURES:
 * **New Parameter:** `autoscale_configuration`
 * **New Parameter:** `autoscale_configuration.min_capacity`
 * **New Parameter:** `autoscale_configuration.max_capacity`
+* **New Parameter:** `waf_configuration`
+* **New Parameter:** `waf_configuration.enabled`
+* **New Parameter:** `waf_configuration.firewall_mode`
+* **New Parameter:** `waf_configuration.rule_set_version`
 
 CHANGES:
 

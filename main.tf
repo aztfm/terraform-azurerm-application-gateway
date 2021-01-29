@@ -6,7 +6,6 @@ resource "azurerm_application_gateway" "appgw" {
   sku {
     name     = var.sku.size
     tier     = var.sku.tier
-    capacity = var.sku.capacity
     capacity = lookup(var.sku,"capacity", null)
   }
 
@@ -21,6 +20,15 @@ resource "azurerm_application_gateway" "appgw" {
   gateway_ip_configuration {
     name      = "${var.name}-configuration"
     subnet_id = var.subnet_id
+  }
+
+  dynamic "waf_configuration" {
+    for_each = local.waf_configuration_enabled ? [""] : []
+    content {
+      enabled          = var.waf_configuration.enabled
+      firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
+      rule_set_version = lookup(var.waf_configuration, "rule_set_version", "3.0")
+    }
   }
 
   dynamic "frontend_ip_configuration" {
