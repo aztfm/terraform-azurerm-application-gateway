@@ -1,4 +1,4 @@
-## 1.1.0 (Unreleased)
+## 1.2.0 (Unreleased)
 
 FEATURES:
 
@@ -12,7 +12,7 @@ FEATURES:
 
 CHANGES:
 
-* **Parameter** `waf_configuration.rule_set_version`: It is now an optional parameter with the default value `null`.
+* **Parameter** `sku.capacity`: It is now an optional parameter with the default value `null`.
 
 ## 1.1.0 (January 24, 2021)
 

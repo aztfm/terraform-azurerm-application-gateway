@@ -6,7 +6,7 @@ resource "azurerm_application_gateway" "appgw" {
   sku {
     name     = var.sku.size
     tier     = var.sku.tier
-    capacity = lookup(var.sku,"capacity", null)
+    capacity = lookup(var.sku, "capacity", null)
   }
 
   dynamic "autoscale_configuration" {
