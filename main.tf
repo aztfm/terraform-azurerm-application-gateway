@@ -6,7 +6,15 @@ resource "azurerm_application_gateway" "appgw" {
   sku {
     name     = var.sku.size
     tier     = var.sku.tier
-    capacity = var.sku.capacity
+    capacity = var.autoscale_configuration == null ? var.sku.capacity : null
+  }
+
+  dynamic "autoscale_configuration" {
+    for_each = var.autoscale_configuration == null ? [] : ["autoscale_configuration"]
+    content {
+      min_capacity = var.autoscale_configuration.min_capacity
+      max_capacity = var.autoscale_configuration.max_capacity
+    }
   }
 
   gateway_ip_configuration {

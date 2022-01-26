@@ -66,3 +66,11 @@ variable "tags" {
   default     = {}
   description = "A mapping of tags to assign to the resource."
 }
+variable "autoscale_configuration" {
+  type = object({
+    min_capacity = number
+    max_capacity = number
+  })
+  default     = null
+  description = "Auto-scale configuration. Mutually exclusive to statically defined sku.capacity."
+}
