@@ -1,3 +1,19 @@
+## 1.2.0 (January 27, 2022)
+
+FEATURES:
+
+* **New Parameter:** `autoscale_configuration`
+* **New Parameter:** `autoscale_configuration.min_capacity`
+* **New Parameter:** `autoscale_configuration.max_capacity`
+* **New Parameter:** `waf_configuration`
+* **New Parameter:** `waf_configuration.enabled`
+* **New Parameter:** `waf_configuration.firewall_mode`
+* **New Parameter:** `waf_configuration.rule_set_version`
+
+CHANGES:
+
+* **Parameter** `sku.capacity`: It is now an optional parameter with the default value `null`.
+
 ## 1.1.0 (January 24, 2021)
 
 FEATURES:
@@ -23,7 +39,7 @@ FEATURES:
 
 BUG FIXES:
 
-* **Output tags**: Now have a correct output of the different tags.
+* **Output** `tags`: Now have a correct output of the different tags.
 
 ## 1.0.0 (December 30, 2020)
 

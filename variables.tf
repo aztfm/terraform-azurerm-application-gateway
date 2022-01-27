@@ -15,9 +15,21 @@ variable "sku" {
   description = "A mapping with the sku configuration of the application gateway."
   # sku = { tier = "", size = "", capacity = "" }
 }
+variable "autoscale_configuration" {
+  type        = map(string)
+  default     = {}
+  description = ""
+  # autoscale_configuration = { min_capacity = "", max_capacity = "" }
+}
 variable "subnet_id" {
   type        = string
   description = "The ID of the Subnet which the Application Gateway should be connected to."
+}
+variable "waf_configuration" {
+  type        = map(string)
+  default     = {}
+  description = ""
+  # waf_configuration = { enabled = "", firewall_mode = "", rule_set_version = ""}
 }
 variable "frontend_ip_configuration" {
   type        = map(string)

@@ -6,12 +6,29 @@ resource "azurerm_application_gateway" "appgw" {
   sku {
     name     = var.sku.size
     tier     = var.sku.tier
-    capacity = var.sku.capacity
+    capacity = lookup(var.sku, "capacity", null)
+  }
+
+  dynamic "autoscale_configuration" {
+    for_each = var.autoscale_configuration != {} ? [""] : []
+    content {
+      min_capacity = var.autoscale_configuration.min_capacity
+      max_capacity = var.autoscale_configuration.max_capacity
+    }
   }
 
   gateway_ip_configuration {
     name      = "${var.name}-configuration"
     subnet_id = var.subnet_id
+  }
+
+  dynamic "waf_configuration" {
+    for_each = local.waf_configuration_enabled ? [""] : []
+    content {
+      enabled          = var.waf_configuration.enabled
+      firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
+      rule_set_version = lookup(var.waf_configuration, "rule_set_version", "3.0")
+    }
   }
 
   dynamic "frontend_ip_configuration" {
