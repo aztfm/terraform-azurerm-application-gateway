@@ -89,3 +89,7 @@ variable "ssl_policy" {
   })
   default = null
 }
+variable "enable_http2" {
+  description = "Enable HTTP2"
+  default     = false
+}

@@ -3,6 +3,8 @@ resource "azurerm_application_gateway" "appgw" {
   resource_group_name = var.resource_group_name
   location            = var.location
 
+  enable_http2 = var.enable_http2
+
   sku {
     name     = var.sku.size
     tier     = var.sku.tier
