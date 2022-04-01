@@ -75,6 +75,17 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
+  dynamic "ssl_policy" {
+    for_each = var.ssl_policy != null ? [var.ssl_policy] : []
+    content {
+      disabled_protocols   = var.ssl_policy.policy_type == null && var.ssl_policy.policy_name == null ? var.ssl_policy.disabled_protocols : null
+      policy_type          = lookup(var.ssl_policy, "policy_type", "Predefined")
+      policy_name          = var.ssl_policy.policy_type == "Predefined" ? var.ssl_policy.policy_name : null
+      cipher_suites        = var.ssl_policy.policy_type == "Custom" ? var.ssl_policy.cipher_suites : null
+      min_protocol_version = var.ssl_policy.min_protocol_version
+    }
+  }
+
   dynamic "ssl_certificate" {
     for_each = var.ssl_certificates
     content {
