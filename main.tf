@@ -94,6 +94,7 @@ resource "azurerm_application_gateway" "appgw" {
       protocol                       = http_listener.value.protocol
       host_name                      = lookup(http_listener.value, "host_name", null)
       ssl_certificate_name           = lookup(http_listener.value, "ssl_certificate_name", null)
+      require_sni                    = lookup(http_listener.value, "require_sni", null)
     }
   }
 
