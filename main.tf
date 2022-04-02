@@ -2,6 +2,7 @@ resource "azurerm_application_gateway" "appgw" {
   name                = var.name
   resource_group_name = var.resource_group_name
   location            = var.location
+  tags                = var.tags
 
   sku {
     name     = var.sku.size
@@ -18,7 +19,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   gateway_ip_configuration {
-    name      = "${var.name}-configuration"
+    name      = "appgateway-ip-configuration"
     subnet_id = var.subnet_id
   }
 
@@ -28,6 +29,9 @@ resource "azurerm_application_gateway" "appgw" {
       enabled          = var.waf_configuration.enabled
       firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
       rule_set_version = lookup(var.waf_configuration, "rule_set_version", "3.0")
+      # file_upload_limit_mb     = lookup(var.waf_configuration, "file_upload_limit_mb", 100)
+      # request_body_check       = lookup(var.waf_configuration, "request_body_check", true)
+      # max_request_body_size_kb = lookup(var.waf_configuration, "max_request_body_size_kb", 128)
     }
   }
 
@@ -133,6 +137,4 @@ resource "azurerm_application_gateway" "appgw" {
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
     }
   }
-
-  tags = var.tags
 }
