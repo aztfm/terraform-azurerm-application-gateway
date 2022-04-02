@@ -10,7 +10,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   dynamic "autoscale_configuration" {
-    for_each = var.autoscale_configuration != {} ? [""] : []
+    for_each = var.autoscale_configuration != null ? [""] : []
     content {
       min_capacity = var.autoscale_configuration.min_capacity
       max_capacity = var.autoscale_configuration.max_capacity

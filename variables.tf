@@ -16,10 +16,12 @@ variable "sku" {
   # sku = { tier = "", size = "", capacity = "" }
 }
 variable "autoscale_configuration" {
-  type        = map(string)
-  default     = {}
+  type = object({
+    min_capacity = string
+    max_capacity = string
+  })
+  default     = null
   description = ""
-  # autoscale_configuration = { min_capacity = "", max_capacity = "" }
 }
 variable "subnet_id" {
   type        = string
