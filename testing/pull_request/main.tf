@@ -38,7 +38,7 @@ module "application_gateway" {
   subnet_id                 = azurerm_subnet.default.id
   frontend_ip_configuration = { public_ip_address_id = azurerm_public_ip.pip.id, private_ip_address = "10.0.0.10", private_ip_address_allocation = "Static" }
   backend_address_pools = [
-    { name = "pool" }
+    { name = "pool", ip_addresses = ["10.0.0.4", "10.0.0.5"] }
   ]
   http_listeners = [
     { name = "listener", frontend_ip_configuration = "Public", port = 80, protocol = "Http" }

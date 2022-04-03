@@ -53,9 +53,9 @@ variable "frontend_ip_configuration" {
 }
 
 variable "backend_address_pools" {
-  type        = list(map(string))
+  type        = any
   description = "List of objects that represent the configuration of each backend address pool."
-  # backend_address_pools = [{ name = "", ip_addresses = "" }]
+  # backend_address_pools = [{ name = "", ip_addresses = [""] }]
 }
 
 variable "identity_id" {

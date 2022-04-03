@@ -57,7 +57,7 @@ resource "azurerm_application_gateway" "appgw" {
     for_each = var.backend_address_pools
     content {
       name         = backend_address_pool.value.name
-      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", "") == "" ? null : split(",", backend_address_pool.value.ip_addresses)
+      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", [])
     }
   }
 
