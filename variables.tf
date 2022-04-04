@@ -53,7 +53,7 @@ variable "ssl_certificates" {
   # ssl_certificates = [{ name = "", data = "", password = "", key_vault_secret_id = "" }]
 }
 variable "http_listeners" {
-  type        = list(map(string))
+  type        = list(map(any))
   description = "List of objects that represent the configuration of each http listener."
   # http_listeners = [{ name = "", frontend_ip_configuration = "", port = "", protocol = "", host_name = "", host_names = [], ssl_certificate_name = "" }]
 }
