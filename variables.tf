@@ -32,8 +32,8 @@ variable "waf_configuration" {
   # waf_configuration = { enabled = "", firewall_mode = "", rule_set_version = ""}
 }
 variable "disabled_rule_group" {
-  type = set(object({rule_group_name=string, rules=set(string)}))
-  default = []
+  type        = set(object({ rule_group_name = string, rules = set(string) }))
+  default     = []
   description = "Rule-groups to disable"
 }
 variable "frontend_ip_configuration" {

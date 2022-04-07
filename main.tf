@@ -32,10 +32,10 @@ resource "azurerm_application_gateway" "appgw" {
       rule_set_version   = lookup(var.waf_configuration, "rule_set_version", "3.0")
       request_body_check = lookup(var.waf_configuration, "request_body_check", true)
       dynamic "disabled_rule_group" {
-        for_each = var.disabled_rule_group
+        for_each = { for disabled_rule_group in var.disabled_rule_group : disabled_rule_group.rule_group_name => disabled_rule_group }
         content {
-          rule_group_name = each.rule_group_name
-          rules = each.rules
+          rule_group_name = each.value.rule_group_name
+          rules           = each.value.rules
         }
       }
     }
