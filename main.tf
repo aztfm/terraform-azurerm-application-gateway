@@ -31,6 +31,13 @@ resource "azurerm_application_gateway" "appgw" {
       firewall_mode      = lookup(var.waf_configuration, "firewall_mode", "Detection")
       rule_set_version   = lookup(var.waf_configuration, "rule_set_version", "3.0")
       request_body_check = lookup(var.waf_configuration, "request_body_check", true)
+      dynamic "disabled_rule_group" {
+        for_each = var.disabled_rule_group
+        content {
+          rule_group_name = each.rule_group_name
+          rules = each.rules
+        }
+      }
     }
   }
 
