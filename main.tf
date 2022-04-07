@@ -27,9 +27,10 @@ resource "azurerm_application_gateway" "appgw" {
   dynamic "waf_configuration" {
     for_each = local.waf_configuration_enabled ? [""] : []
     content {
-      enabled          = var.waf_configuration.enabled
-      firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
-      rule_set_version = lookup(var.waf_configuration, "rule_set_version", "3.0")
+      enabled            = var.waf_configuration.enabled
+      firewall_mode      = lookup(var.waf_configuration, "firewall_mode", "Detection")
+      rule_set_version   = lookup(var.waf_configuration, "rule_set_version", "3.0")
+      request_body_check = lookup(var.waf_configuration, "request_body_check", true)
     }
   }
 
