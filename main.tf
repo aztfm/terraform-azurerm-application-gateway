@@ -34,8 +34,8 @@ resource "azurerm_application_gateway" "appgw" {
       dynamic "disabled_rule_group" {
         for_each = { for disabled_rule_group in var.disabled_rule_group : disabled_rule_group.rule_group_name => disabled_rule_group }
         content {
-          rule_group_name = each.value.rule_group_name
-          rules           = each.value.rules
+          rule_group_name = disabled_rule_group.value.rule_group_name
+          rules           = disabled_rule_group.value.rules
         }
       }
     }
