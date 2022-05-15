@@ -31,6 +31,11 @@ variable "waf_configuration" {
   description = ""
   # waf_configuration = { enabled = "", firewall_mode = "", rule_set_version = ""}
 }
+variable "disabled_rule_group" {
+  type        = set(object({ rule_group_name = string, rules = set(number) }))
+  default     = []
+  description = "Rule-groups to disable"
+}
 variable "frontend_ip_configuration" {
   type        = map(string)
   description = "A mapping the front ip configuration."
@@ -55,7 +60,7 @@ variable "ssl_certificates" {
 variable "http_listeners" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each http listener."
-  # http_listeners = [{ name = "", frontend_ip_configuration = "", port = "", protocol = "", host_name = "", ssl_certificate_name = "" }]
+  # http_listeners = [{ name = "", frontend_ip_configuration = "", port = "", protocol = "", host_name = "", host_names = "hostname1,hostname2", ssl_certificate_name = "" }]
 }
 variable "probes" {
   type        = list(map(string))
@@ -71,10 +76,25 @@ variable "backend_http_settings" {
 variable "request_routing_rules" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each backend request routing rule."
-  # request_routing_rules = [{ name = "", http_listener_name = "", backend_address_pool_name = "", backend_http_settings_name = "" }]
+  # request_routing_rules = [{ name = "", http_listener_name = "", backend_address_pool_name = "", backend_http_settings_name = "", priority = 10 }]
 }
 variable "tags" {
   type        = map(string)
   default     = {}
   description = "A mapping of tags to assign to the resource."
+}
+variable "ssl_policy" {
+  description = "(Optional) Application Gateway SSL configuration"
+  type = object({
+    disabled_protocols   = optional(list(string))
+    policy_type          = optional(string)
+    policy_name          = optional(string)
+    cipher_suites        = optional(list(string))
+    min_protocol_version = optional(string)
+  })
+  default = null
+}
+variable "enable_http2" {
+  description = "Enable HTTP2"
+  default     = false
 }

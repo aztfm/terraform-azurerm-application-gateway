@@ -3,6 +3,8 @@ resource "azurerm_application_gateway" "appgw" {
   resource_group_name = var.resource_group_name
   location            = var.location
 
+  enable_http2 = var.enable_http2
+
   sku {
     name     = var.sku.size
     tier     = var.sku.tier
@@ -25,9 +27,17 @@ resource "azurerm_application_gateway" "appgw" {
   dynamic "waf_configuration" {
     for_each = local.waf_configuration_enabled ? [""] : []
     content {
-      enabled          = var.waf_configuration.enabled
-      firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
-      rule_set_version = lookup(var.waf_configuration, "rule_set_version", "3.0")
+      enabled            = var.waf_configuration.enabled
+      firewall_mode      = lookup(var.waf_configuration, "firewall_mode", "Detection")
+      rule_set_version   = lookup(var.waf_configuration, "rule_set_version", "3.0")
+      request_body_check = lookup(var.waf_configuration, "request_body_check", true)
+      dynamic "disabled_rule_group" {
+        for_each = { for disabled_rule_group in var.disabled_rule_group : disabled_rule_group.rule_group_name => disabled_rule_group }
+        content {
+          rule_group_name = disabled_rule_group.value.rule_group_name
+          rules           = disabled_rule_group.value.rules
+        }
+      }
     }
   }
 
@@ -75,6 +85,17 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
+  dynamic "ssl_policy" {
+    for_each = var.ssl_policy != null ? [var.ssl_policy] : []
+    content {
+      disabled_protocols   = var.ssl_policy.policy_type == null && var.ssl_policy.policy_name == null ? var.ssl_policy.disabled_protocols : null
+      policy_type          = lookup(var.ssl_policy, "policy_type", "Predefined")
+      policy_name          = var.ssl_policy.policy_type == "Predefined" ? var.ssl_policy.policy_name : null
+      cipher_suites        = var.ssl_policy.policy_type == "Custom" ? var.ssl_policy.cipher_suites : null
+      min_protocol_version = var.ssl_policy.min_protocol_version
+    }
+  }
+
   dynamic "ssl_certificate" {
     for_each = var.ssl_certificates
     content {
@@ -93,7 +114,10 @@ resource "azurerm_application_gateway" "appgw" {
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
       host_name                      = lookup(http_listener.value, "host_name", null)
+      host_names                     = lookup(http_listener.value, "host_names", null) == null ? null : split(",", http_listener.value.host_names)
       ssl_certificate_name           = lookup(http_listener.value, "ssl_certificate_name", null)
+      require_sni                    = lookup(http_listener.value, "require_sni", null)
+      ssl_profile_name               = lookup(http_listener.value, "ssl_profile_name", null)
     }
   }
 
@@ -131,6 +155,7 @@ resource "azurerm_application_gateway" "appgw" {
       http_listener_name         = request_routing_rule.value.http_listener_name
       backend_address_pool_name  = request_routing_rule.value.backend_address_pool_name
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
+      priority                   = request_routing_rule.value.priority
     }
   }
 
