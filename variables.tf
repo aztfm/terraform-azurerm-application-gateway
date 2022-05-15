@@ -76,7 +76,7 @@ variable "backend_http_settings" {
 variable "request_routing_rules" {
   type        = list(map(string))
   description = "List of objects that represent the configuration of each backend request routing rule."
-  # request_routing_rules = [{ name = "", http_listener_name = "", backend_address_pool_name = "", backend_http_settings_name = "" }]
+  # request_routing_rules = [{ name = "", http_listener_name = "", backend_address_pool_name = "", backend_http_settings_name = "", priority = 10 }]
 }
 variable "tags" {
   type        = map(string)

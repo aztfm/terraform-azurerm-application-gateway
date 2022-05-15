@@ -155,6 +155,7 @@ resource "azurerm_application_gateway" "appgw" {
       http_listener_name         = request_routing_rule.value.http_listener_name
       backend_address_pool_name  = request_routing_rule.value.backend_address_pool_name
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
+      priority                   = request_routing_rule.value.priority
     }
   }
 
