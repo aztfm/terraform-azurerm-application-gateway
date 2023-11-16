@@ -7,6 +7,7 @@
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
+| >= 2.x.x       | >= 0.13.x         | >= 3.0.0        |
 | >= 1.x.x       | >= 0.13.x         | >= 2.0.0        |
 
 ## Parameters
@@ -18,6 +19,7 @@ The following parameters are supported:
 | name                        | The name of the Application Gateway.                                                   |      `string`       |   n/a   |   yes    |
 | resource\_group\_name       | The name of the resource group in which to create the Application Gateway.             |      `string`       |   n/a   |   yes    |
 | location                    | The location/region where the Application Gateway is created.                          |      `string`       |   n/a   |   yes    |
+| tags                        | A mapping of tags to assign to the resource.                                           |    `map(string)`    |  `{}`   |    no    |
 | sku                         | A mapping with the sku configuration of the application gateway.                       |    `map(string)`    |   n/a   |   yes    |
 | autoscale_configuration     |                                                                                        |    `map(string)`    |  `{}`   |    no    |
 | subnet\_id                  | The ID of the Subnet which the Application Gateway should be connected to.             |      `string`       |   n/a   |   yes    |
@@ -28,7 +30,6 @@ The following parameters are supported:
 | http\_listeners             | List of objects that represent the configuration of each http listener.                | `list(map(string))` |   n/a   |   yes    |
 | backend\_http\_settings     | List of objects that represent the configuration of each backend http settings.        | `list(map(string))` |   n/a   |   yes    |
 | request\_routing\_rules     | List of objects that represent the configuration of each backend request routing rule. | `list(map(string))` |   n/a   |   yes    |
-| tags                        | A mapping of tags to assign to the resource.                                           |    `map(string)`    |  `{}`   |    no    |
 
 ##
 The `sku` supports the following:
