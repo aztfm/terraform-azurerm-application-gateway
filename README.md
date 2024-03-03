@@ -1,13 +1,17 @@
+<!-- markdownlint-disable MD013 -->
 # Azure Application Gateway - Terraform Module
-![Testing module](https://github.com/aztfm/terraform-azurerm-application-gateway/workflows/Testing%20module/badge.svg?branch=main)
-[![TF Registry](https://img.shields.io/badge/terraform-registry-blueviolet.svg)](https://registry.terraform.io/modules/aztfm/application-gateway/azurerm/)
+
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![Terraform Registry](https://img.shields.io/badge/terraform-registry-blueviolet.svg)](https://registry.terraform.io/modules/aztfm/application-gateway/azurerm/)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/aztfm/terraform-azurerm-application-gateway)
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/aztfm/terraform-azurerm-application-gateway?quickstart=1)
 
 ## Version compatibility
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
-| >= 2.x.x       | >= 0.13.x         | >= 3.0.0        |
+| >= 2.x.x       | >= 1.3.x          | >= 3.40.0       |
 | >= 1.x.x       | >= 0.13.x         | >= 2.0.0        |
 
 ## Parameters
@@ -31,7 +35,6 @@ The following parameters are supported:
 | backend\_http\_settings     | List of objects that represent the configuration of each backend http settings.        | `list(map(string))` |   n/a   |   yes    |
 | request\_routing\_rules     | List of objects that represent the configuration of each backend request routing rule. | `list(map(string))` |   n/a   |   yes    |
 
-##
 The `sku` supports the following:
 
 | Name     | Description                                                                                                                                                                      |   Type   | Default | Required |
@@ -40,7 +43,6 @@ The `sku` supports the following:
 | size     | The Size to use for this Application Gateway. Possible values are `Standard_Small`, `Standard_Medium`, `Standard_Large`, `Standard_v2`, `WAF_Medium`, `WAF_Large`, and `WAF_v2`. | `string` |   n/a   |   yes    |
 | capacity | The Capacity to use for this Application Gateway. When using a V1 SKU this value must be between 1 and 32, and 1 to 125 for a V2 SKU.                                            | `string` | `null`  |    no    |
 
-##
 The `frontend_ip_configuration` supports the following:
 
 | Name                             | Description                                                                                   |   Type   | Default | Required |
@@ -49,7 +51,6 @@ The `frontend_ip_configuration` supports the following:
 | private\_ip\_address             | The Private IP Address to use for the Application Gateway.                                    | `string` | `null`  |    no    |
 | private\_ip\_address\_allocation | The Allocation Method for the Private IP Address. Possible values are `Dynamic` and `Static`. | `string` | `null`  |    no    |
 
-##
 The `backend_address_pools` supports the following:
 
 | Name          | Description                                                              |   Type   | Default | Required |
@@ -57,7 +58,6 @@ The `backend_address_pools` supports the following:
 | name          | The name of the Backend Address Pool.                                    | `string` |   n/a   |   yes    |
 | ip\_addresses | A list of IP Addresses which should be part of the Backend Address Pool. | `string` | `null`  |    no    |
 
-##
 The `ssl_certificates` supports the following:
 
 | Name                | Description                                                                                                                                                                                         |   Type   | Default | Required |
@@ -67,7 +67,6 @@ The `ssl_certificates` supports the following:
 | password            | Password for the pfx file specified in data. Required if data is set.                                                                                                                               | `string` | `null`  |    no    |
 | key_vault_secret_id | Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for keyvault to use this feature. Required if data is not set. | `string` | `null`  |    no    |
 
-##
 The `http_listeners` supports the following:
 
 | Name     | Description                                                                         |   Type   | Default | Required |
@@ -76,7 +75,6 @@ The `http_listeners` supports the following:
 | port     | The port used for this HTTP Listener.                                               | `string` |   n/a   |   yes    |
 | protocol | The Protocol to use for this HTTP Listener. Possible values are `Http` and `Https`. | `string` |   n/a   |   yes    |
 
-##
 The `backend_http_settings` supports the following:
 
 | Name             | Description                                                                |   Type   | Default | Required |
@@ -86,7 +84,6 @@ The `backend_http_settings` supports the following:
 | protocol         | The Protocol which should be used. Possible values are `Http` and `Https`. | `string` |   n/a   |   yes    |
 | request\_timeout | The request timeout in seconds, which must be between 1 and 86400 seconds. | `string` |   n/a   |   yes    |
 
-##
 The `request_routing_rules` supports the following:
 
 | Name                         | Description                                                                                  |   Type   | Default | Required |
