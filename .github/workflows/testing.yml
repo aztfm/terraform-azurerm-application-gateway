@@ -1,0 +1,53 @@
+name: "Unit testing"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".config/**"
+      - ".gitignore"
+      - ".pre-commit-config.yaml"
+      - "examples/**"
+      - "LICENSE"
+      - "**.md"
+      - "**.json"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    env:
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~>1.6.0"
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: "Az CLI login"
+        uses: azure/login@v2
+        with:
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: Terraform test
+        run: terraform test
+        if: always()
