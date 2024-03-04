@@ -1,0 +1,55 @@
+{
+    "name": "aztfm-application-gateway",
+    "image": "mcr.microsoft.com/devcontainers/base:jammy",
+    "features": {
+        "ghcr.io/devcontainers/features/terraform:1": {
+            "installTerraformDocs": true,
+            "version": "latest",
+            "tflint": "latest"
+        },
+        "ghcr.io/devcontainers-contrib/features/pre-commit:2": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers-contrib/features/markdownlint-cli:1": {
+            "version": "latest"
+        }
+    },
+    "onCreateCommand": "pre-commit install",
+    "postAttachCommand": "pre-commit autoupdate && pre-commit install-hooks",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bierner.markdown-preview-github-styles",
+                "DavidAnson.vscode-markdownlint",
+                "hashicorp.hcl",
+                "hashicorp.terraform",
+                "redhat.vscode-yaml",
+                "vscode-icons-team.vscode-icons"
+            ],
+            "settings": {
+                "editor.bracketPairColorization.enabled": true,
+                "editor.formatOnSave": true,
+                "editor.formatOnSaveMode": "file",
+                "editor.guides.bracketPairs": "active",
+                "editor.suggest.preview": true,
+                "explorer.compactFolders": false,
+                "files.autoSave": "afterDelay",
+                "git.autofetch": true,
+                "git.confirmSync": false,
+                "markdown-preview-github-styles.colorTheme": "light",
+                "terraform.codelens.referenceCount": true,
+                "terraform.experimentalFeatures.prefillRequiredFields": true,
+                "terraform.experimentalFeatures.validateOnSave": true,
+                "redhat.telemetry.enabled": true,
+                "workbench.iconTheme": "vscode-icons",
+                "workbench.colorTheme": "Default Dark+",
+                "[markdown]": {
+                    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+                },
+                "[terraform]": {
+                    "editor.defaultFormatter": "hashicorp.terraform"
+                }
+            }
+        }
+    }
+}

@@ -2,6 +2,7 @@ resource "azurerm_application_gateway" "appgw" {
   name                = var.name
   resource_group_name = var.resource_group_name
   location            = var.location
+  tags                = var.tags
 
   sku {
     name     = var.sku.size
@@ -10,7 +11,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   dynamic "autoscale_configuration" {
-    for_each = var.autoscale_configuration != {} ? [""] : []
+    for_each = var.autoscale_configuration != null ? [""] : []
     content {
       min_capacity = var.autoscale_configuration.min_capacity
       max_capacity = var.autoscale_configuration.max_capacity
@@ -18,7 +19,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   gateway_ip_configuration {
-    name      = "${var.name}-configuration"
+    name      = "appgateway-ip-configuration"
     subnet_id = var.subnet_id
   }
 
@@ -28,6 +29,9 @@ resource "azurerm_application_gateway" "appgw" {
       enabled          = var.waf_configuration.enabled
       firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
       rule_set_version = lookup(var.waf_configuration, "rule_set_version", "3.0")
+      # file_upload_limit_mb     = lookup(var.waf_configuration, "file_upload_limit_mb", 100)
+      # request_body_check       = lookup(var.waf_configuration, "request_body_check", true)
+      # max_request_body_size_kb = lookup(var.waf_configuration, "max_request_body_size_kb", 128)
     }
   }
 
@@ -53,7 +57,7 @@ resource "azurerm_application_gateway" "appgw" {
     for_each = var.backend_address_pools
     content {
       name         = backend_address_pool.value.name
-      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", "") == "" ? null : split(",", backend_address_pool.value.ip_addresses)
+      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", [])
     }
   }
 
@@ -133,6 +137,4 @@ resource "azurerm_application_gateway" "appgw" {
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
     }
   }
-
-  tags = var.tags
 }
