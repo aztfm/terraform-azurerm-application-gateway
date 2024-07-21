@@ -1,7 +1,10 @@
 {
-    "name": "aztfm-application-gateway",
+    "name": "aztfm",
     "image": "mcr.microsoft.com/devcontainers/base:jammy",
     "features": {
+        "ghcr.io/devcontainers/features/azure-cli:1": {
+            "version": "latest"
+        },
         "ghcr.io/devcontainers/features/terraform:1": {
             "installTerraformDocs": true,
             "version": "latest",
@@ -14,19 +17,26 @@
             "version": "latest"
         }
     },
-    "onCreateCommand": "pre-commit install",
-    "postAttachCommand": "pre-commit autoupdate && pre-commit install-hooks",
+    "onCreateCommand": "git config credential.useHttpPath true && pre-commit install",
     "customizations": {
         "vscode": {
             "extensions": [
+                "bierner.markdown-emoji",
                 "bierner.markdown-preview-github-styles",
                 "DavidAnson.vscode-markdownlint",
                 "hashicorp.hcl",
                 "hashicorp.terraform",
+                "streetsidesoftware.code-spell-checker",
                 "redhat.vscode-yaml",
                 "vscode-icons-team.vscode-icons"
             ],
             "settings": {
+                "cSpell.files": [
+                    "!.devcontainer/devcontainer.json"
+                ],
+                "cSpell.words": [
+                    "azurerm"
+                ],
                 "editor.bracketPairColorization.enabled": true,
                 "editor.formatOnSave": true,
                 "editor.formatOnSaveMode": "file",
@@ -47,7 +57,11 @@
                     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
                 },
                 "[terraform]": {
-                    "editor.defaultFormatter": "hashicorp.terraform"
+                    "editor.defaultFormatter": "hashicorp.terraform",
+                    "editor.tabSize": 2
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml"
                 }
             }
         }
