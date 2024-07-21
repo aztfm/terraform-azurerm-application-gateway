@@ -1,0 +1,29 @@
+[
+    {
+        "Name": "public_ip_address_id",
+        "Description": "The ID of a Public IP Address which the Application Gateway should use.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "no",
+        "Support": []
+    },
+    {
+        "Name": "private_ip_address",
+        "Description": "The Private IP Address to use for the Application Gateway.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "no",
+        "Support": []
+    },
+    {
+        "Name": "private_ip_address_allocation",
+        "Description": "The Allocation Method for the Private IP Address. Possible values are",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "no",
+        "Support": [
+            "Dynamic",
+            "Static"
+        ]
+    }
+]

@@ -1,0 +1,34 @@
+[
+    {
+        "Name": "name",
+        "Description": "The Name of this Request Routing Rule.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
+        "Name": "http_listener_name",
+        "Description": "The Name of the HTTP Listener which should be used for this Routing Rule.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
+        "Name": "backend_address_pool_name",
+        "Description": "The Name of the Backend Address Pool which should be used for this Routing Rule.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
+        "Name": "backend_http_settings_name",
+        "Description": "The Name of the Backend HTTP Settings Collection which should be used for this Routing Rule.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    }
+]

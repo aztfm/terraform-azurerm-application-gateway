@@ -1,0 +1,18 @@
+[
+    {
+        "Name": "name",
+        "Description": "The name of the Backend Address Pool.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
+        "Name": "ip_addresses",
+        "Description": "A list of IP Addresses which should be part of the Backend Address Pool.",
+        "Type": "list(string)",
+        "Default": "n/a",
+        "Required": "no",
+        "Support": []
+    }
+]
