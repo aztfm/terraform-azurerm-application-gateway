@@ -1,10 +1,48 @@
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.88.0
+    rev: v1.92.0
     hooks:
       - id: terraform_fmt
         name: Format Terraform code
 
+      - id: terraform_docs
+        name: Generate Terraform documentation
+
+      - id: terraform_tflint
+        name: Validate Terraform tests
+        exclude: ^(examples)
+        args:
+          - --args=--enable-rule=terraform_documented_outputs
+          - --args=--enable-rule=terraform_documented_variables
+          - --args=--enable-rule=terraform_naming_convention
+          - --args=--enable-rule=terraform_unused_required_providers
+          - --args=--enable-rule=terraform_standard_module_structure
+          - --args=--filter=tests/environments
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.41.0
+    hooks:
+      - id: markdownlint
+        name: Validate Markdown text
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+        name: Makes sure files end in a newline and only a newline
+        exclude_types: [json]
+
+      - id: check-merge-conflict
+        name: Check for files that contain merge conflict strings
+
+      - id: no-commit-to-branch
+        name: Don't commit to main branch.
+        args: [--branch, main]
+        fail_fast: true
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.92.0
+    hooks:
       - id: terraform_validate
         name: Validate Terraform code
         exclude: ^(examples|tests)
@@ -12,29 +50,3 @@ repos:
           - --tf-init-args=-upgrade
           - --tf-init-args=-backend=false
           - --hook-config=--retry-once-with-cleanup=true
-
-      - id: terraform_tflint
-        name: Validate Terraform tests
-        exclude: ^(examples|tests)
-        args:
-          - --args=--enable-rule=terraform_naming_convention
-          - --args=--enable-rule=terraform_unused_required_providers
-          - --args=--module
-
-      - id: terraform_docs
-        name: Generate Terraform documentation
-
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.39.0
-    hooks:
-      - id: markdownlint
-        name: Validate Markdown text
-
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
-    hooks:
-      - id: check-merge-conflict
-        name: Check for files that contain merge conflict strings
-
-      - id: end-of-file-fixer
-        name: Makes sure files end in a newline and only a newline
