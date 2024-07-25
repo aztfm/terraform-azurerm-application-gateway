@@ -1,0 +1,69 @@
+formatter: markdown
+
+settings:
+  anchor: false
+  html: false
+
+sort:
+  enabled: false
+
+output:
+  file: README.md
+  mode: inject
+
+content: |
+  {{ define "table" }}{{ printf "The `%s` supports the following:" .Resource }}
+
+  | Name | Description | Type | Default | Required |
+  | ---- | ------------| :--: | :-----: | :------: |
+  {{ range include .File | fromJson -}}
+    {{ print "|" (.Name | sanitizeMarkdownTbl) -}}
+    {{ $z := len .Support }}{{ if ne $z 0 }}{{ print "|" .Description -}}
+      {{ range $x, $y := .Support -}}
+        {{ if eq $x (sub $z 1) }}{{ printf " `%s`." . -}}
+        {{ else if eq $x (sub $z 2) }}{{ printf " `%s` and" . -}}
+        {{ else }}{{ printf " `%s`," . }}{{ end -}}
+      {{ end -}}
+    {{ else }}{{ print "|" .Description }}{{ end -}}
+    {{ printf "|`%s`" .Type -}}
+    {{ if eq .Default "n/a" }}{{ print "|" (.Default | sanitizeMarkdownTbl) -}}
+    {{ else }}{{ printf "|`%s`" .Default }}{{ end -}}
+    {{ printf "|%s|" .Required }}
+  {{ end }}{{ end -}}
+
+  ## Parameters
+
+  The following parameters are supported:
+
+  | Name | Description | Type | Default | Required |
+  | ---- | ----------- | :--: | :-----: | :------: |
+  {{ range .Module.Inputs -}}
+    {{ print "|" (.Name | sanitizeMarkdownTbl) -}}
+    {{ print "|" (toString .Description | sanitizeMarkdownTbl) -}}
+    {{ if eq (substr 0 13 (toString .Type)) "list(object({" }}{{ print "|`list(object({}))`" -}}
+    {{ else if eq (substr 0 8 (toString .Type)) "object({" }}{{ print "|`object({})`" -}}
+    {{ else }}{{ printf "|`%s`" .Type }}{{ end -}}
+    {{ if eq .GetValue "" }}{{ print "|" (.GetValue | sanitizeMarkdownTbl) -}}
+    {{ else }}{{ printf "|`%s`" .GetValue }}{{ end -}}
+    {{ print "|" (ternary .Required "yes" "no") "|" }}
+  {{ end }}{{ printf "\n" -}}
+
+  {{ template "table" dict "Resource" "sku" "File" ".config/sku_parameters.json" }}
+  {{ template "table" dict "Resource" "frontend_ip_configuration" "File" ".config/frontend_ip_configuration_parameters.json" }}
+  {{ template "table" dict "Resource" "backend_address_pools" "File" ".config/backend_address_pool_parameters.json" }}
+  {{ template "table" dict "Resource" "ssl_certificates" "File" ".config/ssl_certificate_parameters.json" }}
+  {{ template "table" dict "Resource" "http_listeners" "File" ".config/http_listener_parameters.json" }}
+  {{ template "table" dict "Resource" "backend_http_settings" "File" ".config/backend_http_setting_parameters.json" }}
+  {{ template "table" dict "Resource" "request_routing_rules" "File" ".config/request_routing_rule_parameters.json" }}{{ printf "\n" -}}
+
+  ## Outputs
+
+  The following outputs are exported:
+
+  | Name | Description | Sensitive |
+  | ---- | ------------| :-------: |
+  {{ range .Module.Outputs -}}
+    {{ print "|" .Name -}}
+    {{ print "|" (toString .Description | sanitizeMarkdownTbl) -}}
+    {{ print "|" (ternary .Sensitive "yes" "no") "|" }}
+  {{ end -}}

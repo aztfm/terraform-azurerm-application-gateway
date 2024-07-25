@@ -1,0 +1,47 @@
+[
+    {
+        "Name": "tier",
+        "Description": "The Tier of the SKU to use for this Application Gateway. Possible values are",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": [
+            "Standard",
+            "Standard_v2",
+            "WAF",
+            "WAF_v2"
+        ]
+    },
+    {
+        "Name": "size",
+        "Description": "The Size to use for this Application Gateway. Possible values are",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": [
+            "Standard_Small",
+            "Standard_Medium",
+            "Standard_Large",
+            "Standard_v2",
+            "WAF_Medium",
+            "WAF_Large",
+            "WAF_v2"
+        ]
+    },
+    {
+        "Name": "capacity",
+        "Description": "The Capacity to use for this Application Gateway. When using a v1 SKU this value must be between `1` and `32`, and `1` to `125` for a v2 SKU.",
+        "Type": "string",
+        "Default": "null",
+        "Required": "no",
+        "Support": [
+            "Standard_Small",
+            "Standard_Medium",
+            "Standard_Large",
+            "Standard_v2",
+            "WAF_Medium",
+            "WAF_Large",
+            "WAF_v2"
+        ]
+    }
+]
