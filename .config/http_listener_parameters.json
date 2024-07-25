@@ -1,0 +1,29 @@
+[
+    {
+        "Name": "name",
+        "Description": "The Name of the HTTP Listener.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
+        "Name": "port",
+        "Description": "The port used for this HTTP Listener.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
+        "Name": "protocol",
+        "Description": "The Protocol to use for this HTTP Listener. Possible values are",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": [
+            "Http",
+            "Https"
+        ]
+    }
+]
