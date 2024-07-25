@@ -1,0 +1,72 @@
+{
+    "name": "aztfm",
+    "image": "mcr.microsoft.com/devcontainers/base:jammy",
+    "features": {
+        "ghcr.io/devcontainers/features/azure-cli:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/terraform:1": {
+            "installTerraformDocs": true,
+            "version": "latest",
+            "tflint": "latest"
+        },
+        "ghcr.io/devcontainers-contrib/features/pre-commit:2": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers-contrib/features/markdownlint-cli:1": {
+            "version": "latest"
+        }
+    },
+    "onCreateCommand": "git config credential.useHttpPath true && pre-commit install",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bierner.markdown-emoji",
+                "bierner.markdown-preview-github-styles",
+                "DavidAnson.vscode-markdownlint",
+                "hashicorp.hcl",
+                "hashicorp.terraform",
+                "streetsidesoftware.code-spell-checker",
+                "redhat.vscode-yaml",
+                "vscode-icons-team.vscode-icons"
+            ],
+            "settings": {
+                "cSpell.files": [
+                    "!.devcontainer/devcontainer.json"
+                ],
+                "cSpell.words": [
+                    "azurerm"
+                ],
+                "editor.bracketPairColorization.enabled": true,
+                "editor.formatOnSave": true,
+                "editor.formatOnSaveMode": "file",
+                "editor.guides.bracketPairs": "active",
+                "editor.suggest.preview": true,
+                "explorer.compactFolders": false,
+                "files.associations": {
+                    "*.tftest.hcl": "terraform"
+                },
+                "files.autoSave": "afterDelay",
+                "git.autofetch": true,
+                "git.confirmSync": false,
+                "markdown-preview-github-styles.colorTheme": "light",
+                "terraform.codelens.referenceCount": true,
+                "terraform.experimentalFeatures.prefillRequiredFields": true,
+                "terraform.experimentalFeatures.validateOnSave": true,
+                "redhat.telemetry.enabled": true,
+                "workbench.iconTheme": "vscode-icons",
+                "workbench.colorTheme": "Default Dark+",
+                "[markdown]": {
+                    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+                },
+                "[terraform]": {
+                    "editor.defaultFormatter": "hashicorp.terraform",
+                    "editor.tabSize": 2
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml"
+                }
+            }
+        }
+    }
+}
