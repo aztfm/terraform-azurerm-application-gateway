@@ -24,19 +24,20 @@ The following parameters are supported:
 |name|The name of the Application Gateway.|`string`|n/a|yes|
 |resource\_group\_name|The name of the resource group in which to create the Application Gateway.|`string`|n/a|yes|
 |location|The location/region where the Application Gateway is created.|`string`|n/a|yes|
-|tags|A mapping of tags to assign to the resource.|`map(string)`|`{}`|no|
-|sku|A mapping with the sku configuration of the application gateway.|`object({})`|n/a|yes|
-|autoscale\_configuration|n/a|`object({})`|`null`|no|
+|tags|A mapping of tags to assign to the resource.|`map(string)`|`null`|no|
+|sku\_name|The SKU to use for the Application Gateway.|`string`|n/a|yes|
+|capacity|The number of instances to use for the Application Gateway.|`number`|`null`|no|
+|autoscale\_configuration|The autoscale configuration for the Application Gateway.|`object({})`|`null`|no|
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|
-|waf\_configuration|n/a|`map(string)`|`{}`|no|
-|frontend\_ip\_configuration|A mapping the front ip configuration.|`map(string)`|n/a|yes|
-|backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`any`|n/a|yes|
-|identity\_id|Specifies a user managed identity id to be assigned to the Application Gateway.|`string`|`null`|no|
-|ssl\_certificates|List of objects that represent the configuration of each ssl certificate.|`list(map(string))`|`[]`|no|
-|http\_listeners|List of objects that represent the configuration of each http listener.|`list(map(string))`|n/a|yes|
-|probes|List of objects that represent the configuration of each probe.|`list(map(string))`|`[]`|no|
-|backend\_http\_settings|List of objects that represent the configuration of each backend http settings.|`list(map(string))`|n/a|yes|
-|request\_routing\_rules|List of objects that represent the configuration of each backend request routing rule.|`list(map(string))`|n/a|yes|
+|waf\_configuration|n/a|`object({})`|`{}`|no|
+|frontend\_ip\_configuration|A mapping the front ip configuration.|`object({})`|n/a|yes|
+|backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`list(object({}))`|n/a|yes|
+|identity\_ids|List of Managed Identity IDs to assign to the Application Gateway.|`list(string)`|`null`|no|
+|ssl\_certificates|List of objects that represent the configuration of each ssl certificate.|`list(object({}))`|`null`|no|
+|http\_listeners|List of objects that represent the configuration of each http listener.|`list(object({}))`|n/a|yes|
+|probes|List of objects that represent the configuration of each probe.|`list(object({}))`|`null`|no|
+|backend\_http\_settings|List of objects that represent the configuration of each backend http settings.|`list(object({}))`|n/a|yes|
+|request\_routing\_rules|List of objects that represent the configuration of each backend request routing rule.|`list(object({}))`|n/a|yes|
 
 The `frontend_ip_configuration` supports the following:
 

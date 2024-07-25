@@ -1,17 +1,18 @@
-resource "azurerm_application_gateway" "appgw" {
+resource "azurerm_application_gateway" "main" {
   name                = var.name
   resource_group_name = var.resource_group_name
   location            = var.location
   tags                = var.tags
 
   sku {
-    name     = var.sku.size
-    tier     = var.sku.tier
-    capacity = lookup(var.sku, "capacity", null)
+    name     = var.sku_name
+    tier     = var.sku_name
+    capacity = var.capacity
   }
 
   dynamic "autoscale_configuration" {
     for_each = var.autoscale_configuration != null ? [""] : []
+
     content {
       min_capacity = var.autoscale_configuration.min_capacity
       max_capacity = var.autoscale_configuration.max_capacity
@@ -19,12 +20,13 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   gateway_ip_configuration {
-    name      = "appgateway-ip-configuration"
+    name      = "appgateway-ip-configuration" # TODO: Modify this name
     subnet_id = var.subnet_id
   }
 
   dynamic "waf_configuration" {
     for_each = local.waf_configuration_enabled ? [""] : []
+
     content {
       enabled          = var.waf_configuration.enabled
       firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
@@ -35,16 +37,17 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
-  dynamic "frontend_ip_configuration" {
-    for_each = local.public_ip_address_id ? [""] : []
-    content {
-      name                 = "Public-frontend-ip-configuration"
-      public_ip_address_id = var.frontend_ip_configuration.public_ip_address_id
-    }
+  frontend_ip_configuration {
+    name                          = "Public-frontend-ip-configuration" # TODO: Modify this name
+    subnet_id                     = var.frontend_ip_configuration.subnet_id
+    private_ip_address            = var.frontend_ip_configuration.private_ip_address
+    private_ip_address_allocation = var.frontend_ip_configuration.private_ip_address_allocation
+    public_ip_address_id          = var.frontend_ip_configuration.public_ip_address_id
   }
 
   dynamic "frontend_ip_configuration" {
     for_each = local.private_ip_address || local.private_ip_address_allocation ? [""] : []
+
     content {
       name                          = "Private-frontend-ip-configuration"
       subnet_id                     = var.subnet_id
@@ -55,54 +58,60 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "backend_address_pool" {
     for_each = var.backend_address_pools
+
     content {
       name         = backend_address_pool.value.name
-      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", [])
+      fqdns        = backend_address_pool.value.fqdns
+      ip_addresses = backend_address_pool.value.ip_addresses
     }
   }
 
   frontend_port {
-    name = "80"
+    name = "80" # TODO: Modify this name
     port = 80
   }
 
   frontend_port {
-    name = "443"
+    name = "443" # TODO: Modify this name
     port = 443
   }
 
   dynamic "identity" {
-    for_each = var.identity_id != null ? [""] : []
+    for_each = var.identity_ids != null ? [""] : []
+
     content {
       type         = "UserAssigned"
-      identity_ids = [var.identity_id]
+      identity_ids = var.identity_ids
     }
   }
 
   dynamic "ssl_certificate" {
-    for_each = var.ssl_certificates
+    for_each = var.ssl_certificates != null ? [""] : []
+
     content {
       name                = ssl_certificate.value.name
-      data                = lookup(ssl_certificate.value, "data", null)
-      password            = lookup(ssl_certificate.value, "password", null)
-      key_vault_secret_id = lookup(ssl_certificate.value, "key_vault_secret_id", null)
+      data                = ssl_certificate.value.data
+      password            = ssl_certificate.value.password
+      key_vault_secret_id = ssl_certificate.value.key_vault_secret_id
     }
   }
 
   dynamic "http_listener" {
     for_each = var.http_listeners
+
     content {
       name                           = http_listener.value.name
-      frontend_ip_configuration_name = "${http_listener.value.frontend_ip_configuration}-frontend-ip-configuration"
+      frontend_ip_configuration_name = "${http_listener.value.frontend_ip_configuration}-frontend-ip-configuration" # TODO: Modify this name
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
-      host_name                      = lookup(http_listener.value, "host_name", null)
-      ssl_certificate_name           = lookup(http_listener.value, "ssl_certificate_name", null)
+      host_name                      = http_listener.value.host_name
+      ssl_certificate_name           = http_listener.value.ssl_certificate_name
     }
   }
 
   dynamic "probe" {
-    for_each = var.probes
+    for_each = var.probes != null ? [""] : []
+
     content {
       name                = probe.value.name
       host                = lookup(probe.value, "host", null)
@@ -116,19 +125,21 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "backend_http_settings" {
     for_each = var.backend_http_settings
+
     content {
       cookie_based_affinity = "Disabled"
       name                  = backend_http_settings.value.name
       port                  = backend_http_settings.value.port
       protocol              = backend_http_settings.value.protocol
       request_timeout       = backend_http_settings.value.request_timeout
-      host_name             = lookup(backend_http_settings.value, "host_name", null)
-      probe_name            = lookup(backend_http_settings.value, "probe_name", null)
+      host_name             = backend_http_settings.value.host_name
+      probe_name            = backend_http_settings.value.probe_name
     }
   }
 
   dynamic "request_routing_rule" {
     for_each = var.request_routing_rules
+
     content {
       name                       = request_routing_rule.value.name
       rule_type                  = "Basic"

@@ -15,14 +15,35 @@ variable "location" {
 
 variable "tags" {
   type        = map(string)
-  default     = {}
+  default     = null
   description = "A mapping of tags to assign to the resource."
 }
 
-variable "sku" {
-  type        = map(string)
-  description = "A mapping with the sku configuration of the application gateway."
-  # sku = { tier = "", size = "", capacity = "" }
+variable "sku_name" {
+  type        = string
+  description = "The SKU to use for the Application Gateway."
+
+  validation {
+    condition     = contains(["Standard_v2", "WAF_v2"], var.sku_name)
+    error_message = "The sku name must be either Standard_v2 or WAF_v2."
+  }
+}
+
+variable "capacity" {
+  type        = number
+  default     = null
+  description = "The number of instances to use for the Application Gateway."
+
+  validation {
+    condition     = var.capacity <= 125 && var.capacity >= 1
+    error_message = "The capacity must be between 1 and 125."
+  }
+
+  validation {
+    condition     = var.autoscale_configuration != null
+    error_message = "The capacity shouldn't be set when autoscale_configuration is set."
+
+  }
 }
 
 variable "autoscale_configuration" {
@@ -31,7 +52,17 @@ variable "autoscale_configuration" {
     max_capacity = string
   })
   default     = null
-  description = ""
+  description = "The autoscale configuration for the Application Gateway."
+
+  validation {
+    condition     = var.autoscale_configuration.min_capacity <= 100 && var.capacity >= 0
+    error_message = "The min_capacity must be between 0 and 100."
+  }
+
+  validation {
+    condition     = var.autoscale_configuration.max_capacity <= 125 && var.capacity >= 2
+    error_message = "The max_capacity must be between 2 and 125."
+  }
 }
 
 variable "subnet_id" {
@@ -39,59 +70,103 @@ variable "subnet_id" {
   description = "The ID of the Subnet which the Application Gateway should be connected to."
 }
 
-variable "waf_configuration" {
-  type        = map(string)
+variable "waf_configuration" { # TODO: Add more properties or remove this block
+  type = object({
+    enabled          = bool
+    firewall_mode    = string
+    rule_set_version = string
+  })
   default     = {}
   description = ""
   # waf_configuration = { enabled = "", firewall_mode = "", rule_set_version = ""}
 }
 
-variable "frontend_ip_configuration" {
-  type        = map(string)
+variable "frontend_ip_configuration" { # TODO: add more validations
+  type = object({
+    name                          = string
+    subnet_id                     = optional(string)
+    private_ip_address            = optional(string)
+    private_ip_address_allocation = optional(string)
+    public_ip_address_id          = string
+  })
   description = "A mapping the front ip configuration."
-  # frontend_ip_configuration = { public_ip_address_id = "", private_ip_address = "", private_ip_address_allocation = "" }
+
+  validation {
+    condition     = var.frontend_ip_configuration.private_ip_address_allocation == "Static" && var.frontend_ip_configuration.private_ip_address != null
+    error_message = "The private_ip_address must be set when private_ip_address_allocation is Static."
+  }
 }
 
-variable "backend_address_pools" {
-  type        = any
+variable "backend_address_pools" { # TODO: Add more validations
+  type = list(object({
+    name         = string
+    fqdns        = optional(list(string))
+    ip_addresses = optional(list(string))
+  }))
   description = "List of objects that represent the configuration of each backend address pool."
-  # backend_address_pools = [{ name = "", ip_addresses = [""] }]
 }
 
-variable "identity_id" {
-  type        = string
+variable "identity_ids" {
+  type        = list(string)
   default     = null
-  description = "Specifies a user managed identity id to be assigned to the Application Gateway."
+  description = "List of Managed Identity IDs to assign to the Application Gateway."
 }
 
-variable "ssl_certificates" {
-  type        = list(map(string))
-  default     = []
+variable "ssl_certificates" { # TODO: Add more validations
+  type = list(object({
+    name                = string
+    data                = string
+    password            = string
+    key_vault_secret_id = string
+  }))
+  default     = null
   description = "List of objects that represent the configuration of each ssl certificate."
-  # ssl_certificates = [{ name = "", data = "", password = "", key_vault_secret_id = "" }]
 }
 
-variable "http_listeners" {
-  type        = list(map(string))
+variable "http_listeners" { # TODO: Add more validations
+  type = list(object({
+    name                      = string
+    frontend_ip_configuration = string
+    port                      = string
+    protocol                  = string
+    host_name                 = optional(string)
+    ssl_certificate_name      = optional(string)
+  }))
   description = "List of objects that represent the configuration of each http listener."
-  # http_listeners = [{ name = "", frontend_ip_configuration = "", port = "", protocol = "", host_name = "", ssl_certificate_name = "" }]
 }
 
-variable "probes" {
-  type        = list(map(string))
-  default     = []
+variable "probes" { # TODO: Add more validations
+  type = list(object({
+    name                = string
+    host                = optional(string)
+    protocol            = string
+    path                = string
+    interval            = string
+    timeout             = string
+    unhealthy_threshold = string
+  }))
+  default     = null
   description = "List of objects that represent the configuration of each probe."
-  # probes = [{ name = "", host = "", protocol = "", path = "", interval = "", timeout = "", unhealthy_threshold = "" }]
 }
 
 variable "backend_http_settings" {
-  type        = list(map(string))
+  type = list(object({ # TODO: Add more validations
+    name            = string
+    port            = string
+    protocol        = string
+    request_timeout = string
+    host_name       = optional(string)
+    probe_name      = optional(string)
+  }))
   description = "List of objects that represent the configuration of each backend http settings."
-  # backend_http_settings = [{ name = "", port = "", protocol = "", request_timeout = "", host_name = "", probe_name = "" }]
 }
 
 variable "request_routing_rules" {
-  type        = list(map(string))
+  type = list(object({ # TODO: Add more validations
+    name                       = string
+    http_listener_name         = string
+    backend_address_pool_name  = string
+    backend_http_settings_name = string
+  }))
   description = "List of objects that represent the configuration of each backend request routing rule."
-  # request_routing_rules = [{ name = "", http_listener_name = "", backend_address_pool_name = "", backend_http_settings_name = "" }]
 }
