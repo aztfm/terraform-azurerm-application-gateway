@@ -1,4 +1,27 @@
 <!-- markdownlint-disable MD041 -->
+## 2.0.0 (XXXXXX XX, 202X)
+
+BREAKING CHANGES:
+
+* dependencies: updating to `v2.0.0` minimum of terraform.
+* dependencies: updating to `v3.40.0` minimum of hashicorp/azurerm provider.
+
+ENHANCEMENTS:
+
+* The `sku.capacity` parameter changes the `string` type to `number` and is now an optional parameter.
+* The `autoscale_configuration.min_capacity` parameter changes type `string` to `number`.
+* The `autoscale_configuration.max_capacity` parameter changes type `string` to `number`.
+
+FEATURES:
+
+* **New Parameter**:
+
+BUG FIXES:
+
+DEPRECATIONS:
+
+* **Parameter**:
+
 ## 1.2.0 (January 27, 2022)
 
 FEATURES:

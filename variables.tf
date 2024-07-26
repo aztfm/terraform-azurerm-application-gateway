@@ -23,19 +23,19 @@ variable "sku" {
   type = object({
     tier     = string
     size     = string
-    capacity = number
+    capacity = optional(number)
   })
   description = "A mapping with the sku configuration of the application gateway."
 }
 
-# variable "autoscale_configuration" {
-#   type = object({
-#     min_capacity = number
-#     max_capacity = number
-#   })
-#   default     = null
-#   description = "A mapping with the autoscale configuration of the application gateway."
-# }
+variable "autoscale_configuration" {
+  type = object({
+    min_capacity = number
+    max_capacity = number
+  })
+  default     = null
+  description = "A mapping with the autoscale configuration of the application gateway."
+}
 
 variable "subnet_id" {
   type        = string

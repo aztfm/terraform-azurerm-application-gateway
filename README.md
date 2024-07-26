@@ -25,6 +25,7 @@ The following parameters are supported:
 |location|The location/region where the Application Gateway is created.|`string`|n/a|yes|
 |tags|A mapping of tags to assign to the resource.|`map(string)`|`{}`|no|
 |sku|A mapping with the sku configuration of the application gateway.|`object({})`|n/a|yes|
+|autoscale\_configuration|A mapping with the autoscale configuration of the application gateway.|`object({})`|`null`|no|
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|
 |waf\_configuration|A mapping with the waf configuration of the application gateway.|`object({})`|`{}`|no|
 |frontend\_ip\_configuration|A mapping the front ip configuration.|`object({})`|n/a|yes|
