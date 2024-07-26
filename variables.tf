@@ -28,14 +28,14 @@ variable "sku" {
   description = "A mapping with the sku configuration of the application gateway."
 }
 
-variable "autoscale_configuration" {
-  type = object({
-    min_capacity = number
-    max_capacity = number
-  })
-  default     = null
-  description = "A mapping with the autoscale configuration of the application gateway."
-}
+# variable "autoscale_configuration" {
+#   type = object({
+#     min_capacity = number
+#     max_capacity = number
+#   })
+#   default     = null
+#   description = "A mapping with the autoscale configuration of the application gateway."
+# }
 
 variable "subnet_id" {
   type        = string
@@ -69,48 +69,49 @@ variable "backend_address_pools" {
   description = "List of objects that represent the configuration of each backend address pool."
 }
 
-variable "identity_id" {
-  type        = string
-  default     = null
-  description = "Specifies a user managed identity id to be assigned to the Application Gateway."
-}
+# variable "identity_id" {
+#   type        = string
+#   default     = null
+#   description = "Specifies a user managed identity id to be assigned to the Application Gateway."
+# }
 
-variable "ssl_certificates" {
-  type = list(object({
-    name                = string
-    data                = optional(string)
-    password            = optional(string)
-    key_vault_secret_id = optional(string)
-  }))
-  default     = []
-  sensitive   = true
-  description = "List of objects that represent the configuration of each ssl certificate."
-}
+# variable "ssl_certificates" {
+#   type = list(object({
+#     name                = string
+#     data                = optional(string)
+#     password            = optional(string)
+#     key_vault_secret_id = optional(string)
+#   }))
+#   default     = []
+#   sensitive   = true
+#   description = "List of objects that represent the configuration of each ssl certificate."
+# }
 
 variable "http_listeners" {
   type = list(object({
-    name                 = string
-    port                 = string
-    protocol             = string
-    host_name            = optional(string)
-    ssl_certificate_name = optional(string)
+    name                      = string
+    frontend_ip_configuration = string
+    port                      = string
+    protocol                  = string
+    host_name                 = optional(string)
+    ssl_certificate_name      = optional(string)
   }))
   description = "List of objects that represent the configuration of each http listener."
 }
 
-variable "probes" {
-  type = list(object({
-    name                = string
-    host                = optional(string)
-    protocol            = string
-    path                = string
-    interval            = number
-    timeout             = string
-    unhealthy_threshold = string
-  }))
-  default     = []
-  description = "List of objects that represent the configuration of each probe."
-}
+# variable "probes" {
+#   type = list(object({
+#     name                = string
+#     host                = optional(string)
+#     protocol            = string
+#     path                = string
+#     interval            = number
+#     timeout             = string
+#     unhealthy_threshold = string
+#   }))
+#   default     = []
+#   description = "List of objects that represent the configuration of each probe."
+# }
 
 variable "backend_http_settings" {
   type = list(object({
@@ -127,6 +128,7 @@ variable "backend_http_settings" {
 variable "request_routing_rules" {
   type = list(object({
     name                       = string
+    priority                   = number
     http_listener_name         = string
     backend_address_pool_name  = string
     backend_http_settings_name = string
