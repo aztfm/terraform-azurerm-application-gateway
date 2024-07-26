@@ -2,6 +2,7 @@ resource "azurerm_application_gateway" "appgw" {
   name                = var.name
   resource_group_name = var.resource_group_name
   location            = var.location
+  tags                = var.tags
 
   sku {
     name     = var.sku.size
@@ -24,6 +25,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "waf_configuration" {
     for_each = local.waf_configuration_enabled ? [""] : []
+
     content {
       enabled          = var.waf_configuration.enabled
       firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
@@ -33,6 +35,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "frontend_ip_configuration" {
     for_each = local.public_ip_address_id ? [""] : []
+
     content {
       name                 = "Public-frontend-ip-configuration"
       public_ip_address_id = var.frontend_ip_configuration.public_ip_address_id
@@ -41,6 +44,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "frontend_ip_configuration" {
     for_each = local.private_ip_address || local.private_ip_address_allocation ? [""] : []
+
     content {
       name                          = "Private-frontend-ip-configuration"
       subnet_id                     = var.subnet_id
@@ -51,6 +55,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "backend_address_pool" {
     for_each = var.backend_address_pools
+
     content {
       name         = backend_address_pool.value.name
       ip_addresses = lookup(backend_address_pool.value, "ip_addresses", "") == "" ? null : split(",", backend_address_pool.value.ip_addresses)
@@ -69,6 +74,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "identity" {
     for_each = var.identity_id != null ? [""] : []
+
     content {
       type         = "UserAssigned"
       identity_ids = [var.identity_id]
@@ -77,6 +83,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "ssl_certificate" {
     for_each = var.ssl_certificates
+
     content {
       name                = ssl_certificate.value.name
       data                = lookup(ssl_certificate.value, "data", null)
@@ -87,6 +94,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "http_listener" {
     for_each = var.http_listeners
+
     content {
       name                           = http_listener.value.name
       frontend_ip_configuration_name = "${http_listener.value.frontend_ip_configuration}-frontend-ip-configuration"
@@ -99,6 +107,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "probe" {
     for_each = var.probes
+
     content {
       name                = probe.value.name
       host                = lookup(probe.value, "host", null)
@@ -112,6 +121,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "backend_http_settings" {
     for_each = var.backend_http_settings
+
     content {
       cookie_based_affinity = "Disabled"
       name                  = backend_http_settings.value.name
@@ -125,6 +135,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   dynamic "request_routing_rule" {
     for_each = var.request_routing_rules
+
     content {
       name                       = request_routing_rule.value.name
       rule_type                  = "Basic"
@@ -133,6 +144,4 @@ resource "azurerm_application_gateway" "appgw" {
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
     }
   }
-
-  tags = var.tags
 }
