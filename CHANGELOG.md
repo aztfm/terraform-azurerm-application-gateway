@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD041 -->
 ## 1.2.0 (January 27, 2022)
 
 FEATURES:

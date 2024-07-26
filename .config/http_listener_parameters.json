@@ -10,7 +10,7 @@
     {
         "Name": "port",
         "Description": "The port used for this HTTP Listener.",
-        "Type": "string",
+        "Type": "number",
         "Default": "n/a",
         "Required": "yes",
         "Support": []
@@ -25,5 +25,21 @@
             "Http",
             "Https"
         ]
+    },
+    {
+        "Name": "host_name",
+        "Description": "The Hostname which should be used for this HTTP Listener. Setting this value changes Listener Type to Multi site",
+        "Type": "string",
+        "Default": "null",
+        "Required": "no",
+        "Support": []
+    },
+    {
+        "Name": "ssl_certificate_name",
+        "Description": "The name of the associated SSL Certificate which should be used for this HTTP Listener.",
+        "Type": "string",
+        "Default": "null",
+        "Required": "no",
+        "Support": []
     }
 ]
