@@ -7,11 +7,12 @@ resource "azurerm_application_gateway" "appgw" {
   sku {
     name     = var.sku.size
     tier     = var.sku.tier
-    capacity = lookup(var.sku, "capacity", null)
+    capacity = var.sku.capacity
   }
 
   dynamic "autoscale_configuration" {
-    for_each = var.autoscale_configuration != {} ? [""] : []
+    for_each = var.autoscale_configuration != null ? [""] : []
+
     content {
       min_capacity = var.autoscale_configuration.min_capacity
       max_capacity = var.autoscale_configuration.max_capacity
@@ -28,8 +29,8 @@ resource "azurerm_application_gateway" "appgw" {
 
     content {
       enabled          = var.waf_configuration.enabled
-      firewall_mode    = lookup(var.waf_configuration, "firewall_mode", "Detection")
-      rule_set_version = lookup(var.waf_configuration, "rule_set_version", "3.0")
+      firewall_mode    = var.waf_configuration.firewall_mode
+      rule_set_version = var.waf_configuration.rule_set_version
     }
   }
 
@@ -58,7 +59,7 @@ resource "azurerm_application_gateway" "appgw" {
 
     content {
       name         = backend_address_pool.value.name
-      ip_addresses = lookup(backend_address_pool.value, "ip_addresses", "") == "" ? null : split(",", backend_address_pool.value.ip_addresses)
+      ip_addresses = backend_address_pool.value.ip_addresses
     }
   }
 
@@ -81,16 +82,16 @@ resource "azurerm_application_gateway" "appgw" {
     }
   }
 
-  dynamic "ssl_certificate" {
-    for_each = var.ssl_certificates
+  # dynamic "ssl_certificate" {
+  #   for_each = var.ssl_certificates
 
-    content {
-      name                = ssl_certificate.value.name
-      data                = lookup(ssl_certificate.value, "data", null)
-      password            = lookup(ssl_certificate.value, "password", null)
-      key_vault_secret_id = lookup(ssl_certificate.value, "key_vault_secret_id", null)
-    }
-  }
+  #   content {
+  #     name                = ssl_certificate.value.name
+  #     data                = ssl_certificate.value.data
+  #     password            = ssl_certificate.value.password
+  #     key_vault_secret_id = ssl_certificate.value.key_vault_secret_id
+  #   }
+  # }
 
   dynamic "http_listener" {
     for_each = var.http_listeners
@@ -110,7 +111,7 @@ resource "azurerm_application_gateway" "appgw" {
 
     content {
       name                = probe.value.name
-      host                = lookup(probe.value, "host", null)
+      host                = probe.value.host
       protocol            = probe.value.protocol
       path                = probe.value.path
       interval            = probe.value.interval
@@ -128,8 +129,8 @@ resource "azurerm_application_gateway" "appgw" {
       port                  = backend_http_settings.value.port
       protocol              = backend_http_settings.value.protocol
       request_timeout       = backend_http_settings.value.request_timeout
-      host_name             = lookup(backend_http_settings.value, "host_name", null)
-      probe_name            = lookup(backend_http_settings.value, "probe_name", null)
+      host_name             = backend_http_settings.value.host_name
+      probe_name            = backend_http_settings.value.probe_name
     }
   }
 

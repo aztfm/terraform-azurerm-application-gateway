@@ -1,34 +1,53 @@
 [
     {
         "Name": "name",
-        "Description": "The Name of this Request Routing Rule.",
+        "Description": "The name of the Backend HTTP Settings Collection.",
         "Type": "string",
         "Default": "n/a",
         "Required": "yes",
         "Support": []
     },
     {
-        "Name": "http_listener_name",
-        "Description": "The Name of the HTTP Listener which should be used for this Routing Rule.",
+        "Name": "port",
+        "Description": "The port which should be used for this Backend HTTP Settings Collection.",
         "Type": "string",
         "Default": "n/a",
         "Required": "yes",
         "Support": []
     },
     {
-        "Name": "backend_address_pool_name",
-        "Description": "The Name of the Backend Address Pool which should be used for this Routing Rule.",
+        "Name": "protocol",
+        "Description": "The Protocol which should be used. Possible values are",
         "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": [
+            "Http",
+            "Https"
+        ]
+    },
+    {
+        "Name": "request_timeout",
+        "Description": "The request timeout in seconds, which must be between `1` and `86400` seconds.",
+        "Type": "number",
         "Default": "n/a",
         "Required": "yes",
         "Support": []
     },
     {
-        "Name": "backend_http_settings_name",
-        "Description": "The Name of the Backend HTTP Settings Collection which should be used for this Routing Rule.",
+        "Name": "host_name",
+        "Description": "Host header to be sent to the backend servers. Cannot be set if `pick_host_name_from_backend_address` is set to `true`.",
         "Type": "string",
-        "Default": "n/a",
-        "Required": "yes",
+        "Default": "null",
+        "Required": "no",
+        "Support": []
+    },
+    {
+        "Name": "probe_name",
+        "Description": "The name of an associated HTTP Probe.",
+        "Type": "string",
+        "Default": "null",
+        "Required": "no",
         "Support": []
     }
 ]

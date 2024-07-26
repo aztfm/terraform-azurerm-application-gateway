@@ -1,0 +1,18 @@
+[
+    {
+        "Name": "min_capacity",
+        "Description": "Minimum capacity for autoscaling. Accepted values are in the range `0` to `100`.",
+        "Type": "number",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
+        "Name": "max_capacity",
+        "Description": "Maximum capacity for autoscaling. Accepted values are in the range `2` to `125`.",
+        "Type": "number",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    }
+]
