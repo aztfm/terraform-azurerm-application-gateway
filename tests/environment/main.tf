@@ -8,6 +8,20 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+resource "azurerm_web_application_firewall_policy" "waf" {
+  name                = local.workspace_id
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  tags                = azurerm_resource_group.rg.tags
+
+  managed_rules {
+    managed_rule_set {
+      type    = "OWASP"
+      version = "3.2"
+    }
+  }
+}
+
 resource "azurerm_virtual_network" "vnet" {
   name                = local.workspace_id
   resource_group_name = azurerm_resource_group.rg.name

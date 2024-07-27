@@ -14,13 +14,15 @@ ENHANCEMENTS:
 
 FEATURES:
 
-* **New Parameter**:
+* **New Parameter**: `firewall_policy_id`
 
 BUG FIXES:
 
 DEPRECATIONS:
 
-* **Parameter**:
+[waf-config-deprecate]: https://azure.microsoft.com/en-us/updates/retirement-support-for-application-gateway-web-application-firewall-v2-configuration-is-ending/
+
+* **Parameter**: `waf_configuration` is deprecated in favor of `firewall_policy_id`. WAF configuration must now be performed using a firewall policy. [Retirement: Support for Application Gateway Web Application Firewall v2 Configuration is ending][waf-config-deprecate].
 
 ## 1.2.0 (January 27, 2022)
 

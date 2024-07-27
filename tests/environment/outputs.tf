@@ -18,6 +18,10 @@ output "resource_group_tags" {
   value = azurerm_resource_group.rg.tags
 }
 
+output "firewall_policy_id" {
+  value = azurerm_web_application_firewall_policy.waf.id
+}
+
 output "subnet_id" {
   value = azurerm_subnet.snet.id
 }

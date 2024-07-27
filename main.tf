@@ -3,6 +3,7 @@ resource "azurerm_application_gateway" "main" {
   resource_group_name = var.resource_group_name
   location            = var.location
   tags                = var.tags
+  firewall_policy_id  = var.firewall_policy_id
 
   sku {
     name     = var.sku.size
@@ -22,16 +23,6 @@ resource "azurerm_application_gateway" "main" {
   gateway_ip_configuration {
     name      = "${var.name}-configuration"
     subnet_id = var.subnet_id
-  }
-
-  dynamic "waf_configuration" {
-    for_each = local.waf_configuration_enabled ? [""] : []
-
-    content {
-      enabled          = var.waf_configuration.enabled
-      firewall_mode    = var.waf_configuration.firewall_mode
-      rule_set_version = var.waf_configuration.rule_set_version
-    }
   }
 
   dynamic "frontend_ip_configuration" {

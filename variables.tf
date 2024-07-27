@@ -19,6 +19,11 @@ variable "tags" {
   description = "A mapping of tags to assign to the resource."
 }
 
+variable "firewall_policy_id" {
+  type        = string
+  description = "The ID of the Firewall Policy to associate with the Application Gateway."
+}
+
 variable "sku" {
   type = object({
     tier     = string
@@ -40,16 +45,6 @@ variable "autoscale_configuration" {
 variable "subnet_id" {
   type        = string
   description = "The ID of the Subnet which the Application Gateway should be connected to."
-}
-
-variable "waf_configuration" {
-  type = object({
-    enabled          = optional(bool, true)
-    firewall_mode    = optional(string, "Prevention")
-    rule_set_version = optional(string, "3.2")
-  })
-  default     = {}
-  description = "A mapping with the waf configuration of the application gateway."
 }
 
 variable "frontend_ip_configuration" {

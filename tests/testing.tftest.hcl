@@ -10,9 +10,6 @@ run "setup" {
 
 variables {
   sku = { tier = "WAF_v2", size = "WAF_v2", capacity = 2 }
-  waf_configuration = {
-    enabled = true
-  }
   backend_address_pools = [
     { name = "backend-address-pool-1" },
     { name = "backend-address-pool-2", ip_addresses = ["10.0.0.4", "10.0.0.5", "10.0.0.6"] }
@@ -56,6 +53,7 @@ run "plan" {
     resource_group_name = run.setup.resource_group_name
     location            = run.setup.resource_group_location
     tags                = run.setup.resource_group_tags
+    firewall_policy_id  = run.setup.firewall_policy_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
       public_ip_address_id = run.setup.public_ip_id
@@ -86,6 +84,7 @@ run "apply" {
     resource_group_name = run.setup.resource_group_name
     location            = run.setup.resource_group_location
     tags                = run.setup.resource_group_tags
+    firewall_policy_id  = run.setup.firewall_policy_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
       public_ip_address_id = run.setup.public_ip_id
