@@ -42,6 +42,7 @@ resource "azurerm_public_ip" "pip" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tags                = azurerm_resource_group.rg.tags
+  zones               = [1, 2, 3]
   allocation_method   = "Static"
   sku                 = "Standard"
 }
