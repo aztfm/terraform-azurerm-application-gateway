@@ -6,19 +6,19 @@ resource "azurerm_application_gateway" "main" {
   firewall_policy_id  = var.firewall_policy_id
 
   sku {
-    name     = var.sku.size
-    tier     = var.sku.tier
-    capacity = var.sku.capacity
+    name     = var.sku_name
+    tier     = var.sku_name
+    capacity = var.capacity
   }
 
-  # dynamic "autoscale_configuration" {
-  #   for_each = var.autoscale_configuration != null ? [""] : []
+  dynamic "autoscale_configuration" {
+    for_each = var.autoscale_configuration != null ? [""] : []
 
-  #   content {
-  #     min_capacity = var.autoscale_configuration.min_capacity
-  #     max_capacity = var.autoscale_configuration.max_capacity
-  #   }
-  # }
+    content {
+      min_capacity = var.autoscale_configuration.min_capacity
+      max_capacity = var.autoscale_configuration.max_capacity
+    }
+  }
 
   gateway_ip_configuration {
     name      = "${var.name}-configuration"

@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD041 -->
-## 2.0.0 (XXXXXX XX, 202X)
+## 2.0.0 (Unrelease)
 
 BREAKING CHANGES:
 
@@ -11,18 +11,22 @@ ENHANCEMENTS:
 * The `sku.capacity` parameter changes the `string` type to `number` and is now an optional parameter.
 * The `autoscale_configuration.min_capacity` parameter changes type `string` to `number`.
 * The `autoscale_configuration.max_capacity` parameter changes type `string` to `number`.
+* The `sku.capacity` parameter is now a single parameter with the name `capacity`.
 
 FEATURES:
 
 * **New Parameter**: `firewall_policy_id`
+* **New Parameter**: `capacity`
 
 BUG FIXES:
 
 DEPRECATIONS:
 
 [waf-config-deprecate]: https://azure.microsoft.com/en-us/updates/retirement-support-for-application-gateway-web-application-firewall-v2-configuration-is-ending/
+[appgw-sku-deprecate]: https://azure.microsoft.com/en-us/updates/application-gateway-v1-will-be-retired-on-28-april-2026-transition-to-application-gateway-v2/
 
 * **Parameter**: `waf_configuration` is deprecated in favor of `firewall_policy_id`. WAF configuration must now be performed using a firewall policy. [Retirement: Support for Application Gateway Web Application Firewall v2 Configuration is ending][waf-config-deprecate].
+* **Parameter**: `sku` is deprecated in favor of `sku_name`. The `Standard_Small`, `Standard_Medium`, `Standard_Large` and `WAF_Medium` sku types are also deprecated. [Application Gateway V1 will be retired on 28 April 2026– Transition to Application Gateway V2][appgw-sku-deprecate].
 
 ## 1.2.0 (January 27, 2022)
 

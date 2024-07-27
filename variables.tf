@@ -24,13 +24,20 @@ variable "firewall_policy_id" {
   description = "The ID of the Firewall Policy to associate with the Application Gateway."
 }
 
-variable "sku" {
-  type = object({
-    tier     = string
-    size     = string
-    capacity = optional(number)
-  })
-  description = "A mapping with the sku configuration of the application gateway."
+variable "sku_name" {
+  type        = string
+  description = "The SKU of the Application Gateway."
+
+  validation {
+    condition     = contains(["Standard_v2", "WAF_v2"], var.sku_name)
+    error_message = "The sku must be either Standard_v2 or WAF_v2."
+  }
+}
+
+variable "capacity" {
+  type        = number
+  default     = null
+  description = "The capacity (number of instances) of the Application Gateway."
 }
 
 variable "autoscale_configuration" {
@@ -40,6 +47,16 @@ variable "autoscale_configuration" {
   })
   default     = null
   description = "A mapping with the autoscale configuration of the application gateway."
+
+  validation {
+    condition     = var.autoscale_configuration != null ? var.autoscale_configuration.min_capacity >= 0 && var.autoscale_configuration.min_capacity <= 100 : true
+    error_message = "The min_capacity must be between 0 and 100."
+  }
+
+  validation {
+    condition     = var.autoscale_configuration != null ? var.autoscale_configuration.max_capacity >= 2 && var.autoscale_configuration.max_capacity <= 125 : true
+    error_message = "The max_capacity must be between 0 and 100."
+  }
 }
 
 variable "subnet_id" {
