@@ -109,9 +109,15 @@ variable "frontend_ip_configuration" {
 variable "backend_address_pools" {
   type = list(object({
     name         = string
+    fqdn         = optional(list(string))
     ip_addresses = optional(list(string))
   }))
   description = "List of objects that represent the configuration of each backend address pool."
+
+  validation {
+    condition     = alltrue([for pools in var.backend_address_pools : alltrue([for ip in pools.ip_addresses : can(cidrnetmask("${ip}/32"))]) if pools.ip_addresses != null])
+    error_message = "All IP addresses in the backend address pool must be formatted according to the CIDR standard without a mask."
+  }
 }
 
 # variable "identity_id" {

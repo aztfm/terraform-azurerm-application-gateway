@@ -8,6 +8,14 @@
         "Support": []
     },
     {
+        "Name": "fqdns",
+        "Description": "A list of FQDNs which should be part of the Backend Address Pool.",
+        "Type": "list(string)",
+        "Default": "null",
+        "Required": "no",
+        "Support": []
+    },
+    {
         "Name": "private_ip_address",
         "Description": "A list of IP Addresses which should be part of the Backend Address Pool.",
         "Type": "list(string)",
