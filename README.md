@@ -10,6 +10,7 @@
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
+| >= 1.x.x       | >= 1.9.x          | >= 3.40.0       |
 | >= 1.x.x       | >= 0.13.x         | >= 2.0.0        |
 
 <!-- BEGIN_TF_DOCS -->
@@ -23,16 +24,16 @@ The following parameters are supported:
 |resource\_group\_name|The name of the resource group in which to create the Application Gateway.|`string`|n/a|yes|
 |location|The location/region where the Application Gateway is created.|`string`|n/a|yes|
 |tags|A mapping of tags to assign to the resource.|`map(string)`|`{}`|no|
-|sku|A mapping with the sku configuration of the application gateway.|`object({})`|n/a|yes|
+|zones|A list of availability zones to use for the Application Gateway.|`list(number)`|`[]`|no|
+|sku\_name|The SKU of the Application Gateway.|`string`|n/a|yes|
+|enable\_http2|Enables HTTP/2 for the Application Gateway.|`bool`|`false`|no|
+|firewall\_policy\_id|The ID of the Firewall Policy to associate with the Application Gateway.|`string`|`null`|no|
+|capacity|The capacity (number of instances) of the Application Gateway.|`number`|`null`|no|
 |autoscale\_configuration|A mapping with the autoscale configuration of the application gateway.|`object({})`|`null`|no|
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|
-|waf\_configuration|A mapping with the waf configuration of the application gateway.|`object({})`|`{}`|no|
 |frontend\_ip\_configuration|A mapping the front ip configuration.|`object({})`|n/a|yes|
 |backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`list(object({}))`|n/a|yes|
-|identity\_id|Specifies a user managed identity id to be assigned to the Application Gateway.|`string`|`null`|no|
-|ssl\_certificates|List of objects that represent the configuration of each ssl certificate.|`list(object({}))`|`[]`|no|
 |http\_listeners|List of objects that represent the configuration of each http listener.|`list(object({}))`|n/a|yes|
-|probes|List of objects that represent the configuration of each probe.|`list(object({}))`|`[]`|no|
 |backend\_http\_settings|List of objects that represent the configuration of each backend http settings.|`list(object({}))`|n/a|yes|
 |request\_routing\_rules|List of objects that represent the configuration of each backend request routing rule.|`list(object({}))`|n/a|yes|
 
@@ -50,14 +51,6 @@ The `autoscale_configuration` supports the following:
 | ---- | ------------| :--: | :-----: | :------: |
 |min\_capacity|Minimum capacity for autoscaling. Accepted values are in the range `0` to `100`.|`number`|n/a|yes|
 |max\_capacity|Maximum capacity for autoscaling. Accepted values are in the range `2` to `125`.|`number`|n/a|yes|
-
-The `waf_configuration` supports the following:
-
-| Name | Description | Type | Default | Required |
-| ---- | ------------| :--: | :-----: | :------: |
-|enabled|The Tier of the SKU to use for this Application Gateway. Possible values are `Standard`, `Standard_v2`, `WAF` and `WAF_v2`.|`string`|n/a|yes|
-|firewall\_mode|The Web Application Firewall Mode. Possible values are `Detection` and `Prevention`.|`string`|`Prevention`|no|
-|rule\_set\_version|The Version of the Rule Set used for this Web Application Firewall. Possible values are `0.1`, `1.0`, `2.1`, `2.2.9`, `3.0`, `3.1` and `3.2`.|`number`|`3.2`|no|
 
 The `frontend_ip_configuration` supports the following:
 
@@ -88,6 +81,7 @@ The `http_listeners` supports the following:
 | Name | Description | Type | Default | Required |
 | ---- | ------------| :--: | :-----: | :------: |
 |name|The Name of the HTTP Listener.|`string`|n/a|yes|
+|frontend\_ip\_configuration|The frontend ip configuration to use for this HTTP Listener. Possible values are `Public` and `Private`.|`string`|n/a|yes|
 |port|The port used for this HTTP Listener.|`number`|n/a|yes|
 |protocol|The Protocol to use for this HTTP Listener. Possible values are `Http` and `Https`.|`string`|n/a|yes|
 |host\_name|The Hostname which should be used for this HTTP Listener. Setting this value changes Listener Type to Multi site|`string`|`null`|no|

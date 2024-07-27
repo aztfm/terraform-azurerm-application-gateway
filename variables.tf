@@ -19,13 +19,58 @@ variable "tags" {
   description = "A mapping of tags to assign to the resource."
 }
 
-variable "sku" {
-  type = object({
-    tier     = string
-    size     = string
-    capacity = number
-  })
-  description = "A mapping with the sku configuration of the application gateway."
+variable "zones" {
+  type        = list(number)
+  default     = []
+  description = "A list of availability zones to use for the Application Gateway."
+
+  validation {
+    condition     = length(var.zones) == length(distinct(var.zones))
+    error_message = "The zones must be unique."
+  }
+
+  validation {
+    condition     = alltrue([for z in var.zones : z >= 1 && z <= 3])
+    error_message = "The zones must be between 1 and 3."
+  }
+}
+
+variable "sku_name" {
+  type        = string
+  description = "The SKU of the Application Gateway."
+
+  validation {
+    condition     = contains(["Standard_v2", "WAF_v2"], var.sku_name)
+    error_message = "The sku must be either Standard_v2 or WAF_v2."
+  }
+}
+
+variable "enable_http2" {
+  type        = bool
+  default     = false
+  description = "Enables HTTP/2 for the Application Gateway."
+}
+
+variable "firewall_policy_id" {
+  type        = string
+  default     = null
+  description = "The ID of the Firewall Policy to associate with the Application Gateway."
+
+  validation {
+    condition     = var.sku_name == "WAF_v2" ? var.firewall_policy_id != null : true
+    error_message = "The firewall_policy_id is required when the sku is WAF_v2."
+  }
+
+  validation {
+    condition     = var.sku_name != "WAF_v2" ? var.firewall_policy_id == null : true
+    error_message = "The firewall_policy_id is not allowed when the sku is Standard_v2."
+  }
+}
+
+variable "capacity" {
+  type        = number
+  default     = null
+  description = "The capacity (number of instances) of the Application Gateway."
 }
 
 variable "autoscale_configuration" {
@@ -35,21 +80,21 @@ variable "autoscale_configuration" {
   })
   default     = null
   description = "A mapping with the autoscale configuration of the application gateway."
+
+  validation {
+    condition     = var.autoscale_configuration != null ? var.autoscale_configuration.min_capacity >= 0 && var.autoscale_configuration.min_capacity <= 100 : true
+    error_message = "The min_capacity must be between 0 and 100."
+  }
+
+  validation {
+    condition     = var.autoscale_configuration != null ? var.autoscale_configuration.max_capacity >= 2 && var.autoscale_configuration.max_capacity <= 125 : true
+    error_message = "The max_capacity must be between 0 and 100."
+  }
 }
 
 variable "subnet_id" {
   type        = string
   description = "The ID of the Subnet which the Application Gateway should be connected to."
-}
-
-variable "waf_configuration" {
-  type = object({
-    enabled          = optional(bool, true)
-    firewall_mode    = optional(string, "Prevention")
-    rule_set_version = optional(string, "3.2")
-  })
-  default     = {}
-  description = "A mapping with the waf configuration of the application gateway."
 }
 
 variable "frontend_ip_configuration" {
@@ -69,48 +114,49 @@ variable "backend_address_pools" {
   description = "List of objects that represent the configuration of each backend address pool."
 }
 
-variable "identity_id" {
-  type        = string
-  default     = null
-  description = "Specifies a user managed identity id to be assigned to the Application Gateway."
-}
+# variable "identity_id" {
+#   type        = string
+#   default     = null
+#   description = "Specifies a user managed identity id to be assigned to the Application Gateway."
+# }
 
-variable "ssl_certificates" {
-  type = list(object({
-    name                = string
-    data                = optional(string)
-    password            = optional(string)
-    key_vault_secret_id = optional(string)
-  }))
-  default     = []
-  sensitive   = true
-  description = "List of objects that represent the configuration of each ssl certificate."
-}
+# variable "ssl_certificates" {
+#   type = list(object({
+#     name                = string
+#     data                = optional(string)
+#     password            = optional(string)
+#     key_vault_secret_id = optional(string)
+#   }))
+#   default     = []
+#   sensitive   = true
+#   description = "List of objects that represent the configuration of each ssl certificate."
+# }
 
 variable "http_listeners" {
   type = list(object({
-    name                 = string
-    port                 = string
-    protocol             = string
-    host_name            = optional(string)
-    ssl_certificate_name = optional(string)
+    name                      = string
+    frontend_ip_configuration = string
+    port                      = string
+    protocol                  = string
+    host_name                 = optional(string)
+    ssl_certificate_name      = optional(string)
   }))
   description = "List of objects that represent the configuration of each http listener."
 }
 
-variable "probes" {
-  type = list(object({
-    name                = string
-    host                = optional(string)
-    protocol            = string
-    path                = string
-    interval            = number
-    timeout             = string
-    unhealthy_threshold = string
-  }))
-  default     = []
-  description = "List of objects that represent the configuration of each probe."
-}
+# variable "probes" {
+#   type = list(object({
+#     name                = string
+#     host                = optional(string)
+#     protocol            = string
+#     path                = string
+#     interval            = number
+#     timeout             = string
+#     unhealthy_threshold = string
+#   }))
+#   default     = []
+#   description = "List of objects that represent the configuration of each probe."
+# }
 
 variable "backend_http_settings" {
   type = list(object({
@@ -127,6 +173,7 @@ variable "backend_http_settings" {
 variable "request_routing_rules" {
   type = list(object({
     name                       = string
+    priority                   = number
     http_listener_name         = string
     backend_address_pool_name  = string
     backend_http_settings_name = string

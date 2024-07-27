@@ -8,6 +8,17 @@
         "Support": []
     },
     {
+        "Name": "frontend_ip_configuration",
+        "Description": "The frontend ip configuration to use for this HTTP Listener. Possible values are",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": [
+            "Public",
+            "Private"
+        ]
+    },
+    {
         "Name": "port",
         "Description": "The port used for this HTTP Listener.",
         "Type": "number",
