@@ -45,6 +45,12 @@ variable "sku_name" {
   }
 }
 
+variable "enable_http2" {
+  type        = bool
+  default     = false
+  description = "Enables HTTP/2 for the Application Gateway."
+}
+
 variable "firewall_policy_id" {
   type        = string
   default     = null

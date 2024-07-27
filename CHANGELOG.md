@@ -18,6 +18,8 @@ FEATURES:
 * **New Parameter**: `firewall_policy_id`
 * **New Parameter**: `capacity`
 * **New Parameter**: `zones`
+* **New Parameter**: `sku_name`
+* **New Parameter**: `enable_http2`
 
 BUG FIXES:
 

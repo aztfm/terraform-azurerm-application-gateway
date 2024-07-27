@@ -26,6 +26,7 @@ The following parameters are supported:
 |tags|A mapping of tags to assign to the resource.|`map(string)`|`{}`|no|
 |zones|A list of availability zones to use for the Application Gateway.|`list(number)`|`[]`|no|
 |sku\_name|The SKU of the Application Gateway.|`string`|n/a|yes|
+|enable\_http2|Enables HTTP/2 for the Application Gateway.|`bool`|`false`|no|
 |firewall\_policy\_id|The ID of the Firewall Policy to associate with the Application Gateway.|`string`|`null`|no|
 |capacity|The capacity (number of instances) of the Application Gateway.|`number`|`null`|no|
 |autoscale\_configuration|A mapping with the autoscale configuration of the application gateway.|`object({})`|`null`|no|

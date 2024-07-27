@@ -4,6 +4,7 @@ resource "azurerm_application_gateway" "main" {
   location            = var.location
   tags                = var.tags
   zones               = var.zones
+  enable_http2        = var.enable_http2
   firewall_policy_id  = var.firewall_policy_id
 
   sku {

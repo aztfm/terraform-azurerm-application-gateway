@@ -9,8 +9,9 @@ run "setup" {
 }
 
 variables {
-  sku_name = "WAF_v2"
-  zones    = [1, 2, 3]
+  sku_name     = "WAF_v2"
+  zones        = [1, 2, 3]
+  enable_http2 = true
   autoscale_configuration = {
     min_capacity = 2
     max_capacity = 5
@@ -93,6 +94,11 @@ run "plan" {
   assert {
     condition     = azurerm_application_gateway.main.sku[0].capacity == null
     error_message = "The capacity of Application Gateway is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.enable_http2 == var.enable_http2
+    error_message = "The HTTP/2 setting of Application Gateway is not as expected."
   }
 
   assert {
