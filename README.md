@@ -24,8 +24,9 @@ The following parameters are supported:
 |resource\_group\_name|The name of the resource group in which to create the Application Gateway.|`string`|n/a|yes|
 |location|The location/region where the Application Gateway is created.|`string`|n/a|yes|
 |tags|A mapping of tags to assign to the resource.|`map(string)`|`{}`|no|
-|firewall\_policy\_id|The ID of the Firewall Policy to associate with the Application Gateway.|`string`|n/a|yes|
+|zones|A list of availability zones to use for the Application Gateway.|`list(number)`|`[]`|no|
 |sku\_name|The SKU of the Application Gateway.|`string`|n/a|yes|
+|firewall\_policy\_id|The ID of the Firewall Policy to associate with the Application Gateway.|`string`|`null`|no|
 |capacity|The capacity (number of instances) of the Application Gateway.|`number`|`null`|no|
 |autoscale\_configuration|A mapping with the autoscale configuration of the application gateway.|`object({})`|`null`|no|
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|

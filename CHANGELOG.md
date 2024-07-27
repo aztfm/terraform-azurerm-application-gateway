@@ -17,6 +17,7 @@ FEATURES:
 
 * **New Parameter**: `firewall_policy_id`
 * **New Parameter**: `capacity`
+* **New Parameter**: `zones`
 
 BUG FIXES:
 

@@ -19,9 +19,20 @@ variable "tags" {
   description = "A mapping of tags to assign to the resource."
 }
 
-variable "firewall_policy_id" {
-  type        = string
-  description = "The ID of the Firewall Policy to associate with the Application Gateway."
+variable "zones" {
+  type        = list(number)
+  default     = []
+  description = "A list of availability zones to use for the Application Gateway."
+
+  validation {
+    condition     = length(var.zones) == length(distinct(var.zones))
+    error_message = "The zones must be unique."
+  }
+
+  validation {
+    condition     = alltrue([for z in var.zones : z >= 1 && z <= 3])
+    error_message = "The zones must be between 1 and 3."
+  }
 }
 
 variable "sku_name" {
@@ -31,6 +42,22 @@ variable "sku_name" {
   validation {
     condition     = contains(["Standard_v2", "WAF_v2"], var.sku_name)
     error_message = "The sku must be either Standard_v2 or WAF_v2."
+  }
+}
+
+variable "firewall_policy_id" {
+  type        = string
+  default     = null
+  description = "The ID of the Firewall Policy to associate with the Application Gateway."
+
+  validation {
+    condition     = var.sku_name == "WAF_v2" ? var.firewall_policy_id != null : true
+    error_message = "The firewall_policy_id is required when the sku is WAF_v2."
+  }
+
+  validation {
+    condition     = var.sku_name != "WAF_v2" ? var.firewall_policy_id == null : true
+    error_message = "The firewall_policy_id is not allowed when the sku is Standard_v2."
   }
 }
 
