@@ -119,93 +119,93 @@ run "plan" {
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[0].name == var.backend_address_pools[0].name
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-1"].name == var.backend_address_pools[0].name
     error_message = "The name of the first Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[0].fqdns == null
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-1"].fqdns == null
     error_message = "The fqdns of the first Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[0].ip_addresses == null
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-1"].ip_addresses == null
     error_message = "The ip_addresses of the first Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[1].name == var.backend_address_pools[1].name
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-2"].name == var.backend_address_pools[1].name
     error_message = "The name of the second Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[1].fqdns == var.backend_address_pools[1].fqdns
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-2"].fqdns == var.backend_address_pools[1].fqdns
     error_message = "The fqdns of the second Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[1].ip_addresses == null
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-2"].ip_addresses == null
     error_message = "The ip_addresses of the second Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[2].name == var.backend_address_pools[2].name
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-3"].name == var.backend_address_pools[2].name
     error_message = "The name of the third Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[2].fqdns == null
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-3"].fqdns == null
     error_message = "The fqdns of the third Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.backend_address_pool[2].ip_addresses == var.backend_address_pools[2].ip_addresses
+    condition     = {for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend}["backend-address-pool-3"].ip_addresses == var.backend_address_pools[2].ip_addresses
     error_message = "The ip_addresses of the third Backend Address Pool is not as expected."
   }
 }
 
-# run "apply" {
-#   command = apply
+run "apply" {
+  command = apply
 
-#   variables {
-#     name                = run.setup.workspace_id
-#     resource_group_name = run.setup.resource_group_name
-#     location            = run.setup.resource_group_location
-#     tags                = run.setup.resource_group_tags
-#     firewall_policy_id  = run.setup.firewall_policy_id
-#     subnet_id           = run.setup.subnet_id
-#     frontend_ip_configuration = {
-#       public_ip_address_id = run.setup.public_ip_id
-#     }
-#   }
+  variables {
+    name                = run.setup.workspace_id
+    resource_group_name = run.setup.resource_group_name
+    location            = run.setup.resource_group_location
+    tags                = run.setup.resource_group_tags
+    firewall_policy_id  = run.setup.firewall_policy_id
+    subnet_id           = run.setup.subnet_id
+    frontend_ip_configuration = {
+      public_ip_address_id = run.setup.public_ip_id
+    }
+  }
 
-#   assert {
-#     condition     = azurerm_application_gateway.main.id == "${run.setup.resource_group_id}/providers/Microsoft.Network/applicationGateways/${run.setup.workspace_id}"
-#     error_message = "The Application Gateway ID is not as expected."
-#   }
+  assert {
+    condition     = azurerm_application_gateway.main.id == "${run.setup.resource_group_id}/providers/Microsoft.Network/applicationGateways/${run.setup.workspace_id}"
+    error_message = "The Application Gateway ID is not as expected."
+  }
 
-#   assert {
-#     condition     = output.id == azurerm_application_gateway.main.id
-#     error_message = "The Application Gateway ID output is not as expected."
-#   }
+  assert {
+    condition     = output.id == azurerm_application_gateway.main.id
+    error_message = "The Application Gateway ID output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.name == azurerm_application_gateway.main.name
-#     error_message = "The Application Gateway name output is not as expected."
-#   }
+  assert {
+    condition     = output.name == azurerm_application_gateway.main.name
+    error_message = "The Application Gateway name output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.resource_group_name == azurerm_application_gateway.main.resource_group_name
-#     error_message = "The Application Gateway resource group output is not as expected."
-#   }
+  assert {
+    condition     = output.resource_group_name == azurerm_application_gateway.main.resource_group_name
+    error_message = "The Application Gateway resource group output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.location == azurerm_application_gateway.main.location
-#     error_message = "The Application Gateway location output is not as expected."
-#   }
+  assert {
+    condition     = output.location == azurerm_application_gateway.main.location
+    error_message = "The Application Gateway location output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.tags == azurerm_application_gateway.main.tags
-#     error_message = "The Application Gateway tags output is not as expected."
-#   }
-# }
+  assert {
+    condition     = output.tags == azurerm_application_gateway.main.tags
+    error_message = "The Application Gateway tags output is not as expected."
+  }
+}
