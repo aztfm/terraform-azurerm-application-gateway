@@ -109,7 +109,7 @@ variable "frontend_ip_configuration" {
 variable "backend_address_pools" {
   type = list(object({
     name         = string
-    fqdn         = optional(list(string))
+    fqdns        = optional(list(string))
     ip_addresses = optional(list(string))
   }))
   description = "List of objects that represent the configuration of each backend address pool."
