@@ -134,12 +134,12 @@ run "plan" {
   }
 
   assert {
-    condition     = tolist({ for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-2"].fqdns) == toset(var.backend_address_pools[1].fqdns)
+    condition     = { for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-2"].fqdns == toset(var.backend_address_pools[1].fqdns)
     error_message = "The fqdns of the second Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = tolist({ for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-2"].ip_addresses) == toset([])
+    condition     = { for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-2"].ip_addresses == toset([])
     error_message = "The ip_addresses of the second Backend Address Pool is not as expected."
   }
 
@@ -149,12 +149,12 @@ run "plan" {
   }
 
   assert {
-    condition     = tolist({ for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-3"].fqdns) == toset([])
+    condition     = { for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-3"].fqdns == toset([])
     error_message = "The fqdns of the third Backend Address Pool is not as expected."
   }
 
   assert {
-    condition     = tolist({ for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-3"].ip_addresses) == toset(var.backend_address_pools[2].ip_addresses)
+    condition     = { for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-3"].ip_addresses == toset(var.backend_address_pools[2].ip_addresses)
     error_message = "The ip_addresses of the third Backend Address Pool is not as expected."
   }
 }
