@@ -24,7 +24,7 @@ output "tags" {
 }
 
 output "backend_address_pools" {
-  value       = azurerm_application_gateway.main.backend_address_pool
+  value       = { for pool in azurerm_application_gateway.main.backend_address_pool : pool.name => pool }
   description = "Blocks containing configuration of each backend address pool."
 }
 

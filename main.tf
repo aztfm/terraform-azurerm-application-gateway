@@ -52,6 +52,7 @@ resource "azurerm_application_gateway" "main" {
 
     content {
       name         = backend_address_pool.value.name
+      fqdns        = backend_address_pool.value.fqdns
       ip_addresses = backend_address_pool.value.ip_addresses
     }
   }

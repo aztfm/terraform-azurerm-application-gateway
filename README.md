@@ -10,7 +10,7 @@
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
-| >= 1.x.x       | >= 1.9.x          | >= 3.40.0       |
+| >= 2.x.x       | >= 1.9.x          | >= 3.40.0       |
 | >= 1.x.x       | >= 0.13.x         | >= 2.0.0        |
 
 <!-- BEGIN_TF_DOCS -->
@@ -65,6 +65,7 @@ The `backend_address_pools` supports the following:
 | Name | Description | Type | Default | Required |
 | ---- | ------------| :--: | :-----: | :------: |
 |name|The name of the Backend Address Pool.|`string`|n/a|yes|
+|fqdns|A list of FQDNs which should be part of the Backend Address Pool.|`list(string)`|`null`|no|
 |private\_ip\_address|A list of IP Addresses which should be part of the Backend Address Pool.|`list(string)`|`null`|no|
 
 The `ssl_certificates` supports the following:

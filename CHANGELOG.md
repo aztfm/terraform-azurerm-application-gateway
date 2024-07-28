@@ -5,6 +5,7 @@ BREAKING CHANGES:
 
 * dependencies: updating to `v2.0.0` minimum of terraform.
 * dependencies: updating to `v3.40.0` minimum of hashicorp/azurerm provider.
+* The internal name by which the `azurerm_application_gateway` resource is defined was defined as `appgw`. This has been changed by `main` to maintain the internal consistency of the module, so the resources deployed in the previous version of the module are not compatible with this new version.
 
 ENHANCEMENTS:
 
@@ -20,6 +21,7 @@ FEATURES:
 * **New Parameter**: `zones`
 * **New Parameter**: `sku_name`
 * **New Parameter**: `enable_http2`
+* **New Parameter**: `backend_address_pool.fqdns`
 
 BUG FIXES:
 
