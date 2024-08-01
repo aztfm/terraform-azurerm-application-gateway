@@ -26,6 +26,10 @@ output "subnet_id" {
   value = azurerm_subnet.snet.id
 }
 
+output "subnet_address_prefix" {
+  value = azurerm_subnet.snet.address_prefixes[0]
+}
+
 output "public_ip_id" {
   value = azurerm_public_ip.pip.id
 }

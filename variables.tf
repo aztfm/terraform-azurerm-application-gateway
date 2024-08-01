@@ -99,9 +99,10 @@ variable "subnet_id" {
 
 variable "frontend_ip_configuration" {
   type = object({
-    public_ip_address_id          = optional(string)
-    private_ip_address            = optional(string)
+    subnet_id                     = optional(string)
+    public_ip_address_id          = string
     private_ip_address_allocation = optional(string)
+    private_ip_address            = optional(string)
   })
   description = "A mapping the front ip configuration."
 }
