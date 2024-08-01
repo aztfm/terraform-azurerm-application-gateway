@@ -177,17 +177,17 @@ run "plan" {
   #region Managed Identity
 
   assert {
-    condition     = length(azurerm_application_gateway.main.identity.identity_ids) == 2
+    condition     = length(azurerm_application_gateway.main.identity[0].identity_ids) == 2
     error_message = "The number of Managed Identities is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.identity.type == "UserAssigned"
+    condition     = azurerm_application_gateway.main.identity[0].type == "UserAssigned"
     error_message = "The Managed Identity type is not as expected."
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.identity.identity_ids == run.setup.managed_identity_ids
+    condition     = azurerm_application_gateway.main.identity[0].identity_ids == run.setup.managed_identity_ids
     error_message = "The Managed Identity IDs are not as expected."
   }
 }
