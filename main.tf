@@ -33,7 +33,7 @@ resource "azurerm_application_gateway" "main" {
   }
 
   dynamic "frontend_ip_configuration" {
-    for_each = var.subnet_id != null ? [""] : []
+    for_each = var.frontend_ip_configuration.subnet_id != null ? [""] : []
 
     content {
       name                          = "FrontendPrivateIpConfiguration"

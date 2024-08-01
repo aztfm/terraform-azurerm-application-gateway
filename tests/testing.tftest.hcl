@@ -169,7 +169,7 @@ run "plan" {
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].private_ip_address_allocation == cidrhost(run.setup.subnet_address_prefix, 10)
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].private_ip_address == cidrhost(run.setup.subnet_address_prefix, 10)
     error_message = "The name of the second Frontend IP Configuration is not as expected."
   }
 }
