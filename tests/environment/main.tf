@@ -47,15 +47,8 @@ resource "azurerm_public_ip" "pip" {
   sku                 = "Standard"
 }
 
-resource "azurerm_user_assigned_identity" "id_01" {
+resource "azurerm_user_assigned_identity" "id" {
   name                = "${local.workspace_id}1"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  tags                = azurerm_resource_group.rg.tags
-}
-
-resource "azurerm_user_assigned_identity" "id_02" {
-  name                = "${local.workspace_id}2"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tags                = azurerm_resource_group.rg.tags

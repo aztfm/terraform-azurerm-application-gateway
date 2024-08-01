@@ -65,7 +65,7 @@ run "plan" {
     location            = run.setup.resource_group_location
     tags                = run.setup.resource_group_tags
     firewall_policy_id  = run.setup.firewall_policy_id
-    identity_ids        = run.setup.managed_identity_ids
+    identity_id         = run.setup.managed_identity_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
       subnet_id                     = run.setup.subnet_id
@@ -177,7 +177,7 @@ run "plan" {
   #region Managed Identity
 
   assert {
-    condition     = length(azurerm_application_gateway.main.identity[0].identity_ids) == 2
+    condition     = length(azurerm_application_gateway.main.identity[0].identity_ids) == 1
     error_message = "The number of Managed Identities is not as expected."
   }
 
@@ -187,8 +187,8 @@ run "plan" {
   }
 
   assert {
-    condition     = tolist(azurerm_application_gateway.main.identity[0].identity_ids) == tolist(run.setup.managed_identity_ids)
-    error_message = "The Managed Identity IDs are not as expected."
+    condition     = azurerm_application_gateway.main.identity[0].identity_ids[0] == run.setup.managed_identity_id
+    error_message = "The Managed Identity ID is not as expected."
   }
 }
 
@@ -201,7 +201,7 @@ run "apply" {
     location            = run.setup.resource_group_location
     tags                = run.setup.resource_group_tags
     firewall_policy_id  = run.setup.firewall_policy_id
-    identity_ids        = run.setup.managed_identity_ids
+    identity_id         = run.setup.managed_identity_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
       subnet_id                     = run.setup.subnet_id

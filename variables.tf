@@ -97,10 +97,10 @@ variable "autoscale_configuration" {
   }
 }
 
-variable "identity_ids" {
-  type        = list(string)
+variable "identity_id" {
+  type        = string
   default     = null
-  description = "A list of Managed Identity IDs to assign to the Application Gateway."
+  description = "The ID of the Managed Identity to associate with the Application Gateway."
 }
 
 variable "subnet_id" {
