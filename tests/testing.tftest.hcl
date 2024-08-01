@@ -185,7 +185,10 @@ run "apply" {
     firewall_policy_id  = run.setup.firewall_policy_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
-      public_ip_address_id = run.setup.public_ip_id
+      subnet_id                     = run.setup.subnet_id
+      public_ip_address_id          = run.setup.public_ip_id
+      private_ip_address_allocation = "Static"
+      private_ip_address            = cidrhost(run.setup.subnet_address_prefix, 10)
     }
   }
 
