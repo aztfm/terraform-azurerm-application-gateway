@@ -187,7 +187,7 @@ run "plan" {
   }
 
   assert {
-    condition     = azurerm_application_gateway.main.identity[0].identity_ids[0] == run.setup.managed_identity_id
+    condition     = tolist(azurerm_application_gateway.main.identity[0].identity_ids) == tolist([run.setup.managed_identity_id])
     error_message = "The Managed Identity ID is not as expected."
   }
 }
