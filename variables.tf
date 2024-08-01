@@ -22,7 +22,7 @@ variable "tags" {
 variable "zones" {
   type        = list(number)
   default     = []
-  description = "A list of availability zones to use for the Application Gateway."
+  description = "A list of availability zones to use for the Application Gateway. Possible values are `1`, `2` and `3`."
 
   validation {
     condition     = length(var.zones) == length(distinct(var.zones))
@@ -37,7 +37,7 @@ variable "zones" {
 
 variable "sku_name" {
   type        = string
-  description = "The SKU of the Application Gateway."
+  description = "The SKU of the Application Gateway. Possible values are `Standard_v2` and `WAF_v2`."
 
   validation {
     condition     = contains(["Standard_v2", "WAF_v2"], var.sku_name)
@@ -70,7 +70,12 @@ variable "firewall_policy_id" {
 variable "capacity" {
   type        = number
   default     = null
-  description = "The capacity (number of instances) of the Application Gateway."
+  description = "The capacity (number of instances) of the Application Gateway. Possible values are between `1` and `125`."
+
+  validation {
+    condition     = var.capacity != null ? var.capacity >= 1 && var.capacity <= 125 : true
+    error_message = "The max_capacity must be between 1 and 125."
+  }
 }
 
 variable "autoscale_configuration" {
@@ -88,7 +93,7 @@ variable "autoscale_configuration" {
 
   validation {
     condition     = var.autoscale_configuration != null ? var.autoscale_configuration.max_capacity >= 2 && var.autoscale_configuration.max_capacity <= 125 : true
-    error_message = "The max_capacity must be between 0 and 100."
+    error_message = "The max_capacity must be between 2 and 125."
   }
 }
 
