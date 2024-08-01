@@ -65,6 +65,7 @@ run "plan" {
     location            = run.setup.resource_group_location
     tags                = run.setup.resource_group_tags
     firewall_policy_id  = run.setup.firewall_policy_id
+    identity_id         = run.setup.managed_identity_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
       subnet_id                     = run.setup.subnet_id
@@ -172,6 +173,23 @@ run "plan" {
     condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].private_ip_address == cidrhost(run.setup.subnet_address_prefix, 10)
     error_message = "The name of the second Frontend IP Configuration is not as expected."
   }
+
+  #region Managed Identity
+
+  assert {
+    condition     = length(azurerm_application_gateway.main.identity[0].identity_ids) == 1
+    error_message = "The number of Managed Identities is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.identity[0].type == "UserAssigned"
+    error_message = "The Managed Identity type is not as expected."
+  }
+
+  assert {
+    condition     = tolist(azurerm_application_gateway.main.identity[0].identity_ids) == tolist([run.setup.managed_identity_id])
+    error_message = "The Managed Identity ID is not as expected."
+  }
 }
 
 run "apply" {
@@ -183,6 +201,7 @@ run "apply" {
     location            = run.setup.resource_group_location
     tags                = run.setup.resource_group_tags
     firewall_policy_id  = run.setup.firewall_policy_id
+    identity_id         = run.setup.managed_identity_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
       subnet_id                     = run.setup.subnet_id

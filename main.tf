@@ -22,6 +22,15 @@ resource "azurerm_application_gateway" "main" {
     }
   }
 
+  dynamic "identity" {
+    for_each = var.identity_id != null ? [""] : []
+
+    content {
+      type         = "UserAssigned"
+      identity_ids = [var.identity_id]
+    }
+  }
+
   gateway_ip_configuration {
     name      = "GatewayIpConfiguration"
     subnet_id = var.subnet_id
@@ -62,15 +71,6 @@ resource "azurerm_application_gateway" "main" {
     name = "443"
     port = 443
   }
-
-  # dynamic "identity" {
-  #   for_each = var.identity_id != null ? [""] : []
-
-  #   content {
-  #     type         = "UserAssigned"
-  #     identity_ids = [var.identity_id]
-  #   }
-  # }
 
   # dynamic "ssl_certificate" {
   #   for_each = var.ssl_certificates

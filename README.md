@@ -30,6 +30,7 @@ The following parameters are supported:
 |firewall\_policy\_id|The ID of the Firewall Policy to associate with the Application Gateway.|`string`|`null`|no|
 |capacity|The capacity (number of instances) of the Application Gateway. Possible values are between `1` and `125`.|`number`|`null`|no|
 |autoscale\_configuration|A mapping with the autoscale configuration of the application gateway.|`object({})`|`null`|no|
+|identity\_id|The ID of the Managed Identity to associate with the Application Gateway.|`string`|`null`|no|
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|
 |frontend\_ip\_configuration|A mapping the front ip configuration.|`object({})`|n/a|yes|
 |backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`list(object({}))`|n/a|yes|

@@ -46,3 +46,10 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = "Static"
   sku                 = "Standard"
 }
+
+resource "azurerm_user_assigned_identity" "id" {
+  name                = "${local.workspace_id}1"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  tags                = azurerm_resource_group.rg.tags
+}

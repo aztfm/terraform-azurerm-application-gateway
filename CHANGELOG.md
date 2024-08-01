@@ -16,13 +16,13 @@ ENHANCEMENTS:
 
 FEATURES:
 
-* **New Parameter**: `firewall_policy_id`
-* **New Parameter**: `capacity`
 * **New Parameter**: `zones`
 * **New Parameter**: `sku_name`
 * **New Parameter**: `enable_http2`
-* **New Parameter**: `backend_address_pool.fqdns`
+* **New Parameter**: `firewall_policy_id`
+* **New Parameter**: `capacity`
 * **New Parameter**: `frontend_ip_configuration.subnet_id`
+* **New Parameter**: `backend_address_pool.fqdns`
 
 DEPRECATIONS:
 

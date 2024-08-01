@@ -97,6 +97,12 @@ variable "autoscale_configuration" {
   }
 }
 
+variable "identity_id" {
+  type        = string
+  default     = null
+  description = "The ID of the Managed Identity to associate with the Application Gateway."
+}
+
 variable "subnet_id" {
   type        = string
   description = "The ID of the Subnet which the Application Gateway should be connected to."
@@ -125,12 +131,6 @@ variable "backend_address_pools" {
     error_message = "All IP addresses in the backend address pool must be formatted according to the CIDR standard without a mask."
   }
 }
-
-# variable "identity_id" {
-#   type        = string
-#   default     = null
-#   description = "Specifies a user managed identity id to be assigned to the Application Gateway."
-# }
 
 # variable "ssl_certificates" {
 #   type = list(object({
