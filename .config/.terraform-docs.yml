@@ -48,7 +48,6 @@ content: |
     {{ print "|" (ternary .Required "yes" "no") "|" }}
   {{ end }}{{ printf "\n" -}}
 
-  {{ template "table" dict "Resource" "sku" "File" ".config/sku_parameters.json" }}
   {{ template "table" dict "Resource" "autoscale_configuration" "File" ".config/autoscale_configuration_parameters.json" }}
   {{ template "table" dict "Resource" "frontend_ip_configuration" "File" ".config/frontend_ip_configuration_parameters.json" }}
   {{ template "table" dict "Resource" "backend_address_pools" "File" ".config/backend_address_pool_parameters.json" }}

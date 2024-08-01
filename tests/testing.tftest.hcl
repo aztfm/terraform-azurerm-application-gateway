@@ -67,7 +67,10 @@ run "plan" {
     firewall_policy_id  = run.setup.firewall_policy_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
-      public_ip_address_id = run.setup.public_ip_id
+      subnet_id                     = run.setup.subnet_id
+      public_ip_address_id          = run.setup.public_ip_id
+      private_ip_address_allocation = "Static"
+      private_ip_address            = cidrhost(run.setup.subnet_address_prefix, 10)
     }
   }
 
@@ -107,6 +110,11 @@ run "plan" {
   }
 
   assert {
+    condition     = azurerm_application_gateway.main.gateway_ip_configuration[0].name == "GatewayIpConfiguration"
+    error_message = "The Application Gateway subnet ID is not as expected."
+  }
+
+  assert {
     condition     = azurerm_application_gateway.main.gateway_ip_configuration[0].subnet_id == run.setup.subnet_id
     error_message = "The Application Gateway subnet ID is not as expected."
   }
@@ -137,57 +145,99 @@ run "plan" {
     condition     = { for backend in azurerm_application_gateway.main.backend_address_pool : backend.name => backend }["backend-address-pool-3"].ip_addresses == toset(var.backend_address_pools[2].ip_addresses)
     error_message = "The ip_addresses of the third Backend Address Pool is not as expected."
   }
+
+  #region Frontend IP Configuration
+
+  assert {
+    condition     = length(azurerm_application_gateway.main.frontend_ip_configuration) == 2
+    error_message = "The number of Frontend IP Configurations is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[0].name == "FrontendPublicIpConfiguration"
+    error_message = "The name of the first Frontend IP Configuration is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].name == "FrontendPrivateIpConfiguration"
+    error_message = "The name of the second Frontend IP Configuration is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].private_ip_address_allocation == "Static"
+    error_message = "The name of the second Frontend IP Configuration is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].private_ip_address == cidrhost(run.setup.subnet_address_prefix, 10)
+    error_message = "The name of the second Frontend IP Configuration is not as expected."
+  }
 }
 
-# run "apply" {
-#   command = apply
+run "apply" {
+  command = apply
 
-#   variables {
-#     name                = run.setup.workspace_id
-#     resource_group_name = run.setup.resource_group_name
-#     location            = run.setup.resource_group_location
-#     tags                = run.setup.resource_group_tags
-#     firewall_policy_id  = run.setup.firewall_policy_id
-#     subnet_id           = run.setup.subnet_id
-#     frontend_ip_configuration = {
-#       public_ip_address_id = run.setup.public_ip_id
-#     }
-#   }
+  variables {
+    name                = run.setup.workspace_id
+    resource_group_name = run.setup.resource_group_name
+    location            = run.setup.resource_group_location
+    tags                = run.setup.resource_group_tags
+    firewall_policy_id  = run.setup.firewall_policy_id
+    subnet_id           = run.setup.subnet_id
+    frontend_ip_configuration = {
+      subnet_id                     = run.setup.subnet_id
+      public_ip_address_id          = run.setup.public_ip_id
+      private_ip_address_allocation = "Static"
+      private_ip_address            = cidrhost(run.setup.subnet_address_prefix, 10)
+    }
+  }
 
-#   assert {
-#     condition     = azurerm_application_gateway.main.id == "${run.setup.resource_group_id}/providers/Microsoft.Network/applicationGateways/${run.setup.workspace_id}"
-#     error_message = "The Application Gateway ID is not as expected."
-#   }
+  assert {
+    condition     = azurerm_application_gateway.main.id == "${run.setup.resource_group_id}/providers/Microsoft.Network/applicationGateways/${run.setup.workspace_id}"
+    error_message = "The Application Gateway ID is not as expected."
+  }
 
-#   assert {
-#     condition     = output.id == azurerm_application_gateway.main.id
-#     error_message = "The Application Gateway ID output is not as expected."
-#   }
+  assert {
+    condition     = output.id == azurerm_application_gateway.main.id
+    error_message = "The Application Gateway ID output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.name == azurerm_application_gateway.main.name
-#     error_message = "The Application Gateway name output is not as expected."
-#   }
+  assert {
+    condition     = output.name == azurerm_application_gateway.main.name
+    error_message = "The Application Gateway name output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.resource_group_name == azurerm_application_gateway.main.resource_group_name
-#     error_message = "The Application Gateway resource group output is not as expected."
-#   }
+  assert {
+    condition     = output.resource_group_name == azurerm_application_gateway.main.resource_group_name
+    error_message = "The Application Gateway resource group output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.location == azurerm_application_gateway.main.location
-#     error_message = "The Application Gateway location output is not as expected."
-#   }
+  assert {
+    condition     = output.location == azurerm_application_gateway.main.location
+    error_message = "The Application Gateway location output is not as expected."
+  }
 
-#   assert {
-#     condition     = output.tags == azurerm_application_gateway.main.tags
-#     error_message = "The Application Gateway tags output is not as expected."
-#   }
+  assert {
+    condition     = output.tags == azurerm_application_gateway.main.tags
+    error_message = "The Application Gateway tags output is not as expected."
+  }
 
-#   #region Backend Address Pools
+  #region Backend Address Pools
 
-#   assert {
-#     condition     = length(azurerm_application_gateway.main.backend_address_pool) == length(var.backend_address_pools)
-#     error_message = "The number of Backend Address Pools is not as expected."
-#   }
-# }
+  assert {
+    condition     = length(azurerm_application_gateway.main.backend_address_pool) == length(var.backend_address_pools)
+    error_message = "The number of Backend Address Pools is not as expected."
+  }
+
+  #region Frontend IP Configuration
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[0].public_ip_address_id == run.setup.public_ip_id
+    error_message = "The public_ip_address_id of the first Frontend IP Configuration is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].subnet_id == run.setup.subnet_id
+    error_message = "The subnet_id of the second Frontend IP Configuration is not as expected."
+  }
+}

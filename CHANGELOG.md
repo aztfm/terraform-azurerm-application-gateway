@@ -22,8 +22,7 @@ FEATURES:
 * **New Parameter**: `sku_name`
 * **New Parameter**: `enable_http2`
 * **New Parameter**: `backend_address_pool.fqdns`
-
-BUG FIXES:
+* **New Parameter**: `frontend_ip_configuration.subnet_id`
 
 DEPRECATIONS:
 

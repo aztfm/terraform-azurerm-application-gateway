@@ -23,27 +23,23 @@ resource "azurerm_application_gateway" "main" {
   }
 
   gateway_ip_configuration {
-    name      = "${var.name}-configuration"
+    name      = "GatewayIpConfiguration"
     subnet_id = var.subnet_id
   }
 
-  dynamic "frontend_ip_configuration" {
-    for_each = local.public_ip_address_id ? [""] : []
-
-    content {
-      name                 = "Public-frontend-ip-configuration"
-      public_ip_address_id = var.frontend_ip_configuration.public_ip_address_id
-    }
+  frontend_ip_configuration {
+    name                 = "FrontendPublicIpConfiguration"
+    public_ip_address_id = var.frontend_ip_configuration.public_ip_address_id
   }
 
   dynamic "frontend_ip_configuration" {
-    for_each = local.private_ip_address || local.private_ip_address_allocation ? [""] : []
+    for_each = var.frontend_ip_configuration.subnet_id != null ? [""] : []
 
     content {
-      name                          = "Private-frontend-ip-configuration"
+      name                          = "FrontendPrivateIpConfiguration"
       subnet_id                     = var.subnet_id
-      private_ip_address            = var.frontend_ip_configuration.private_ip_address
       private_ip_address_allocation = var.frontend_ip_configuration.private_ip_address_allocation
+      private_ip_address            = var.frontend_ip_configuration.private_ip_address
     }
   }
 
@@ -92,7 +88,7 @@ resource "azurerm_application_gateway" "main" {
 
     content {
       name                           = http_listener.value.name
-      frontend_ip_configuration_name = "${http_listener.value.frontend_ip_configuration}-frontend-ip-configuration"
+      frontend_ip_configuration_name = "FrontendPublicIpConfiguration"
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
       host_name                      = http_listener.value.host_name
