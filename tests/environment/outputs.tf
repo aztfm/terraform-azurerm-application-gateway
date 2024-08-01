@@ -33,3 +33,10 @@ output "subnet_address_prefix" {
 output "public_ip_id" {
   value = azurerm_public_ip.pip.id
 }
+
+output "managed_identity_ids" {
+  value = [
+    azurerm_user_assigned_identity.id_01.id,
+    azurerm_user_assigned_identity.id_02.id
+  ]
+}
