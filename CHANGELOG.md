@@ -13,16 +13,18 @@ ENHANCEMENTS:
 * The `autoscale_configuration.min_capacity` parameter changes type `string` to `number`.
 * The `autoscale_configuration.max_capacity` parameter changes type `string` to `number`.
 * The `sku.capacity` parameter is now a single parameter with the name `capacity`.
+* The `sku.identity_id` parameter is now a plural parameter with the name `identity_ids` and is of type `list(string)`.
 
 FEATURES:
 
-* **New Parameter**: `firewall_policy_id`
-* **New Parameter**: `capacity`
 * **New Parameter**: `zones`
 * **New Parameter**: `sku_name`
 * **New Parameter**: `enable_http2`
-* **New Parameter**: `backend_address_pool.fqdns`
+* **New Parameter**: `firewall_policy_id`
+* **New Parameter**: `capacity`
+* **New Parameter**: `identity_ids`
 * **New Parameter**: `frontend_ip_configuration.subnet_id`
+* **New Parameter**: `backend_address_pool.fqdns`
 
 DEPRECATIONS:
 
