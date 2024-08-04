@@ -265,13 +265,13 @@ run "apply" {
     resource_group_name = run.setup.resource_group_name
     location            = run.setup.resource_group_location
     tags                = run.setup.resource_group_tags
-    # firewall_policy_id  = run.setup.firewall_policy_id
+    firewall_policy_id  = run.setup.firewall_policy_id
     identity_id         = run.setup.managed_identity_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
-      subnet_id                     = run.setup.subnet_id
-      public_ip_address_id          = run.setup.public_ip_id
-      # private_ip_address            = cidrhost(run.setup.subnet_address_prefix, 10)
+      subnet_id            = run.setup.subnet_id
+      public_ip_address_id = run.setup.public_ip_id
+      private_ip_address   = cidrhost(run.setup.subnet_address_prefix, 10)
     }
   }
 
