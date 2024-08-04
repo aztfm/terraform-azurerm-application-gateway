@@ -84,7 +84,7 @@ variable "autoscale_configuration" {
     max_capacity = number
   })
   default     = null
-  description = "A mapping with the autoscale configuration of the application gateway."
+  description = "A mapping with the autoscale configuration of the Application Gateway."
 
   validation {
     condition     = var.autoscale_configuration != null ? var.autoscale_configuration.min_capacity >= 0 && var.autoscale_configuration.min_capacity <= 100 : true
@@ -110,12 +110,26 @@ variable "subnet_id" {
 
 variable "frontend_ip_configuration" {
   type = object({
-    subnet_id                     = optional(string)
-    public_ip_address_id          = string
-    private_ip_address_allocation = optional(string)
-    private_ip_address            = optional(string)
+    subnet_id            = optional(string)
+    public_ip_address_id = string
+    private_ip_address   = optional(string)
   })
-  description = "A mapping the front ip configuration."
+  description = "A mapping with the frontend ip configuration of the Application Gateway."
+
+  validation {
+    condition     = var.frontend_ip_configuration.subnet_id != null ? var.frontend_ip_configuration.private_ip_address != null : true
+    error_message = "The private_ip_address is required when the subnet_id is provided."
+  }
+
+  validation {
+    condition     = var.frontend_ip_configuration.private_ip_address != null ? var.frontend_ip_configuration.subnet_id != null : true
+    error_message = "The subnet_id is required when the private_ip_address is provided."
+  }
+
+  validation {
+    condition     = var.frontend_ip_configuration.subnet_id != null ? can(cidrnetmask("${var.frontend_ip_configuration.private_ip_address}/32")) : true
+    error_message = "The private_ip_address must be formatted according to the CIDR standard without a mask."
+  }
 }
 
 variable "backend_address_pools" {
@@ -148,12 +162,32 @@ variable "http_listeners" {
   type = list(object({
     name                      = string
     frontend_ip_configuration = string
-    port                      = string
+    port                      = number
     protocol                  = string
     host_name                 = optional(string)
     ssl_certificate_name      = optional(string)
   }))
   description = "List of objects that represent the configuration of each http listener."
+
+  validation {
+    condition     = alltrue([for listener in var.http_listeners : contains(["Public", "Private"], listener.frontend_ip_configuration)])
+    error_message = "The frontend_ip_configuration must be either Public or Private."
+  }
+
+  validation {
+    condition     = alltrue([for listener in var.http_listeners : var.frontend_ip_configuration.subnet_id != null if listener.frontend_ip_configuration == "Private"])
+    error_message = "The frontend_ip_configuration.subnet_id must be provided when the frontend_ip_configuration is Private."
+  }
+
+  validation {
+    condition     = alltrue([for listener in var.http_listeners : contains(["Http", "Https"], listener.protocol)])
+    error_message = "The protocol must be either Http or Https."
+  }
+
+  # validation {
+  #   condition     = alltrue([for listener in var.http_listeners : listener.protocol == "Https" ? listener.ssl_certificate_name != null : true])
+  #   error_message = "The ssl_certificate_name is required when the protocol is Https."
+  # }
 }
 
 # variable "probes" {

@@ -30,13 +30,17 @@ variables {
     frontend_ip_configuration = "Public"
     port                      = 80
     protocol                  = "Http"
-    },
-    #   {
-    #   name                      = "http-listener-2"
-    #   frontend_ip_configuration = "Public"
-    #   port                      = 80
-    #   protocol                  = "Http"
-    # }
+    }, {
+    name                      = "http-listener-2"
+    frontend_ip_configuration = "Private"
+    port                      = 8080
+    protocol                  = "Http"
+    }, {
+    name                      = "http-listener-3"
+    frontend_ip_configuration = "Public"
+    port                      = 1433
+    protocol                  = "Http"
+    }
   ]
   backend_http_settings = [{ name = "backend-http-setting", port = 80, protocol = "Http", request_timeout = 20 }]
   request_routing_rules = [{
@@ -68,10 +72,9 @@ run "plan" {
     identity_id         = run.setup.managed_identity_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
-      subnet_id                     = run.setup.subnet_id
-      public_ip_address_id          = run.setup.public_ip_id
-      private_ip_address_allocation = "Static"
-      private_ip_address            = cidrhost(run.setup.subnet_address_prefix, 10)
+      public_ip_address_id = run.setup.public_ip_id
+      subnet_id            = run.setup.subnet_id
+      private_ip_address   = cidrhost(run.setup.subnet_address_prefix, 10)
     }
   }
 
@@ -190,6 +193,68 @@ run "plan" {
     condition     = tolist(azurerm_application_gateway.main.identity[0].identity_ids) == tolist([run.setup.managed_identity_id])
     error_message = "The Managed Identity ID is not as expected."
   }
+
+  #region HTTP Listeners
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-1"].name == var.http_listeners[0].name
+    error_message = "The name of the first HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-1"].frontend_ip_configuration_name == "FrontendPublicIpConfiguration"
+    error_message = "The frontend_ip_configuration of the first HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-1"].frontend_port_name == tostring(var.http_listeners[0].port)
+    error_message = "The port of the first HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-1"].protocol == var.http_listeners[0].protocol
+    error_message = "The protocol of the first HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-2"].name == var.http_listeners[1].name
+    error_message = "The name of the second HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-2"].frontend_ip_configuration_name == "FrontendPrivateIpConfiguration"
+    error_message = "The frontend_ip_configuration of the second HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-2"].frontend_port_name == tostring(var.http_listeners[1].port)
+    error_message = "The port of the second HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-2"].protocol == var.http_listeners[1].protocol
+    error_message = "The protocol of the second HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-3"].name == var.http_listeners[2].name
+    error_message = "The name of the third HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-3"].frontend_ip_configuration_name == "FrontendPublicIpConfiguration"
+    error_message = "The frontend_ip_configuration of the third HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-3"].frontend_port_name == tostring(var.http_listeners[2].port)
+    error_message = "The port of the third HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-3"].protocol == var.http_listeners[2].protocol
+    error_message = "The protocol of the third HTTP Listener is not as expected."
+  }
 }
 
 run "apply" {
@@ -204,10 +269,9 @@ run "apply" {
     identity_id         = run.setup.managed_identity_id
     subnet_id           = run.setup.subnet_id
     frontend_ip_configuration = {
-      subnet_id                     = run.setup.subnet_id
-      public_ip_address_id          = run.setup.public_ip_id
-      private_ip_address_allocation = "Static"
-      private_ip_address            = cidrhost(run.setup.subnet_address_prefix, 10)
+      subnet_id            = run.setup.subnet_id
+      public_ip_address_id = run.setup.public_ip_id
+      private_ip_address   = cidrhost(run.setup.subnet_address_prefix, 10)
     }
   }
 

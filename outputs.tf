@@ -34,7 +34,7 @@ output "ssl_certificates" {
 }
 
 output "http_listeners" {
-  value       = azurerm_application_gateway.main.http_listener
+  value       = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }
   description = "Blocks containing configuration of each http listener."
 }
 

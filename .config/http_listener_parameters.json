@@ -39,7 +39,7 @@
     },
     {
         "Name": "host_name",
-        "Description": "The Hostname which should be used for this HTTP Listener. Setting this value changes Listener Type to Multi site",
+        "Description": "The Hostname which should be used for this HTTP Listener. Setting this value changes Listener Type to Multi site.",
         "Type": "string",
         "Default": "null",
         "Required": "no",

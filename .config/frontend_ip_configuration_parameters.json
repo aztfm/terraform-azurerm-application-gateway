@@ -8,22 +8,19 @@
         "Support": []
     },
     {
+        "Name": "subnet_id",
+        "Description": "The ID of the Subnet in which the Application Gateway should be deployed.",
+        "Type": "string",
+        "Default": "null",
+        "Required": "yes",
+        "Support": []
+    },
+    {
         "Name": "private_ip_address",
         "Description": "The Private IP Address to use for the Application Gateway.",
         "Type": "string",
         "Default": "null",
         "Required": "no",
         "Support": []
-    },
-    {
-        "Name": "private_ip_address_allocation",
-        "Description": "The Allocation Method for the Private IP Address. Possible values are",
-        "Type": "string",
-        "Default": "null",
-        "Required": "no",
-        "Support": [
-            "Dynamic",
-            "Static"
-        ]
     }
 ]
