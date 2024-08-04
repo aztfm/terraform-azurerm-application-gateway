@@ -31,6 +31,7 @@ DEPRECATIONS:
 
 * **Parameter**: `waf_configuration` is deprecated in favor of `firewall_policy_id`. WAF configuration must now be performed using a firewall policy. [Retirement: Support for Application Gateway Web Application Firewall v2 Configuration is ending][waf-config-deprecate].
 * **Parameter**: `sku` is deprecated in favor of `sku_name`. The `Standard_Small`, `Standard_Medium`, `Standard_Large` and `WAF_Medium` sku types are also deprecated. [Application Gateway V1 will be retired on 28 April 2026– Transition to Application Gateway V2][appgw-sku-deprecate].
+* **Parameter**: `private_ip_address_allocation` is deprecated.
 
 ## 1.2.0 (January 27, 2022)
 

@@ -47,7 +47,7 @@ resource "azurerm_application_gateway" "main" {
     content {
       name                          = "FrontendPrivateIpConfiguration"
       subnet_id                     = var.subnet_id
-      private_ip_address_allocation = var.frontend_ip_configuration.private_ip_address_allocation
+      private_ip_address_allocation = var.subnet_id != null ? "Static" : null
       private_ip_address            = var.frontend_ip_configuration.private_ip_address
     }
   }
@@ -62,14 +62,13 @@ resource "azurerm_application_gateway" "main" {
     }
   }
 
-  frontend_port {
-    name = "80"
-    port = 80
-  }
+  dynamic "frontend_port" {
+    for_each = [for port in distinct(var.http_listeners[*].port) : port]
 
-  frontend_port {
-    name = "443"
-    port = 443
+    content {
+      name = tostring(frontend_port.value)
+      port = frontend_port.value
+    }
   }
 
   # dynamic "ssl_certificate" {
@@ -88,11 +87,11 @@ resource "azurerm_application_gateway" "main" {
 
     content {
       name                           = http_listener.value.name
-      frontend_ip_configuration_name = "FrontendPublicIpConfiguration"
+      frontend_ip_configuration_name = http_listener.value.frontend_ip_configuration == "Private" ? "FrontendPrivateIpConfiguration" : "FrontendPublicIpConfiguration"
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
       host_name                      = http_listener.value.host_name
-      ssl_certificate_name           = http_listener.value.ssl_certificate_name
+      # ssl_certificate_name           = http_listener.value.ssl_certificate_name
     }
   }
 
