@@ -146,17 +146,17 @@ variable "backend_address_pools" {
   }
 }
 
-# variable "ssl_certificates" {
-#   type = list(object({
-#     name                = string
-#     data                = optional(string)
-#     password            = optional(string)
-#     key_vault_secret_id = optional(string)
-#   }))
-#   default     = []
-#   sensitive   = true
-#   description = "List of objects that represent the configuration of each ssl certificate."
-# }
+variable "ssl_certificates" {
+  type = list(object({
+    name                = string
+    data                = optional(string)
+    password            = optional(string)
+    key_vault_secret_id = optional(string)
+  }))
+  default     = []
+  sensitive   = true
+  description = "List of objects that represent the configuration of each ssl certificate."
+}
 
 variable "http_listeners" {
   type = list(object({

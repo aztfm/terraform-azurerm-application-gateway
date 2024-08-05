@@ -1,5 +1,9 @@
 provider "azurerm" {
-  features {}
+  features {
+    key_vault {
+      purge_soft_delete_on_destroy = true
+    }
+  }
 }
 
 run "setup" {
@@ -76,6 +80,14 @@ run "plan" {
       subnet_id            = run.setup.subnet_id
       private_ip_address   = cidrhost(run.setup.subnet_address_prefix, 10)
     }
+    ssl_certificates = [{
+      name                = "${run.setup.workspace_id}1"
+      key_vault_secret_id = run.setup.key_vault_certificate_secret_id
+      }, {
+      name     = "${run.setup.workspace_id}2"
+      data     = run.setup.certificate_data
+      password = run.setup.workspace_id
+    }]
   }
 
   assert {
@@ -273,6 +285,14 @@ run "apply" {
       public_ip_address_id = run.setup.public_ip_id
       private_ip_address   = cidrhost(run.setup.subnet_address_prefix, 10)
     }
+    ssl_certificates = [{
+      name                = "${run.setup.workspace_id}1"
+      key_vault_secret_id = run.setup.key_vault_certificate_secret_id
+      }, {
+      name     = "${run.setup.workspace_id}2"
+      data     = run.setup.certificate_data
+      password = run.setup.workspace_id
+    }]
   }
 
   assert {
