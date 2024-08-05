@@ -10,14 +10,13 @@ repos:
 
       - id: terraform_tflint
         name: Validate Terraform tests
-        exclude: ^(examples)
+        exclude: ^(examples|tests)
         args:
           - --args=--enable-rule=terraform_documented_outputs
           - --args=--enable-rule=terraform_documented_variables
           - --args=--enable-rule=terraform_naming_convention
-          - --args=--enable-rule=terraform_unused_required_providers
           - --args=--enable-rule=terraform_standard_module_structure
-          - --args=--filter=tests/environments
+          - --args=--enable-rule=terraform_unused_required_providers
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.41.0
