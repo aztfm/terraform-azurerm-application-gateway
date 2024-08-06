@@ -35,6 +35,7 @@ The following parameters are supported:
 |frontend\_ip\_configuration|A mapping with the frontend ip configuration of the Application Gateway.|`object({})`|n/a|yes|
 |backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`list(object({}))`|n/a|yes|
 |http\_listeners|List of objects that represent the configuration of each http listener.|`list(object({}))`|n/a|yes|
+|probes|List of objects that represent the configuration of each probe.|`list(object({}))`|`[]`|no|
 |backend\_http\_settings|List of objects that represent the configuration of each backend http settings.|`list(object({}))`|n/a|yes|
 |request\_routing\_rules|List of objects that represent the configuration of each backend request routing rule.|`list(object({}))`|n/a|yes|
 
@@ -88,10 +89,10 @@ The `probes` supports the following:
 |name|The Name of the Probe.|`string`|n/a|yes|
 |host|The Hostname used for this Probe. If the Application Gateway is configured for a single site, by default the Host name should be specified as `127.0.0.1`, unless otherwise configured in custom probe. Cannot be set if `pick_host_name_from_backend_http_settings` is set to `true`.|`string`|`null`|no|
 |protocol|The Protocol used for this Probe. Possible values are `Http` and `Https`.|`string`|n/a|yes|
-|path|The Path used for this Probe.|`string`|`null`|no|
-|interval|The Interval between two consecutive probes in seconds. Possible values range from `1` second to a maximum of `86400` seconds.|`number`|`null`|no|
-|timeout|The Timeout used for this Probe, which indicates when a probe becomes unhealthy. Possible values range from `1` second to a maximum of `86400` seconds.|`string`|`null`|no|
-|unhealthy\_threshold|The Unhealthy Threshold for this Probe, which indicates the amount of retries which should be attempted before a node is deemed unhealthy. Possible values are from `1` to `20`.|`string`|`null`|no|
+|path|The Path used for this Probe.|`string`|`/`|no|
+|interval|The Interval between two consecutive probes in seconds. Possible values range from `1` second to a maximum of `86400` seconds.|`number`|`30`|no|
+|timeout|The Timeout used for this Probe, which indicates when a probe becomes unhealthy. Possible values range from `1` second to a maximum of `86400` seconds.|`number`|`30`|no|
+|unhealthy\_threshold|The Unhealthy Threshold for this Probe, which indicates the amount of retries which should be attempted before a node is deemed unhealthy. Possible values are from `1` to `20`.|`number`|`3`|no|
 
 The `backend_http_settings` supports the following:
 

@@ -30,7 +30,7 @@ variable "zones" {
   }
 
   validation {
-    condition     = alltrue([for z in var.zones : z >= 1 && z <= 3])
+    condition     = alltrue([for zone in var.zones : zone >= 1 && zone <= 3])
     error_message = "The zones must be between 1 and 3."
   }
 }
@@ -190,19 +190,49 @@ variable "http_listeners" {
   # }
 }
 
-# variable "probes" {
-#   type = list(object({
-#     name                = string
-#     host                = optional(string)
-#     protocol            = string
-#     path                = string
-#     interval            = number
-#     timeout             = string
-#     unhealthy_threshold = string
-#   }))
-#   default     = []
-#   description = "List of objects that represent the configuration of each probe."
-# }
+variable "probes" {
+  type = list(object({
+    name                = string
+    host                = optional(string)
+    protocol            = string
+    path                = optional(string, "/")
+    interval            = optional(number, 30)
+    timeout             = optional(number, 30)
+    unhealthy_threshold = optional(number, 3)
+  }))
+  default     = []
+  description = "List of objects that represent the configuration of each probe."
+
+  validation {
+    condition     = alltrue([for probe in var.probes : strcontains(probe.host, ".") if probe.host != null])
+    error_message = "The host must be a valid domain name."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : length(split("/", probe.path)) >= 2 && split("/", probe.path)[0] == ""])
+    error_message = "The path must be a valid URL path."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : contains(["Http", "Https"], probe.protocol)])
+    error_message = "The protocol must be either Http or Https."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : probe.interval >= 1 && probe.interval <= 86400])
+    error_message = "The interval must be between 1 and 86400."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : probe.timeout >= 1 && probe.timeout <= 86400])
+    error_message = "The timeout must be between 1 and 86400."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : probe.unhealthy_threshold >= 1 && probe.unhealthy_threshold <= 20])
+    error_message = "The unhealthy_threshold must be between 1 and 20."
+  }
+}
 
 variable "backend_http_settings" {
   type = list(object({
