@@ -236,14 +236,45 @@ variable "probes" {
 
 variable "backend_http_settings" {
   type = list(object({
-    name            = string
-    port            = string
-    protocol        = string
-    request_timeout = number
-    host_name       = optional(string)
-    probe_name      = optional(string)
+    name                  = string
+    protocol              = string
+    port                  = number
+    cookie_based_affinity = optional(string, "Disabled")
+    request_timeout       = optional(number, 20)
+    host_name             = optional(string)
+    probe_name            = optional(string)
   }))
   description = "List of objects that represent the configuration of each backend http settings."
+
+  validation {
+    condition     = alltrue([for backend in var.backend_http_settings : backend.port >= 1 && backend.port <= 65535])
+    error_message = "The port must be between 1 and 65535."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : contains(["Http", "Https"], settings.protocol)])
+    error_message = "The protocol must be either Http or Https."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : contains(["Disabled", "Enabled"], settings.cookie_based_affinity)])
+    error_message = "The cookie_based_affinity must be either Disabled or Enabled."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : settings.request_timeout >= 1 && settings.request_timeout <= 86400])
+    error_message = "The request_timeout must be between 1 and 86400."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : strcontains(settings.host_name, ".") if settings.host_name != null])
+    error_message = "The host_name must be a valid domain name."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : contains([for probe in var.probes : probe.name], settings.probe_name) if settings.probe_name != null])
+    error_message = "The probe_name must be one of the defined probes."
+  }
 }
 
 variable "request_routing_rules" {

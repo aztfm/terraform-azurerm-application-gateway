@@ -114,13 +114,14 @@ resource "azurerm_application_gateway" "main" {
     for_each = var.backend_http_settings
 
     content {
-      cookie_based_affinity = "Disabled"
-      name                  = backend_http_settings.value.name
-      port                  = backend_http_settings.value.port
-      protocol              = backend_http_settings.value.protocol
-      request_timeout       = backend_http_settings.value.request_timeout
-      host_name             = backend_http_settings.value.host_name
-      probe_name            = backend_http_settings.value.probe_name
+      name                                = backend_http_settings.value.name
+      port                                = backend_http_settings.value.port
+      protocol                            = backend_http_settings.value.protocol
+      cookie_based_affinity               = backend_http_settings.value.cookie_based_affinity
+      request_timeout                     = backend_http_settings.value.request_timeout
+      host_name                           = backend_http_settings.value.host_name
+      pick_host_name_from_backend_address = backend_http_settings.value.host_name == null ? true : null
+      probe_name                          = backend_http_settings.value.probe_name
     }
   }
 
