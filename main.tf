@@ -95,19 +95,20 @@ resource "azurerm_application_gateway" "main" {
     }
   }
 
-  # dynamic "probe" {
-  #   for_each = var.probes
+  dynamic "probe" {
+    for_each = var.probes
 
-  #   content {
-  #     name                = probe.value.name
-  #     host                = probe.value.host
-  #     protocol            = probe.value.protocol
-  #     path                = probe.value.path
-  #     interval            = probe.value.interval
-  #     timeout             = probe.value.timeout
-  #     unhealthy_threshold = probe.value.unhealthy_threshold
-  #   }
-  # }
+    content {
+      name                                      = probe.value.name
+      host                                      = probe.value.host
+      protocol                                  = probe.value.protocol
+      path                                      = probe.value.path
+      interval                                  = probe.value.interval
+      timeout                                   = probe.value.timeout
+      unhealthy_threshold                       = probe.value.unhealthy_threshold
+      pick_host_name_from_backend_http_settings = probe.value.host == null ? true : null
+    }
+  }
 
   dynamic "backend_http_settings" {
     for_each = var.backend_http_settings
