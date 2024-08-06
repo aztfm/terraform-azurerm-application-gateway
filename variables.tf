@@ -209,7 +209,7 @@ variable "probes" {
   }
 
   validation {
-    condition     = alltrue([for probe in var.probes : length(split(probe.path, "/")) >= 2 && split("/", probe.path)[0] == ""])
+    condition     = alltrue([for probe in var.probes : length(split("/", probe.path)) >= 2 && split("/", probe.path)[0] == ""])
     error_message = "The path must be a valid URL path."
   }
 
