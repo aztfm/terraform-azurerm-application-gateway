@@ -276,7 +276,7 @@ run "plan" {
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].host == null
+    condition     = lookup({ for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"], "host", null) == null
     error_message = "The host of the first Health Probe is not as expected."
   }
 
