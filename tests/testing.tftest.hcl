@@ -271,72 +271,72 @@ run "plan" {
   #region Health Probes
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-1"].name == var.probes[0].name
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].name == var.probes[0].name
     error_message = "The name of the first Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].host == null
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].host == null
     error_message = "The host of the first Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-1"].protocol == var.probes[0].protocol
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].protocol == var.probes[0].protocol
     error_message = "The protocol of the first Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-1"].path == "/"
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].path == "/"
     error_message = "The path of the first Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-1"].interval == 30
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].interval == 30
     error_message = "The interval of the first Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-1"].timeout == 30
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].timeout == 30
     error_message = "The timeout of the first Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-1"].unhealthy_threshold == 3
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].unhealthy_threshold == 3
     error_message = "The unhealthy_threshold of the first Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].name == var.probes[1].name
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].name == var.probes[1].name
     error_message = "The name of the second Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].host == var.probes[1].host
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].host == var.probes[1].host
     error_message = "The host of the second Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].protocol == var.probes[1].protocol
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].protocol == var.probes[1].protocol
     error_message = "The protocol of the second Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].path == var.probes[1].path
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].path == var.probes[1].path
     error_message = "The path of the second Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].interval == var.probes[1].interval
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].interval == var.probes[1].interval
     error_message = "The interval of the second Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].timeout == var.probes[1].timeout
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].timeout == var.probes[1].timeout
     error_message = "The timeout of the second Health Probe is not as expected."
   }
 
   assert {
-    condition     = { for probe in azurerm_application_gateway.main.http_settings : probe.name => probe }["probe-2"].unhealthy_threshold == var.probes[1].unhealthy_threshold
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].unhealthy_threshold == var.probes[1].unhealthy_threshold
     error_message = "The unhealthy_threshold of the second Health Probe is not as expected."
   }
 }
