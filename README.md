@@ -99,9 +99,10 @@ The `backend_http_settings` supports the following:
 | Name | Description | Type | Default | Required |
 | ---- | ------------| :--: | :-----: | :------: |
 |name|The name of the Backend HTTP Settings Collection.|`string`|n/a|yes|
-|port|The port which should be used for this Backend HTTP Settings Collection.|`string`|n/a|yes|
 |protocol|The Protocol which should be used. Possible values are `Http` and `Https`.|`string`|n/a|yes|
-|request\_timeout|The request timeout in seconds, which must be between `1` and `86400` seconds.|`number`|n/a|yes|
+|port|The port which should be used for this Backend HTTP Settings Collection.|`string`|n/a|yes|
+|cookie\_based\_affinity|The cookie based affinity configuration. Possible values are `Disabled` and `Enabled`.|`string`|`Disabled`|no|
+|request\_timeout|The request timeout in seconds, which must be between `1` and `86400` seconds.|`number`|`30`|no|
 |host\_name|Host header to be sent to the backend servers. Cannot be set if `pick_host_name_from_backend_address` is set to `true`.|`string`|`null`|no|
 |probe\_name|The name of an associated HTTP Probe.|`string`|`null`|no|
 

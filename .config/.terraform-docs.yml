@@ -54,7 +54,7 @@ content: |
   {{ template "table" dict "Resource" "ssl_certificates" "File" ".config/ssl_certificate_parameters.json" }}
   {{ template "table" dict "Resource" "http_listeners" "File" ".config/http_listener_parameters.json" }}
   {{ template "table" dict "Resource" "probes" "File" ".config/probe_parameters.json" }}
-  {{ template "table" dict "Resource" "backend_http_settings" "File" ".config/backend_http_setting_parameters.json" }}
+  {{ template "table" dict "Resource" "backend_http_settings" "File" ".config/backend_http_settings_parameters.json" }}
   {{ template "table" dict "Resource" "request_routing_rules" "File" ".config/request_routing_rule_parameters.json" }}{{ printf "\n" -}}
 
   ## Outputs
