@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_resource_group" "rg" {
   name     = "resource-group"
   location = "Spain Central"
@@ -57,16 +59,22 @@ module "application_gateway" {
     name         = "backend-address-pool",
     ip_addresses = ["10.0.0.4", "10.0.0.5"]
   }]
+  ssl_certificates = [{
+    name     = "certificate"
+    data     = filebase64("path/to/file")
+    password = "P4$$w0rd1234"
+  }]
   http_listeners = [{
     name                      = "http-listener"
     frontend_ip_configuration = "Public"
-    protocol                  = "Http"
-    port                      = 80
+    protocol                  = "Https"
+    port                      = 443
+    certificate_name          = "certificate"
   }]
   backend_http_settings = [{
-    name     = "backend-http-setting-1"
-    protocol = "Http"
-    port     = 80
+    name     = "backend-http-setting"
+    protocol = "Https"
+    port     = 443
   }]
   request_routing_rules = [{
     name                       = "request-routing-rule"
