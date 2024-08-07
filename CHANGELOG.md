@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD041 -->
-## 2.0.0 (Unreleased)
+## 2.0.0 (August 07, 2024)
 
 BREAKING CHANGES:
 
@@ -9,7 +9,6 @@ BREAKING CHANGES:
 
 ENHANCEMENTS:
 
-* The `sku.capacity` parameter changes the `string` type to `number` and is now an optional parameter.
 * The `autoscale_configuration.min_capacity` parameter changes type `string` to `number`.
 * The `autoscale_configuration.max_capacity` parameter changes type `string` to `number`.
 * The `sku.capacity` parameter is now a single parameter with the name `capacity`.
