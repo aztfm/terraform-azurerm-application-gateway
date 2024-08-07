@@ -37,3 +37,11 @@ output "public_ip_id" {
 output "managed_identity_id" {
   value = azurerm_user_assigned_identity.id.id
 }
+
+output "certificate_data" {
+  value = pkcs12_from_pem.cer.result
+}
+
+output "key_vault_certificate_secret_id" {
+  value = azurerm_key_vault_certificate.kv.versionless_secret_id
+}
