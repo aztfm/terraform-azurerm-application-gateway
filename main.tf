@@ -91,7 +91,7 @@ resource "azurerm_application_gateway" "main" {
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
       host_name                      = http_listener.value.host_name
-      # ssl_certificate_name           = http_listener.value.ssl_certificate_name
+      ssl_certificate_name           = http_listener.value.ssl_certificate_name
     }
   }
 

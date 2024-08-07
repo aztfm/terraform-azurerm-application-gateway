@@ -184,10 +184,10 @@ variable "http_listeners" {
     error_message = "The protocol must be either Http or Https."
   }
 
-  # validation {
-  #   condition     = alltrue([for listener in var.http_listeners : listener.protocol == "Https" ? listener.ssl_certificate_name != null : true])
-  #   error_message = "The ssl_certificate_name is required when the protocol is Https."
-  # }
+  validation {
+    condition     = alltrue([for listener in var.http_listeners : listener.protocol == "Https" ? listener.ssl_certificate_name != null : true])
+    error_message = "The ssl_certificate_name is required when the protocol is Https."
+  }
 }
 
 variable "probes" {

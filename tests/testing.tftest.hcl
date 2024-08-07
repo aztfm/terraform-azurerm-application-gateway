@@ -29,23 +29,6 @@ variables {
     name         = "backend-address-pool-3"
     ip_addresses = ["10.0.10.1", "192.16.0.4"]
   }]
-  http_listeners = [{
-    name                      = "http-listener-1"
-    frontend_ip_configuration = "Public"
-    port                      = 80
-    protocol                  = "Http"
-    }, {
-    name                      = "http-listener-2"
-    frontend_ip_configuration = "Private"
-    port                      = 8080
-    protocol                  = "Http"
-    }, {
-    name                      = "http-listener-3"
-    frontend_ip_configuration = "Public"
-    port                      = 1433
-    protocol                  = "Http"
-    }
-  ]
   probes = [{
     name     = "probe-1"
     protocol = "Http"
@@ -62,14 +45,14 @@ variables {
     name     = "backend-http-setting-1"
     protocol = "Http"
     port     = 80
-    # }, {
-    # name                  = "backend-http-setting-2"
-    # protocol              = "Http"
-    # port                  = 443
-    # cookie_based_affinity = "Enabled"
-    # request_timeout       = 120
-    # host_name             = "domain.com"
-    # probe_name            = "probe-2"
+    }, {
+    name                  = "backend-http-setting-2"
+    protocol              = "Https"
+    port                  = 443
+    cookie_based_affinity = "Enabled"
+    request_timeout       = 120
+    host_name             = "domain.com"
+    probe_name            = "probe-2"
   }]
   request_routing_rules = [{
     name                       = "request-routing-rule-1"
@@ -77,15 +60,13 @@ variables {
     http_listener_name         = "http-listener-1"
     backend_address_pool_name  = "backend-address-pool-1"
     backend_http_settings_name = "backend-http-setting-1"
-    },
-    #    {
-    #   name                       = "request-routing-rule-2"
-    #   priority                   = 2
-    #   http_listener_name         = "http-listener-2"
-    #   backend_address_pool_name  = "backend-address-pool-2"
-    #   backend_http_settings_name = "backend-http-setting"
-    # }
-  ]
+    }, {
+    name                       = "request-routing-rule-2"
+    priority                   = 2
+    http_listener_name         = "http-listener-2"
+    backend_address_pool_name  = "backend-address-pool-2"
+    backend_http_settings_name = "backend-http-setting"
+  }]
 }
 
 run "plan" {
@@ -111,6 +92,28 @@ run "plan" {
       name     = "${run.setup.workspace_id}2"
       data     = run.setup.certificate_data
       password = run.setup.workspace_id
+    }]
+    http_listeners = [{
+      name                      = "http-listener-1"
+      frontend_ip_configuration = "Public"
+      port                      = 80
+      protocol                  = "Http"
+      }, {
+      name                      = "http-listener-2"
+      frontend_ip_configuration = "Private"
+      port                      = 8080
+      protocol                  = "Http"
+      }, {
+      name                      = "http-listener-3"
+      frontend_ip_configuration = "Public"
+      port                      = 1433
+      protocol                  = "Http"
+      }, {
+      name                      = "http-listener-4"
+      frontend_ip_configuration = "Private"
+      port                      = 445
+      protocol                  = "Https"
+      ssl_certificate_name      = "${run.setup.workspace_id}1"
     }]
   }
 
@@ -292,6 +295,58 @@ run "plan" {
     error_message = "The protocol of the third HTTP Listener is not as expected."
   }
 
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-4"].name == var.http_listeners[3].name
+    error_message = "The name of the fourth HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-4"].frontend_ip_configuration_name == "FrontendPrivateIpConfiguration"
+    error_message = "The frontend_ip_configuration of the fourth HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-4"].frontend_port_name == tostring(var.http_listeners[3].port)
+    error_message = "The port of the fourth HTTP Listener is not as expected."
+  }
+
+  assert {
+    condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-4"].protocol == var.http_listeners[3].protocol
+    error_message = "The protocol of the fourth HTTP Listener is not as expected."
+  }
+
+  #region SSL Certificates
+
+  assert {
+    condition     = length(azurerm_application_gateway.main.ssl_certificate) == 2
+    error_message = "The number of SSL Certificates is not as expected."
+  }
+
+  assert {
+    condition     = { for cert in azurerm_application_gateway.main.ssl_certificate : cert.name => cert }["${run.setup.workspace_id}1"].name == var.ssl_certificates[0].name
+    error_message = "The name of the first SSL Certificate is not as expected."
+  }
+
+  assert {
+    condition     = { for cert in azurerm_application_gateway.main.ssl_certificate : cert.name => cert }["${run.setup.workspace_id}1"].key_vault_secret_id == var.ssl_certificates[0].key_vault_secret_id
+    error_message = "The key_vault_secret_id of the first SSL Certificate is not as expected."
+  }
+
+  assert {
+    condition     = { for cert in azurerm_application_gateway.main.ssl_certificate : cert.name => cert }["${run.setup.workspace_id}2"].name == var.ssl_certificates[1].name
+    error_message = "The name of the second SSL Certificate is not as expected."
+  }
+
+  assert {
+    condition     = { for cert in azurerm_application_gateway.main.ssl_certificate : cert.name => cert }["${run.setup.workspace_id}2"].data == var.ssl_certificates[1].data
+    error_message = "The data of the second SSL Certificate is not as expected."
+  }
+
+  assert {
+    condition     = { for cert in azurerm_application_gateway.main.ssl_certificate : cert.name => cert }["${run.setup.workspace_id}2"].password == var.ssl_certificates[1].password
+    error_message = "The password of the second SSL Certificate is not as expected."
+  }
+
   #region Health Probes
 
   assert {
@@ -381,6 +436,46 @@ run "plan" {
     error_message = "The port of the first Backend HTTP Settings is not as expected."
   }
 
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-1"].cookie_based_affinity == var.backend_http_settings[0].cookie_based_affinity
+    error_message = "The cookie_based_affinity of the first Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-2"].name == var.backend_http_settings[1].name
+    error_message = "The name of the second Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-2"].protocol == var.backend_http_settings[1].protocol
+    error_message = "The protocol of the second Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-2"].port == var.backend_http_settings[1].port
+    error_message = "The port of the second Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-2"].cookie_based_affinity == var.backend_http_settings[1].cookie_based_affinity
+    error_message = "The cookie_based_affinity of the second Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-2"].request_timeout == var.backend_http_settings[1].request_timeout
+    error_message = "The request_timeout of the second Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-2"].host_name == var.backend_http_settings[1].host_name
+    error_message = "The host_name of the second Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-2"].probe_name == var.backend_http_settings[1].probe_name
+    error_message = "The probe_name of the second Backend HTTP Settings is not as expected."
+  }
+
   #region Request Routing Rules
 
   assert {
@@ -412,6 +507,31 @@ run "plan" {
     condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].backend_http_settings_name == var.request_routing_rules[0].backend_http_settings_name
     error_message = "The backend_http_settings_name of the first Request Routing Rule is not as expected."
   }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-2"].name == var.request_routing_rules[1].name
+    error_message = "The name of the second Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-2"].priority == var.request_routing_rules[1].priority
+    error_message = "The priority of the second Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-2"].http_listener_name == var.request_routing_rules[1].http_listener_name
+    error_message = "The http_listener_name of the second Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-2"].backend_address_pool_name == var.request_routing_rules[1].backend_address_pool_name
+    error_message = "The backend_address_pool_name of the second Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-2"].backend_http_settings_name == var.request_routing_rules[1].backend_http_settings_name
+    error_message = "The backend_http_settings_name of the second Request Routing Rule is not as expected."
+  }
 }
 
 run "apply" {
@@ -437,6 +557,28 @@ run "apply" {
       name     = "${run.setup.workspace_id}2"
       data     = run.setup.certificate_data
       password = run.setup.workspace_id
+    }]
+    http_listeners = [{
+      name                      = "http-listener-1"
+      frontend_ip_configuration = "Public"
+      port                      = 80
+      protocol                  = "Http"
+      }, {
+      name                      = "http-listener-2"
+      frontend_ip_configuration = "Private"
+      port                      = 8080
+      protocol                  = "Http"
+      }, {
+      name                      = "http-listener-3"
+      frontend_ip_configuration = "Public"
+      port                      = 1433
+      protocol                  = "Http"
+      }, {
+      name                      = "http-listener-4"
+      frontend_ip_configuration = "Private"
+      port                      = 445
+      protocol                  = "Https"
+      ssl_certificate_name      = "${run.setup.workspace_id}1"
     }]
   }
 

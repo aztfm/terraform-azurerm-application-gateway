@@ -25,7 +25,7 @@
     },
     {
         "Name": "key_vault_secret_id",
-        "Description": "Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for keyvault to use this feature. Required if `data` is not set.",
+        "Description": "Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure Key Vault. You need to enable soft delete for Key Vault to use this feature. Required if `data` is not set.",
         "Type": "string",
         "Default": "null",
         "Required": "no",
