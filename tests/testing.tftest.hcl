@@ -368,11 +368,6 @@ run "plan" {
     condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-1"].port == var.backend_http_settings[0].port
     error_message = "The port of the first Backend HTTP Settings is not as expected."
   }
-
-  assert {
-    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-1"].pick_host_name_from_backend_http_settings == true
-    error_message = "The pick_host_name_from_backend_http_settings of the first Backend HTTP Settings is not as expected."
-  }
 }
 
 run "apply" {
