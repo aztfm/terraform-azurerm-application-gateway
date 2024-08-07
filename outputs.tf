@@ -30,6 +30,7 @@ output "backend_address_pools" {
 
 output "ssl_certificates" {
   value       = azurerm_application_gateway.main.ssl_certificate
+  sensitive   = true
   description = "Blocks containing configuration of each ssl certificate."
 }
 

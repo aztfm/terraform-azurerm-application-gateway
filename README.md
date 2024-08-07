@@ -6,15 +6,98 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/aztfm/terraform-azurerm-application-gateway?quickstart=1)
 
-## Version compatibility
+## :gear: Version compatibility
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
 | >= 2.x.x       | >= 1.9.x          | >= 3.40.0       |
 | >= 1.x.x       | >= 0.13.x         | >= 2.0.0        |
 
+## :memo: Usage
+
+```hcl
+resource "azurerm_resource_group" "rg" {
+  name     = "resource-group"
+  location = "Spain Central"
+}
+
+resource "azurerm_public_ip" "pip" {
+  name                = "pip"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "Standard"
+  allocation_method   = "Static"
+}
+
+resource "azurerm_virtual_network" "vnet" {
+  name                = "virtual-network"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  address_space       = ["10.0.0.0/24"]
+}
+
+resource "azurerm_subnet" "snet" {
+  name                 = "virtual-subnet"
+  resource_group_name  = azurerm_virtual_network.vnet.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.0.0/24"]
+}
+
+module "application_gateway_firewall_policy" {
+  source              = "aztfm/application-gateway-firewall-policy/azurerm"
+  version             = ">=1.0.0"
+  name                = "application-gateway-firewall-policy"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  managed_rule_sets = [{
+    type    = "OWASP"
+    version = "3.2"
+    }, {
+    type    = "Microsoft_BotManagerRuleSet"
+    version = "1.0"
+  }]
+}
+
+module "application_gateway" {
+  source              = "aztfm/application-gateway/azurerm"
+  version             = ">=2.0.0"
+  name                = "application-gateway"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku_name            = "WAF_v2"
+  firewall_policy_id  = module.application_gateway_firewall_policy.id
+  capacity            = 1
+  subnet_id           = azurerm_subnet.snet.id
+  frontend_ip_configuration = {
+    public_ip_address_id = azurerm_public_ip.pip.id
+  }
+  backend_address_pools = [{
+    name         = "backend-address-pool",
+    ip_addresses = ["10.0.0.4","10.0.0.5"]
+  }]
+  http_listeners        = [{
+    name                      = "http-listener"
+    frontend_ip_configuration = "Public"
+    protocol                  = "Http"
+    port                      = 80
+  }]
+  backend_http_settings = [{
+    name     = "backend-http-setting-1"
+    protocol = "Http"
+    port     = 80
+  }]
+  request_routing_rules = [{
+    name                       = "request-routing-rule"
+    priority                   = 100
+    http_listener_name         = "http-listener"
+    backend_address_pool_name  = "backend-address-pool"
+    backend_http_settings_name = "backend-http-setting"
+  }]
+}
+```
+
 <!-- BEGIN_TF_DOCS -->
-## Parameters
+## :arrow_forward: Parameters
 
 The following parameters are supported:
 
@@ -34,6 +117,7 @@ The following parameters are supported:
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|
 |frontend\_ip\_configuration|A mapping with the frontend ip configuration of the Application Gateway.|`object({})`|n/a|yes|
 |backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`list(object({}))`|n/a|yes|
+|ssl\_certificates|List of objects that represent the configuration of each ssl certificate.|`list(object({}))`|`[]`|no|
 |http\_listeners|List of objects that represent the configuration of each http listener.|`list(object({}))`|n/a|yes|
 |probes|List of objects that represent the configuration of each probe.|`list(object({}))`|`[]`|no|
 |backend\_http\_settings|List of objects that represent the configuration of each backend http settings.|`list(object({}))`|n/a|yes|
@@ -68,8 +152,8 @@ The `ssl_certificates` supports the following:
 | ---- | ------------| :--: | :-----: | :------: |
 |name|The Name of the SSL certificate that is unique within this Application Gateway.|`string`|n/a|yes|
 |data|PFX certificate. Required if `key_vault_secret_id` is not set.|`string`|`null`|no|
-|password|Password for the pfx file specified in data. Required if data is set.|`string`|`null`|no|
-|key\_vault\_secret\_id|Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for Key Vault to use this feature. Required if data is not set.|`string`|`null`|no|
+|password|Password for the pfx file specified in data. Required if `data` is set.|`string`|`null`|no|
+|key\_vault\_secret\_id|Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure Key Vault. You need to enable soft delete for Key Vault to use this feature. Required if `data` is not set.|`string`|`null`|no|
 
 The `http_listeners` supports the following:
 
@@ -116,7 +200,7 @@ The `request_routing_rules` supports the following:
 |backend\_address\_pool\_name|The Name of the Backend Address Pool which should be used for this Routing Rule.|`string`|n/a|yes|
 |backend\_http\_settings\_name|The Name of the Backend HTTP Settings Collection which should be used for this Routing Rule.|`string`|n/a|yes|
 
-## Outputs
+## :arrow_backward: Outputs
 
 The following outputs are exported:
 
