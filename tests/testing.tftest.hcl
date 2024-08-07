@@ -62,10 +62,10 @@ variables {
     backend_http_settings_name = "backend-http-setting-1"
     }, {
     name                       = "request-routing-rule-2"
-    priority                   = 2
+    priority                   = 200
     http_listener_name         = "http-listener-2"
     backend_address_pool_name  = "backend-address-pool-2"
-    backend_http_settings_name = "backend-http-setting"
+    backend_http_settings_name = "backend-http-setting-2"
   }]
 }
 
