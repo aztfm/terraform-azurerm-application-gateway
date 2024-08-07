@@ -31,7 +31,7 @@ content: |
     {{ printf "|%s|" .Required }}
   {{ end }}{{ end -}}
 
-  ## Parameters
+  ## :arrow_forward: Parameters
 
   The following parameters are supported:
 
@@ -57,7 +57,7 @@ content: |
   {{ template "table" dict "Resource" "backend_http_settings" "File" ".config/backend_http_settings_parameters.json" }}
   {{ template "table" dict "Resource" "request_routing_rules" "File" ".config/request_routing_rule_parameters.json" }}{{ printf "\n" -}}
 
-  ## Outputs
+  ## :arrow_backward: Outputs
 
   The following outputs are exported:
 

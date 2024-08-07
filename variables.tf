@@ -146,17 +146,17 @@ variable "backend_address_pools" {
   }
 }
 
-# variable "ssl_certificates" {
-#   type = list(object({
-#     name                = string
-#     data                = optional(string)
-#     password            = optional(string)
-#     key_vault_secret_id = optional(string)
-#   }))
-#   default     = []
-#   sensitive   = true
-#   description = "List of objects that represent the configuration of each ssl certificate."
-# }
+variable "ssl_certificates" {
+  type = list(object({
+    name                = string
+    data                = optional(string)
+    password            = optional(string)
+    key_vault_secret_id = optional(string)
+  }))
+  default     = []
+  sensitive   = true
+  description = "List of objects that represent the configuration of each ssl certificate."
+}
 
 variable "http_listeners" {
   type = list(object({
@@ -184,10 +184,10 @@ variable "http_listeners" {
     error_message = "The protocol must be either Http or Https."
   }
 
-  # validation {
-  #   condition     = alltrue([for listener in var.http_listeners : listener.protocol == "Https" ? listener.ssl_certificate_name != null : true])
-  #   error_message = "The ssl_certificate_name is required when the protocol is Https."
-  # }
+  validation {
+    condition     = alltrue([for listener in var.http_listeners : listener.protocol == "Https" ? listener.ssl_certificate_name != null : true])
+    error_message = "The ssl_certificate_name is required when the protocol is Https."
+  }
 }
 
 variable "probes" {

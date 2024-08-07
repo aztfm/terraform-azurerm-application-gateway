@@ -71,16 +71,16 @@ resource "azurerm_application_gateway" "main" {
     }
   }
 
-  # dynamic "ssl_certificate" {
-  #   for_each = var.ssl_certificates
+  dynamic "ssl_certificate" {
+    for_each = nonsensitive(var.ssl_certificates)
 
-  #   content {
-  #     name                = ssl_certificate.value.name
-  #     data                = ssl_certificate.value.data
-  #     password            = ssl_certificate.value.password
-  #     key_vault_secret_id = ssl_certificate.value.key_vault_secret_id
-  #   }
-  # }
+    content {
+      name                = ssl_certificate.value.name
+      data                = ssl_certificate.value.data
+      password            = ssl_certificate.value.password
+      key_vault_secret_id = ssl_certificate.value.key_vault_secret_id
+    }
+  }
 
   dynamic "http_listener" {
     for_each = var.http_listeners
@@ -91,7 +91,7 @@ resource "azurerm_application_gateway" "main" {
       frontend_port_name             = http_listener.value.port
       protocol                       = http_listener.value.protocol
       host_name                      = http_listener.value.host_name
-      # ssl_certificate_name           = http_listener.value.ssl_certificate_name
+      ssl_certificate_name           = http_listener.value.ssl_certificate_name
     }
   }
 
