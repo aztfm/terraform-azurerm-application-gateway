@@ -6,14 +6,14 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/aztfm/terraform-azurerm-application-gateway?quickstart=1)
 
-## Version compatibility
+## :gear: Version compatibility
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
 | >= 2.x.x       | >= 1.9.x          | >= 3.40.0       |
 | >= 1.x.x       | >= 0.13.x         | >= 2.0.0        |
 
-## Usage
+## :memo: Usage
 
 ```hcl
 resource "azurerm_resource_group" "rg" {
@@ -72,22 +72,32 @@ module "application_gateway" {
     public_ip_address_id = azurerm_public_ip.pip.id
   }
   backend_address_pools = [{
-    name         = "backend",
+    name         = "backend-address-pool",
     ip_addresses = ["10.0.0.4","10.0.0.5"]
   }]
   http_listeners        = [{
-    name                      = "listener"
+    name                      = "http-listener"
     frontend_ip_configuration = "Public"
     protocol                  = "Http"
     port                      = 80
   }]
-  backend_http_settings = []
-  request_routing_rules = []
+  backend_http_settings = [{
+    name     = "backend-http-setting-1"
+    protocol = "Http"
+    port     = 80
+  }]
+  request_routing_rules = [{
+    name                       = "request-routing-rule"
+    priority                   = 100
+    http_listener_name         = "http-listener"
+    backend_address_pool_name  = "backend-address-pool"
+    backend_http_settings_name = "backend-http-setting"
+  }]
 }
 ```
 
 <!-- BEGIN_TF_DOCS -->
-## Parameters
+## :arrow_forward: Parameters
 
 The following parameters are supported:
 
@@ -190,7 +200,7 @@ The `request_routing_rules` supports the following:
 |backend\_address\_pool\_name|The Name of the Backend Address Pool which should be used for this Routing Rule.|`string`|n/a|yes|
 |backend\_http\_settings\_name|The Name of the Backend HTTP Settings Collection which should be used for this Routing Rule.|`string`|n/a|yes|
 
-## Outputs
+## :arrow_backward: Outputs
 
 The following outputs are exported:
 

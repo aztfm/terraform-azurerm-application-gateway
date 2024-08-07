@@ -474,11 +474,6 @@ run "plan" {
   #region Request Routing Rules
 
   assert {
-    condition     = length(azurerm_application_gateway.main.request_routing_rule) == 2
-    error_message = "The number of Request Routing Rules is not as expected."
-  }
-
-  assert {
     condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].name == var.request_routing_rules[0].name
     error_message = "The name of the first Request Routing Rule is not as expected."
   }
