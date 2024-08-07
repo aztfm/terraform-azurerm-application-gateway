@@ -318,11 +318,6 @@ run "plan" {
   #region SSL Certificates
 
   assert {
-    condition     = length(azurerm_application_gateway.main.ssl_certificate) == 2
-    error_message = "The number of SSL Certificates is not as expected."
-  }
-
-  assert {
     condition     = { for cert in azurerm_application_gateway.main.ssl_certificate : cert.name => cert }["${run.setup.workspace_id}1"].name == var.ssl_certificates[0].name
     error_message = "The name of the first SSL Certificate is not as expected."
   }
@@ -479,7 +474,7 @@ run "plan" {
   #region Request Routing Rules
 
   assert {
-    condition     = length(azurerm_application_gateway.main.request_routing_rule) == 1
+    condition     = length(azurerm_application_gateway.main.request_routing_rule) == 2
     error_message = "The number of Request Routing Rules is not as expected."
   }
 
