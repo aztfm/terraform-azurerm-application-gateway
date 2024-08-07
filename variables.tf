@@ -30,7 +30,7 @@ variable "zones" {
   }
 
   validation {
-    condition     = alltrue([for z in var.zones : z >= 1 && z <= 3])
+    condition     = alltrue([for zone in var.zones : zone >= 1 && zone <= 3])
     error_message = "The zones must be between 1 and 3."
   }
 }
@@ -190,30 +190,91 @@ variable "http_listeners" {
   # }
 }
 
-# variable "probes" {
-#   type = list(object({
-#     name                = string
-#     host                = optional(string)
-#     protocol            = string
-#     path                = string
-#     interval            = number
-#     timeout             = string
-#     unhealthy_threshold = string
-#   }))
-#   default     = []
-#   description = "List of objects that represent the configuration of each probe."
-# }
+variable "probes" {
+  type = list(object({
+    name                = string
+    host                = optional(string)
+    protocol            = string
+    path                = optional(string, "/")
+    interval            = optional(number, 30)
+    timeout             = optional(number, 30)
+    unhealthy_threshold = optional(number, 3)
+  }))
+  default     = []
+  description = "List of objects that represent the configuration of each probe."
+
+  validation {
+    condition     = alltrue([for probe in var.probes : strcontains(probe.host, ".") if probe.host != null])
+    error_message = "The host must be a valid domain name."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : length(split("/", probe.path)) >= 2 && split("/", probe.path)[0] == ""])
+    error_message = "The path must be a valid URL path."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : contains(["Http", "Https"], probe.protocol)])
+    error_message = "The protocol must be either Http or Https."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : probe.interval >= 1 && probe.interval <= 86400])
+    error_message = "The interval must be between 1 and 86400."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : probe.timeout >= 1 && probe.timeout <= 86400])
+    error_message = "The timeout must be between 1 and 86400."
+  }
+
+  validation {
+    condition     = alltrue([for probe in var.probes : probe.unhealthy_threshold >= 1 && probe.unhealthy_threshold <= 20])
+    error_message = "The unhealthy_threshold must be between 1 and 20."
+  }
+}
 
 variable "backend_http_settings" {
   type = list(object({
-    name            = string
-    port            = string
-    protocol        = string
-    request_timeout = number
-    host_name       = optional(string)
-    probe_name      = optional(string)
+    name                  = string
+    protocol              = string
+    port                  = number
+    cookie_based_affinity = optional(string, "Disabled")
+    request_timeout       = optional(number, 20)
+    host_name             = optional(string)
+    probe_name            = optional(string)
   }))
   description = "List of objects that represent the configuration of each backend http settings."
+
+  validation {
+    condition     = alltrue([for backend in var.backend_http_settings : backend.port >= 1 && backend.port <= 65535])
+    error_message = "The port must be between 1 and 65535."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : contains(["Http", "Https"], settings.protocol)])
+    error_message = "The protocol must be either Http or Https."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : contains(["Disabled", "Enabled"], settings.cookie_based_affinity)])
+    error_message = "The cookie_based_affinity must be either Disabled or Enabled."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : settings.request_timeout >= 1 && settings.request_timeout <= 86400])
+    error_message = "The request_timeout must be between 1 and 86400."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : strcontains(settings.host_name, ".") if settings.host_name != null])
+    error_message = "The host_name must be a valid domain name."
+  }
+
+  validation {
+    condition     = alltrue([for settings in var.backend_http_settings : contains([for probe in var.probes : probe.name], settings.probe_name) if settings.probe_name != null])
+    error_message = "The probe_name must be one of the defined probes."
+  }
 }
 
 variable "request_routing_rules" {
@@ -225,4 +286,24 @@ variable "request_routing_rules" {
     backend_http_settings_name = string
   }))
   description = "List of objects that represent the configuration of each backend request routing rule."
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : rule.priority >= 1 && rule.priority <= 20000])
+    error_message = "The priority must be between 1 and 20000."
+  }
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : contains([for listener in var.http_listeners : listener.name], rule.http_listener_name)])
+    error_message = "The http_listener_name must be one of the defined http listeners."
+  }
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : contains([for pool in var.backend_address_pools : pool.name], rule.backend_address_pool_name)])
+    error_message = "The backend_address_pool_name must be one of the defined backend address pools."
+  }
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : contains([for settings in var.backend_http_settings : settings.name], rule.backend_http_settings_name)])
+    error_message = "The backend_http_settings_name must be one of the defined backend http settings."
+  }
 }

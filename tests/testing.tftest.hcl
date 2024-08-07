@@ -46,13 +46,37 @@ variables {
     protocol                  = "Http"
     }
   ]
-  backend_http_settings = [{ name = "backend-http-setting", port = 80, protocol = "Http", request_timeout = 20 }]
+  probes = [{
+    name     = "probe-1"
+    protocol = "Http"
+    }, {
+    name                = "probe-2"
+    host                = "domain.com"
+    protocol            = "Https"
+    path                = "/health"
+    interval            = 60
+    timeout             = 120
+    unhealthy_threshold = 9
+  }]
+  backend_http_settings = [{
+    name     = "backend-http-setting-1"
+    protocol = "Http"
+    port     = 80
+    # }, {
+    # name                  = "backend-http-setting-2"
+    # protocol              = "Http"
+    # port                  = 443
+    # cookie_based_affinity = "Enabled"
+    # request_timeout       = 120
+    # host_name             = "domain.com"
+    # probe_name            = "probe-2"
+  }]
   request_routing_rules = [{
     name                       = "request-routing-rule-1"
-    priority                   = 1
+    priority                   = 100
     http_listener_name         = "http-listener-1"
     backend_address_pool_name  = "backend-address-pool-1"
-    backend_http_settings_name = "backend-http-setting"
+    backend_http_settings_name = "backend-http-setting-1"
     },
     #    {
     #   name                       = "request-routing-rule-2"
@@ -267,6 +291,127 @@ run "plan" {
     condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-3"].protocol == var.http_listeners[2].protocol
     error_message = "The protocol of the third HTTP Listener is not as expected."
   }
+
+  #region Health Probes
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].name == var.probes[0].name
+    error_message = "The name of the first Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].protocol == var.probes[0].protocol
+    error_message = "The protocol of the first Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].path == "/"
+    error_message = "The path of the first Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].pick_host_name_from_backend_http_settings == true
+    error_message = "The pick_host_name_from_backend_http_settings of the first Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].interval == 30
+    error_message = "The interval of the first Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].timeout == 30
+    error_message = "The timeout of the first Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-1"].unhealthy_threshold == 3
+    error_message = "The unhealthy_threshold of the first Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].name == var.probes[1].name
+    error_message = "The name of the second Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].host == var.probes[1].host
+    error_message = "The host of the second Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].protocol == var.probes[1].protocol
+    error_message = "The protocol of the second Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].path == var.probes[1].path
+    error_message = "The path of the second Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].interval == var.probes[1].interval
+    error_message = "The interval of the second Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].timeout == var.probes[1].timeout
+    error_message = "The timeout of the second Health Probe is not as expected."
+  }
+
+  assert {
+    condition     = { for probe in azurerm_application_gateway.main.probe : probe.name => probe }["probe-2"].unhealthy_threshold == var.probes[1].unhealthy_threshold
+    error_message = "The unhealthy_threshold of the second Health Probe is not as expected."
+  }
+
+  #region Backend HTTP Settings
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-1"].name == var.backend_http_settings[0].name
+    error_message = "The name of the first Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-1"].protocol == var.backend_http_settings[0].protocol
+    error_message = "The protocol of the first Backend HTTP Settings is not as expected."
+  }
+
+  assert {
+    condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-1"].port == var.backend_http_settings[0].port
+    error_message = "The port of the first Backend HTTP Settings is not as expected."
+  }
+
+  #region Request Routing Rules
+
+  assert {
+    condition     = length(azurerm_application_gateway.main.request_routing_rule) == 1
+    error_message = "The number of Request Routing Rules is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].name == var.request_routing_rules[0].name
+    error_message = "The name of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].priority == var.request_routing_rules[0].priority
+    error_message = "The priority of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].http_listener_name == var.request_routing_rules[0].http_listener_name
+    error_message = "The http_listener_name of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].backend_address_pool_name == var.request_routing_rules[0].backend_address_pool_name
+    error_message = "The backend_address_pool_name of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].backend_http_settings_name == var.request_routing_rules[0].backend_http_settings_name
+    error_message = "The backend_http_settings_name of the first Request Routing Rule is not as expected."
+  }
 }
 
 run "apply" {
@@ -342,5 +487,10 @@ run "apply" {
   assert {
     condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].subnet_id == run.setup.subnet_id
     error_message = "The subnet_id of the second Frontend IP Configuration is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].private_ip_address == cidrhost(run.setup.subnet_address_prefix, 10)
+    error_message = "The private_ip_address of the second Frontend IP Configuration is not as expected."
   }
 }

@@ -30,7 +30,7 @@
         "Name": "path",
         "Description": "The Path used for this Probe.",
         "Type": "string",
-        "Default": "null",
+        "Default": "/",
         "Required": "no",
         "Support": []
     },
@@ -38,23 +38,23 @@
         "Name": "interval",
         "Description": "The Interval between two consecutive probes in seconds. Possible values range from `1` second to a maximum of `86400` seconds.",
         "Type": "number",
-        "Default": "null",
+        "Default": "30",
         "Required": "no",
         "Support": []
     },
     {
         "Name": "timeout",
         "Description": "The Timeout used for this Probe, which indicates when a probe becomes unhealthy. Possible values range from `1` second to a maximum of `86400` seconds.",
-        "Type": "string",
-        "Default": "null",
+        "Type": "number",
+        "Default": "30",
         "Required": "no",
         "Support": []
     },
     {
         "Name": "unhealthy_threshold",
         "Description": "The Unhealthy Threshold for this Probe, which indicates the amount of retries which should be attempted before a node is deemed unhealthy. Possible values are from `1` to `20`.",
-        "Type": "string",
-        "Default": "null",
+        "Type": "number",
+        "Default": "3",
         "Required": "no",
         "Support": []
     }

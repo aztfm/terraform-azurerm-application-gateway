@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD041 -->
-## 2.0.0 (Unrelease)
+## 2.0.0 (Unreleased)
 
 BREAKING CHANGES:
 
@@ -23,6 +23,7 @@ FEATURES:
 * **New Parameter**: `capacity`
 * **New Parameter**: `frontend_ip_configuration.subnet_id`
 * **New Parameter**: `backend_address_pool.fqdns`
+* **New Parameter**: `backend_http_settings.cookie_based_affinity`
 
 DEPRECATIONS:
 
