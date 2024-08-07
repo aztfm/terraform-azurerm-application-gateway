@@ -8,6 +8,14 @@
         "Support": []
     },
     {
+        "Name": "priority",
+        "Description": "The Priority of this Request Routing Rule.",
+        "Type": "number",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
         "Name": "http_listener_name",
         "Description": "The Name of the HTTP Listener which should be used for this Routing Rule.",
         "Type": "string",

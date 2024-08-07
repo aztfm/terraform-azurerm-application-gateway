@@ -69,7 +69,7 @@ The `ssl_certificates` supports the following:
 |name|The Name of the SSL certificate that is unique within this Application Gateway.|`string`|n/a|yes|
 |data|PFX certificate. Required if `key_vault_secret_id` is not set.|`string`|`null`|no|
 |password|Password for the pfx file specified in data. Required if data is set.|`string`|`null`|no|
-|key\_vault\_secret\_id|Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for keyvault to use this feature. Required if data is not set.|`string`|`null`|no|
+|key\_vault\_secret\_id|Secret Id of (base-64 encoded unencrypted pfx) Secret or Certificate object stored in Azure KeyVault. You need to enable soft delete for Key Vault to use this feature. Required if data is not set.|`string`|`null`|no|
 
 The `http_listeners` supports the following:
 
@@ -111,6 +111,7 @@ The `request_routing_rules` supports the following:
 | Name | Description | Type | Default | Required |
 | ---- | ------------| :--: | :-----: | :------: |
 |name|The Name of this Request Routing Rule.|`string`|n/a|yes|
+|priority|The Priority of this Request Routing Rule.|`number`|n/a|yes|
 |http\_listener\_name|The Name of the HTTP Listener which should be used for this Routing Rule.|`string`|n/a|yes|
 |backend\_address\_pool\_name|The Name of the Backend Address Pool which should be used for this Routing Rule.|`string`|n/a|yes|
 |backend\_http\_settings\_name|The Name of the Backend HTTP Settings Collection which should be used for this Routing Rule.|`string`|n/a|yes|
