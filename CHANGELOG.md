@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD041 -->
-## 2.0.0 (Unrelease)
+## 2.0.0 (Unreleased)
 
 BREAKING CHANGES:
 

@@ -31,11 +31,8 @@
                 "vscode-icons-team.vscode-icons"
             ],
             "settings": {
-                "cSpell.files": [
-                    "!.devcontainer/devcontainer.json"
-                ],
-                "cSpell.words": [
-                    "azurerm"
+                "cSpell.ignorePaths": [
+                    ".devcontainer/devcontainer.json"
                 ],
                 "editor.bracketPairColorization.enabled": true,
                 "editor.formatOnSave": true,

@@ -286,4 +286,24 @@ variable "request_routing_rules" {
     backend_http_settings_name = string
   }))
   description = "List of objects that represent the configuration of each backend request routing rule."
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : rule.priority >= 1 && rule.priority <= 20000])
+    error_message = "The priority must be between 1 and 20000."
+  }
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : contains([for listener in var.http_listeners : listener.name], rule.http_listener_name)])
+    error_message = "The http_listener_name must be one of the defined http listeners."
+  }
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : contains([for pool in var.backend_address_pools : pool.name], rule.backend_address_pool_name)])
+    error_message = "The backend_address_pool_name must be one of the defined backend address pools."
+  }
+
+  validation {
+    condition     = alltrue([for rule in var.request_routing_rules : contains([for settings in var.backend_http_settings : settings.name], rule.backend_http_settings_name)])
+    error_message = "The backend_http_settings_name must be one of the defined backend http settings."
+  }
 }

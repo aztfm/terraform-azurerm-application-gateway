@@ -69,7 +69,7 @@ variables {
   }]
   request_routing_rules = [{
     name                       = "request-routing-rule-1"
-    priority                   = 1
+    priority                   = 100
     http_listener_name         = "http-listener-1"
     backend_address_pool_name  = "backend-address-pool-1"
     backend_http_settings_name = "backend-http-setting-1"
@@ -368,6 +368,38 @@ run "plan" {
     condition     = { for settings in azurerm_application_gateway.main.backend_http_settings : settings.name => settings }["backend-http-setting-1"].port == var.backend_http_settings[0].port
     error_message = "The port of the first Backend HTTP Settings is not as expected."
   }
+
+  #region Request Routing Rules
+
+  assert {
+    condition     = length(azurerm_application_gateway.main.request_routing_rule) == 1
+    error_message = "The number of Request Routing Rules is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].name == var.request_routing_rules[0].name
+    error_message = "The name of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].priority == var.request_routing_rules[0].priority
+    error_message = "The priority of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].http_listener_name == var.request_routing_rules[0].http_listener_name
+    error_message = "The http_listener_name of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].backend_address_pool_name == var.request_routing_rules[0].backend_address_pool_name
+    error_message = "The backend_address_pool_name of the first Request Routing Rule is not as expected."
+  }
+
+  assert {
+    condition     = { for rule in azurerm_application_gateway.main.request_routing_rule : rule.name => rule }["request-routing-rule-1"].backend_http_settings_name == var.request_routing_rules[0].backend_http_settings_name
+    error_message = "The backend_http_settings_name of the first Request Routing Rule is not as expected."
+  }
 }
 
 run "apply" {
@@ -435,5 +467,10 @@ run "apply" {
   assert {
     condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].subnet_id == run.setup.subnet_id
     error_message = "The subnet_id of the second Frontend IP Configuration is not as expected."
+  }
+
+  assert {
+    condition     = azurerm_application_gateway.main.frontend_ip_configuration[1].private_ip_address == cidrhost(run.setup.subnet_address_prefix, 10)
+    error_message = "The private_ip_address of the second Frontend IP Configuration is not as expected."
   }
 }
