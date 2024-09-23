@@ -69,7 +69,7 @@ module "application_gateway" {
     frontend_ip_configuration = "Public"
     protocol                  = "Https"
     port                      = 443
-    certificate_name          = "certificate"
+    ssl_certificate_name          = "certificate"
   }]
   backend_http_settings = [{
     name     = "backend-http-setting"
@@ -82,5 +82,9 @@ module "application_gateway" {
     http_listener_name         = "http-listener"
     backend_address_pool_name  = "backend-address-pool"
     backend_http_settings_name = "backend-http-setting"
+  }]
+  ssl_policies = [{
+    policy_type = "Predefined"
+    predefined_policy_name = "AppGwSslPolicy20170401S"
   }]
 }

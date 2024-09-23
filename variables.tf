@@ -307,3 +307,14 @@ variable "request_routing_rules" {
     error_message = "The backend_http_settings_name must be one of the defined backend http settings."
   }
 }
+
+variable "ssl_policies" {
+  description = "List of SSL policies for the Application Gateway"
+  type = list(object({
+    policy_type            = string
+    predefined_policy_name = optional(string)
+    min_protocol_version   = optional(string)
+    cipher_suites          = optional(list(string))
+  }))
+  default = []
+}

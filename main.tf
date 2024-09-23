@@ -137,4 +137,15 @@ resource "azurerm_application_gateway" "main" {
       backend_http_settings_name = request_routing_rule.value.backend_http_settings_name
     }
   }
+
+  dynamic "ssl_policy" {
+    for_each = var.ssl_policies
+
+    content {
+      policy_type          = ssl_policy.value.policy_type
+      policy_name          = lookup(ssl_policy.value, "predefined_policy_name", null)
+      min_protocol_version = lookup(ssl_policy.value, "min_protocol_version", null)
+      cipher_suites        = lookup(ssl_policy.value, "cipher_suites", null)
+    }
+  }
 }
