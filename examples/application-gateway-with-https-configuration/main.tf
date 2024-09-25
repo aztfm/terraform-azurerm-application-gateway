@@ -1,5 +1,3 @@
-data "azurerm_client_config" "current" {}
-
 resource "azurerm_resource_group" "rg" {
   name     = "resource-group"
   location = "Spain Central"
@@ -13,18 +11,17 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = "Static"
 }
 
-resource "azurerm_virtual_network" "vnet" {
+module "virtual_network" {
+  source              = "aztfm/virtual-network/azurerm"
+  version             = ">=4.0.0"
   name                = "virtual-network"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  address_space       = ["10.0.0.0/24"]
-}
-
-resource "azurerm_subnet" "snet" {
-  name                 = "virtual-subnet"
-  resource_group_name  = azurerm_virtual_network.vnet.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.0.0/24"]
+  address_space       = ["10.0.0.0/16"]
+  subnets = [{
+    name             = "subnet"
+    address_prefixes = ["10.0.0.0/24"]
+  }]
 }
 
 module "application_gateway_firewall_policy" {
@@ -50,8 +47,8 @@ module "application_gateway" {
   location            = azurerm_resource_group.rg.location
   sku_name            = "WAF_v2"
   firewall_policy_id  = module.application_gateway_firewall_policy.id
+  subnet_id           = module.virtual_network.subnet["subnet"].id
   capacity            = 1
-  subnet_id           = azurerm_subnet.snet.id
   frontend_ip_configuration = {
     public_ip_address_id = azurerm_public_ip.pip.id
   }
@@ -69,7 +66,7 @@ module "application_gateway" {
     frontend_ip_configuration = "Public"
     protocol                  = "Https"
     port                      = 443
-    certificate_name          = "certificate"
+    ssl_certificate_name      = "certificate"
   }]
   backend_http_settings = [{
     name     = "backend-http-setting"
