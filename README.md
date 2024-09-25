@@ -1,7 +1,12 @@
 # Azure Application Gateway - Terraform Module
 
+[devcontainer]: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/aztfm/terraform-azurerm-application-gateway
+[registry]: https://registry.terraform.io/modules/aztfm/application-gateway/azurerm/
+
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![Terraform Registry](https://img.shields.io/badge/terraform-registry-blueviolet.svg)](https://registry.terraform.io/modules/aztfm/application-gateway/azurerm/)
+[![Terraform Registry](https://img.shields.io/badge/terraform-registry-blueviolet?logo=terraform&logoColor=white)][registry]
+[![Dev Container](https://img.shields.io/badge/devcontainer-VSCode-blue?logo=linuxcontainers)][devcontainer]
+![GitHub License](https://img.shields.io/github/license/aztfm/terraform-azurerm-application-gateway)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/aztfm/terraform-azurerm-application-gateway)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/aztfm/terraform-azurerm-application-gateway?quickstart=1)
@@ -29,18 +34,17 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = "Static"
 }
 
-resource "azurerm_virtual_network" "vnet" {
+module "virtual_network" {
+  source              = "aztfm/virtual-network/azurerm"
+  version             = ">=4.0.0"
   name                = "virtual-network"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  address_space       = ["10.0.0.0/24"]
-}
-
-resource "azurerm_subnet" "snet" {
-  name                 = "virtual-subnet"
-  resource_group_name  = azurerm_virtual_network.vnet.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.0.0/24"]
+  address_space       = ["10.0.0.0/16"]
+  subnets = [{
+    name             = "subnet"
+    address_prefixes = ["10.0.0.0/24"]
+  }]
 }
 
 module "application_gateway_firewall_policy" {
@@ -66,8 +70,8 @@ module "application_gateway" {
   location            = azurerm_resource_group.rg.location
   sku_name            = "WAF_v2"
   firewall_policy_id  = module.application_gateway_firewall_policy.id
+  subnet_id           = module.virtual_network.subnet["subnet"].id
   capacity            = 1
-  subnet_id           = azurerm_subnet.snet.id
   frontend_ip_configuration = {
     public_ip_address_id = azurerm_public_ip.pip.id
   }
