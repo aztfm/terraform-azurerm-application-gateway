@@ -121,6 +121,7 @@ The following parameters are supported:
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|
 |frontend\_ip\_configuration|A mapping with the frontend ip configuration of the Application Gateway.|`object({})`|n/a|yes|
 |backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`list(object({}))`|n/a|yes|
+|ssl\_policies|List of objects that represent the configuration of each ssl policy.|`list(object({}))`|`[]`|no|
 |ssl\_certificates|List of objects that represent the configuration of each ssl certificate.|`list(object({}))`|`[]`|no|
 |http\_listeners|List of objects that represent the configuration of each http listener.|`list(object({}))`|n/a|yes|
 |probes|List of objects that represent the configuration of each probe.|`list(object({}))`|`[]`|no|
@@ -149,6 +150,16 @@ The `backend_address_pools` supports the following:
 |name|The name of the Backend Address Pool.|`string`|n/a|yes|
 |fqdns|A list of FQDNs which should be part of the Backend Address Pool.|`list(string)`|`null`|no|
 |private\_ip\_address|A list of IP Addresses which should be part of the Backend Address Pool.|`list(string)`|`null`|no|
+
+The `ssl_policies` supports the following:
+
+| Name | Description | Type | Default | Required |
+| ---- | ------------| :--: | :-----: | :------: |
+|policy\_type|The Type of the Policy. Possible values are `Predefined`, `Custom` and `CustomV2`.|`string`|`null`|no|
+|policy\_name|The Name of the Policy e.g. AppGwSslPolicy20170401S. Required if policy_type is set to Predefined. Not compatible with disabled_protocols.|`string`|`null`|no|
+|disabled\_protocols|A list of SSL Protocols which should be disabled on this Application Gateway. Possible values are `TLSv1_0`, `TLSv1_1`, `TLSv1_2` and `TLSv1_3`.|`list(string)`|`null`|no|
+|min\_protocol\_version|The minimal TLS version. Possible values are `TLSv1_0`, `TLSv1_1`, `TLSv1_2` and `TLSv1_3`.|`string`|`null`|no|
+|cipher\_suites|A List of accepted cipher suites. Possible values are `TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_128_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_128_CBC_SHA256`, `TLS_DHE_DSS_WITH_AES_256_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_256_CBC_SHA256`, `TLS_DHE_RSA_WITH_AES_128_CBC_SHA`, `TLS_DHE_RSA_WITH_AES_128_GCM_SHA256`, `TLS_DHE_RSA_WITH_AES_256_CBC_SHA`, `TLS_DHE_RSA_WITH_AES_256_GCM_SHA384`, `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA`, `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256`, `TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256`, `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA`, `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384`, `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384`, `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA`, `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256`, `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`, `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA`, `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384`, `TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384`, `TLS_RSA_WITH_3DES_EDE_CBC_SHA`, `TLS_RSA_WITH_AES_128_CBC_SHA`, `TLS_RSA_WITH_AES_128_CBC_SHA256`, `TLS_RSA_WITH_AES_128_GCM_SHA256`, `TLS_RSA_WITH_AES_256_CBC_SHA`, `TLS_RSA_WITH_AES_256_CBC_SHA256` and `TLS_RSA_WITH_AES_256_GCM_SHA384`.|`list(string)`|`null`|no|
 
 The `ssl_certificates` supports the following:
 
