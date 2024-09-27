@@ -20,6 +20,18 @@ variables {
     min_capacity = 2
     max_capacity = 5
   }
+  ssl_policies = [{
+    policy_type = "Predefined"
+    policy_name = "AppGwSslPolicy20220101"
+    }, {
+    policy_type          = "CustomV2"
+    min_protocol_version = "TLSv1_3"
+    cipher_suites = [
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+    ]
+  }]
   backend_address_pools = [{
     name = "backend-address-pool-1"
     }, {
@@ -313,6 +325,33 @@ run "plan" {
   assert {
     condition     = { for listener in azurerm_application_gateway.main.http_listener : listener.name => listener }["http-listener-4"].protocol == var.http_listeners[3].protocol
     error_message = "The protocol of the fourth HTTP Listener is not as expected."
+  }
+
+  #region SSL Policies
+
+  assert {
+    condition     = { for policy in azurerm_application_gateway.main.ssl_policy : policy.policy_name => policy }["AppGwSslPolicy20220101"].policy_type == var.ssl_policies[0].policy_type
+    error_message = "The policy_type of the first SSL Policy is not as expected."
+  }
+
+  assert {
+    condition     = { for policy in azurerm_application_gateway.main.ssl_policy : policy.policy_name => policy }["AppGwSslPolicy20220101"].policy_name == var.ssl_policies[0].policy_name
+    error_message = "The policy_name of the first SSL Policy is not as expected."
+  }
+
+  assert {
+    condition     = { for policy in azurerm_application_gateway.main.ssl_policy : policy.policy_name => policy }["CustomV2"].policy_type == var.ssl_policies[1].policy_type
+    error_message = "The policy_type of the second SSL Policy is not as expected."
+  }
+
+  assert {
+    condition     = { for policy in azurerm_application_gateway.main.ssl_policy : policy.policy_name => policy }["CustomV2"].min_protocol_version == var.ssl_policies[1].min_protocol_version
+    error_message = "The min_protocol_version of the second SSL Policy is not as expected."
+  }
+
+  assert {
+    condition     = { for policy in azurerm_application_gateway.main.ssl_policy : policy.policy_name => policy }["CustomV2"].cipher_suites == toset(var.ssl_policies[1].cipher_suites)
+    error_message = "The cipher_suites of the second SSL Policy is not as expected."
   }
 
   #region SSL Certificates

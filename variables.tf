@@ -183,6 +183,16 @@ variable "ssl_policies" {
   }
 
   validation {
+    condition     = alltrue([for policy in var.ssl_policies : policy.policy_type == "Custom" ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2"], policy.disabled_protocols) : true])
+    error_message = "The disabled_protocols must be one of TLSv1_0, TLSv1_1, or TLSv1_2 when the policy_type is Custom."
+  }
+
+  validation {
+    condition     = alltrue([for policy in var.ssl_policies : policy.policy_type == "CustomV2" ? contains(["TLSv1_2", "TLSv1_3"], policy.disabled_protocols) : true])
+    error_message = "The disabled_protocols must be one of TLSv1_2 or TLSv1_3 when the policy_type is CustomV2."
+  }
+
+  validation {
     condition     = alltrue([for policy in var.ssl_policies : policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], policy.min_protocol_version) : true])
     error_message = "The min_protocol_version must be one of TLSv1_0, TLSv1_1, TLSv1_2, or TLSv1_3."
   }
@@ -190,6 +200,8 @@ variable "ssl_policies" {
   validation {
     condition = alltrue([for policy in var.ssl_policies :
       alltrue([for suite in policy.cipher_suites : contains([
+        "TLS_AES_128_GCM_SHA256",
+        "TLS_AES_256_GCM_SHA384",
         "TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
         "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
         "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",
@@ -223,7 +235,7 @@ variable "ssl_policies" {
   }
 
   validation {
-    condition     = alltrue([for policy in var.ssl_policies : contains(["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384 "], policy.cipher_suites) ? policy.policy_type == "CustomV2" : true])
+    condition     = alltrue([for policy in var.ssl_policies : contains(["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384"], policy.cipher_suites) ? policy.policy_type == "CustomV2" : true])
     error_message = "The cipher_suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 are only supported for CustomV2 policies."
   }
 }
