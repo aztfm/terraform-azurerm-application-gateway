@@ -24,7 +24,7 @@ variables {
     policy_type = "Predefined"
     policy_name = "AppGwSslPolicy20220101S"
   }
-  ssl_profile = [{
+  ssl_profiles = [{
     name        = "ssl-profile-1"
     policy_type = "Predefined"
     policy_name = "AppGwSslPolicy20220101S"
