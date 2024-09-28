@@ -1,4 +1,3 @@
-<!-- markdownlint-disable MD041 -->
 ## 2.1.0 (XXXXXX XX, 20XX)
 
 FEATURES:
