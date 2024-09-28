@@ -156,22 +156,22 @@ variable "default_ssl_policy" {
   description = "A mapping with the default ssl policy of the Application Gateway."
 
   validation {
-    condition     = alltrue([for policy in var.default_ssl_policy : contains(["Predefined", "Custom", "CustomV2"], policy.policy_type)])
+    condition     = contains(["Predefined", "Custom", "CustomV2"], var.default_ssl_policy.policy_type)
     error_message = "The policy_type must be either Predefined, Custom, or CustomV2."
   }
 
   validation {
-    condition     = alltrue([for policy in var.default_ssl_policy : policy.policy_type == "Predefined" ? policy.policy_name != null : true])
+    condition     = var.default_ssl_policy.policy_type == "Predefined" ? var.default_ssl_policy.policy_name != null : true
     error_message = "The policy_name is required when the policy_type is Predefined."
   }
 
   validation {
-    condition     = alltrue([for policy in var.default_ssl_policy : policy.policy_name != null ? regex(policy.policy_name, "/^AppGwSslPolicy[0-9]{8}S?$/") : true])
+    condition     = var.default_ssl_policy.policy_name != null ? regex(var.default_ssl_policy.policy_name, "/^AppGwSslPolicy[0-9]{8}S?$/") : true
     error_message = "The policy_name must follow the naming convention AppGwSslPolicy<AAAAMMDD>, it may or may not include the suffix S."
   }
 
   validation {
-    condition     = alltrue([for policy in var.default_ssl_policy : policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], policy.min_protocol_version) : true])
+    condition     = var.default_ssl_policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], var.default_ssl_policy.min_protocol_version) : true
     error_message = "The min_protocol_version must be one of TLSv1_0, TLSv1_1, TLSv1_2, or TLSv1_3."
   }
 }
