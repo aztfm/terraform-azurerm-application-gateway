@@ -1,0 +1,35 @@
+[
+    {
+        "Name": "policy_type",
+        "Description": "The Type of the Policy. Possible values are",
+        "Type": "string",
+        "Default": "Predefined",
+        "Required": "no",
+        "Support": [
+            "Predefined",
+            "Custom",
+            "CustomV2"
+        ]
+    },
+    {
+        "Name": "policy_name",
+        "Description": "The Name of the Policy e.g. AppGwSslPolicy20170401S. Required if policy_type is set to Predefined.",
+        "Type": "string",
+        "Default": "AppGwSslPolicy20220101",
+        "Required": "no",
+        "Support": []
+    },
+    {
+        "Name": "min_protocol_version",
+        "Description": "The minimal TLS version. Possible values are",
+        "Type": "string",
+        "Default": "null",
+        "Required": "no",
+        "Support": [
+            "TLSv1_0",
+            "TLSv1_1",
+            "TLSv1_2",
+            "TLSv1_3"
+        ]
+    }
+]

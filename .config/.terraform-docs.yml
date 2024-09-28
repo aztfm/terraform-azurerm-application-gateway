@@ -51,7 +51,8 @@ content: |
   {{ template "table" dict "Resource" "autoscale_configuration" "File" ".config/autoscale_configuration_parameters.json" }}
   {{ template "table" dict "Resource" "frontend_ip_configuration" "File" ".config/frontend_ip_configuration_parameters.json" }}
   {{ template "table" dict "Resource" "backend_address_pools" "File" ".config/backend_address_pool_parameters.json" }}
-  {{ template "table" dict "Resource" "ssl_policies" "File" ".config/ssl_policy_parameters.json" }}
+  {{ template "table" dict "Resource" "default_ssl_policy" "File" ".config/default_ssl_policy_parameters.json" }}
+  {{ template "table" dict "Resource" "ssl_profiles" "File" ".config/ssl_profile_parameters.json" }}
   {{ template "table" dict "Resource" "ssl_certificates" "File" ".config/ssl_certificate_parameters.json" }}
   {{ template "table" dict "Resource" "http_listeners" "File" ".config/http_listener_parameters.json" }}
   {{ template "table" dict "Resource" "probes" "File" ".config/probe_parameters.json" }}

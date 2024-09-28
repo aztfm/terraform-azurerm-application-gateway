@@ -146,11 +146,41 @@ variable "backend_address_pools" {
   }
 }
 
-variable "ssl_policies" {
+variable "default_ssl_policy" {
+  type = object({
+    policy_type          = optional(string, "Predefined")
+    policy_name          = optional(string, "AppGwSslPolicy20220101")
+    min_protocol_version = optional(string)
+  })
+  default     = null
+  description = "A mapping with the default ssl policy of the Application Gateway."
+
+  validation {
+    condition     = alltrue([for policy in var.default_ssl_policy : contains(["Predefined", "Custom", "CustomV2"], policy.policy_type)])
+    error_message = "The policy_type must be either Predefined, Custom, or CustomV2."
+  }
+
+  validation {
+    condition     = alltrue([for policy in var.default_ssl_policy : policy.policy_type == "Predefined" ? policy.policy_name != null : true])
+    error_message = "The policy_name is required when the policy_type is Predefined."
+  }
+
+  validation {
+    condition     = alltrue([for policy in var.default_ssl_policy : policy.policy_name != null ? regex(policy.policy_name, "/^AppGwSslPolicy[0-9]{8}S?$/") : true])
+    error_message = "The policy_name must follow the naming convention AppGwSslPolicy<AAAAMMDD>, it may or may not include the suffix S."
+  }
+
+  validation {
+    condition     = alltrue([for policy in var.default_ssl_policy : policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], policy.min_protocol_version) : true])
+    error_message = "The min_protocol_version must be one of TLSv1_0, TLSv1_1, TLSv1_2, or TLSv1_3."
+  }
+}
+
+variable "ssl_profiles" {
   type = list(object({
+    name                 = string
     policy_type          = optional(string)
     policy_name          = optional(string)
-    disabled_protocols   = optional(list(string))
     min_protocol_version = optional(string)
     cipher_suites        = optional(list(string))
   }))
@@ -158,47 +188,27 @@ variable "ssl_policies" {
   description = "List of objects that represent the configuration of each ssl policy."
 
   validation {
-    condition     = alltrue([for policy in var.ssl_policies : contains(["Predefined", "Custom", "CustomV2"], policy.policy_type)])
+    condition     = alltrue([for policy in var.ssl_profiles : contains(["Predefined", "Custom", "CustomV2"], policy.policy_type)])
     error_message = "The policy_type must be either Predefined, Custom, or CustomV2."
   }
 
   validation {
-    condition     = alltrue([for policy in var.ssl_policies : policy.policy_type == "Predefined" ? policy.policy_name != null : true])
+    condition     = alltrue([for policy in var.ssl_profiles : policy.policy_type == "Predefined" ? policy.policy_name != null : true])
     error_message = "The policy_name is required when the policy_type is Predefined."
   }
 
   validation {
-    condition     = alltrue([for policy in var.ssl_policies : policy.policy_name != null ? regex(policy.policy_name, "/^AppGwSslPolicy[0-9]{8}S?$/") : true])
+    condition     = alltrue([for policy in var.ssl_profiles : policy.policy_name != null ? regex(policy.policy_name, "/^AppGwSslPolicy[0-9]{8}S?$/") : true])
     error_message = "The policy_name must follow the naming convention AppGwSslPolicy<AAAAMMDD>, it may or may not include the suffix S."
   }
 
   validation {
-    condition     = alltrue([for policy in var.ssl_policies : contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], policy.disabled_protocols)])
-    error_message = "The disabled_protocols must be one of TLSv1_0, TLSv1_1, TLSv1_2, or TLSv1_3."
-  }
-
-  validation {
-    condition     = alltrue([for policy in var.ssl_policies : policy.policy_type != null || policy.policy_name != null ? policy.disabled_protocols == null : true])
-    error_message = "The disabled_protocols cannot be set when the policy_type or policy_name is set."
-  }
-
-  validation {
-    condition     = alltrue([for policy in var.ssl_policies : policy.policy_type == "Custom" ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2"], policy.disabled_protocols) : true])
-    error_message = "The disabled_protocols must be one of TLSv1_0, TLSv1_1, or TLSv1_2 when the policy_type is Custom."
-  }
-
-  validation {
-    condition     = alltrue([for policy in var.ssl_policies : policy.policy_type == "CustomV2" ? contains(["TLSv1_2", "TLSv1_3"], policy.disabled_protocols) : true])
-    error_message = "The disabled_protocols must be one of TLSv1_2 or TLSv1_3 when the policy_type is CustomV2."
-  }
-
-  validation {
-    condition     = alltrue([for policy in var.ssl_policies : policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], policy.min_protocol_version) : true])
+    condition     = alltrue([for policy in var.ssl_profiles : policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], policy.min_protocol_version) : true])
     error_message = "The min_protocol_version must be one of TLSv1_0, TLSv1_1, TLSv1_2, or TLSv1_3."
   }
 
   validation {
-    condition = alltrue([for policy in var.ssl_policies :
+    condition = alltrue([for policy in var.ssl_profiles :
       alltrue([for suite in policy.cipher_suites : contains([
         "TLS_AES_128_GCM_SHA256",
         "TLS_AES_256_GCM_SHA384",
@@ -235,7 +245,7 @@ variable "ssl_policies" {
   }
 
   validation {
-    condition     = alltrue([for policy in var.ssl_policies : contains(["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384"], policy.cipher_suites) ? policy.policy_type == "CustomV2" : true])
+    condition     = alltrue([for policy in var.ssl_profiles : contains(["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384"], policy.cipher_suites) ? policy.policy_type == "CustomV2" : true])
     error_message = "The cipher_suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 are only supported for CustomV2 policies."
   }
 }

@@ -1,7 +1,15 @@
 [
     {
+        "Name": "name",
+        "Description": "The name of the SSL Profile that is unique within this Application Gateway.",
+        "Type": "string",
+        "Default": "n/a",
+        "Required": "yes",
+        "Support": []
+    },
+    {
         "Name": "policy_type",
-        "Description": "The Type of the Policy. Possible values are",
+        "Description": "The type of the Policy. Possible values are",
         "Type": "string",
         "Default": "null",
         "Required": "no",
@@ -13,24 +21,11 @@
     },
     {
         "Name": "policy_name",
-        "Description": "The Name of the Policy e.g. AppGwSslPolicy20170401S. Required if policy_type is set to Predefined. Not compatible with disabled_protocols.",
+        "Description": "The name of the SSL Profile that is unique within this Application Gateway.",
         "Type": "string",
         "Default": "null",
         "Required": "no",
         "Support": []
-    },
-    {
-        "Name": "disabled_protocols",
-        "Description": "A list of SSL Protocols which should be disabled on this Application Gateway. Possible values are",
-        "Type": "list(string)",
-        "Default": "null",
-        "Required": "no",
-        "Support": [
-            "TLSv1_0",
-            "TLSv1_1",
-            "TLSv1_2",
-            "TLSv1_3"
-        ]
     },
     {
         "Name": "min_protocol_version",
@@ -47,7 +42,7 @@
     },
     {
         "Name": "cipher_suites",
-        "Description": "A List of accepted cipher suites. Possible values are",
+        "Description": "A list of accepted cipher suites. Possible values are",
         "Type": "list(string)",
         "Default": "null",
         "Required": "no",
