@@ -72,14 +72,10 @@ resource "azurerm_application_gateway" "main" {
   }
 
 
-  dynamic "ssl_policy" {
-    for_each = var.default_ssl_policy != null ? [""] : []
-
-    content {
-      policy_type          = ssl_policy.value.policy_type
-      policy_name          = ssl_policy.value.policy_name
-      min_protocol_version = ssl_policy.value.min_protocol_version
-    }
+  ssl_policy {
+    policy_type          = var.default_ssl_policy.policy_type
+    policy_name          = var.default_ssl_policy.policy_name
+    min_protocol_version = var.default_ssl_policy.min_protocol_version
   }
 
   dynamic "ssl_profile" {
