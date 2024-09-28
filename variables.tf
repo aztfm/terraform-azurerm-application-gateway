@@ -235,7 +235,7 @@ variable "ssl_profiles" {
   }
 
   validation {
-    condition     = alltrue([for policy in var.ssl_profiles : policy.cipher_suites != null && contains(["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384"], policy.cipher_suites) ? policy.policy_type == "CustomV2" : true])
+    condition     = alltrue([for policy in var.ssl_profiles : policy.cipher_suites != null ? contains(["TLS_AES_128_GCM_SHA256", "TLS_AES_256_GCM_SHA384"], policy.cipher_suites) ? policy.policy_type == "CustomV2" : true : true])
     error_message = "The cipher_suites TLS_AES_128_GCM_SHA256 and TLS_AES_256_GCM_SHA384 are only supported for CustomV2 policies."
   }
 }
