@@ -76,6 +76,7 @@ resource "azurerm_application_gateway" "main" {
     policy_type          = var.default_ssl_policy.policy_type
     policy_name          = var.default_ssl_policy.policy_name
     min_protocol_version = var.default_ssl_policy.min_protocol_version
+    cipher_suites        = var.default_ssl_policy.cipher_suites
   }
 
   dynamic "ssl_profile" {

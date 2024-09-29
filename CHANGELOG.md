@@ -6,6 +6,7 @@ FEATURES:
 * **New Parameter**: `default_ssl_policy.policy_type`
 * **New Parameter**: `default_ssl_policy.policy_name`
 * **New Parameter**: `default_ssl_policy.min_protocol_version`
+* **New Parameter**: `default_ssl_policy.cipher_suites`
 * **New Parameter**: `ssl_profiles`
 * **New Parameter**: `ssl_profiles.name`
 * **New Parameter**: `ssl_profiles.policy_type`
