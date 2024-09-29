@@ -31,11 +31,10 @@ variables {
     }, {
     name                 = "ssl-profile-2"
     policy_type          = "CustomV2"
-    min_protocol_version = "TLSv1_3"
+    min_protocol_version = "TLSv1_2"
     cipher_suites = [
-      "TLS_AES_128_GCM_SHA256",
-      "TLS_AES_256_GCM_SHA384",
-      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384"
     ]
   }]
   backend_address_pools = [{
