@@ -352,37 +352,37 @@ run "plan" {
   }
 
   assert {
-    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-1"].name == var.ssl_profile[0].name
+    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-1"].name == var.ssl_profiles[0].name
     error_message = "The name of the first SSL Profile is not as expected."
   }
 
   assert {
-    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-1"].policy_type == var.ssl_profile[0].policy_type
+    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-1"].policy_type == var.ssl_profiles[0].policy_type
     error_message = "The policy_type of the first SSL Profile is not as expected."
   }
 
   assert {
-    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-1"].policy_name == var.ssl_profile[0].policy_name
+    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-1"].policy_name == var.ssl_profiles[0].policy_name
     error_message = "The policy_name of the first SSL Profile is not as expected."
   }
 
   assert {
-    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].name == var.ssl_profile[1].name
+    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].name == var.ssl_profiles[1].name
     error_message = "The name of the second SSL Profile is not as expected."
   }
 
   assert {
-    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].policy_type == var.ssl_profile[1].policy_type
+    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].policy_type == var.ssl_profiles[1].policy_type
     error_message = "The policy_type of the second SSL Profile is not as expected."
   }
 
   assert {
-    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].min_protocol_version == var.ssl_profile[1].min_protocol_version
+    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].min_protocol_version == var.ssl_profiles[1].min_protocol_version
     error_message = "The min_protocol_version of the second SSL Profile is not as expected."
   }
 
   assert {
-    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].cipher_suites == toset(var.ssl_profile[1].cipher_suites)
+    condition     = { for profile in azurerm_application_gateway.main.ssl_profile : profile.name => profile }["ssl-profile-2"].cipher_suites == toset(var.ssl_profiles[1].cipher_suites)
     error_message = "The cipher_suites of the second SSL Profile is not as expected."
   }
 
