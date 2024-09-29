@@ -1,4 +1,4 @@
-## 2.1.0 (XXXXXX XX, 20XX)
+## 2.1.0 (September 29, 2024)
 
 FEATURES:
 
