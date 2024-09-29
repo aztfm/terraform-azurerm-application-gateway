@@ -24,15 +24,22 @@
                 "bierner.markdown-emoji",
                 "bierner.markdown-preview-github-styles",
                 "DavidAnson.vscode-markdownlint",
+                "GitHub.vscode-github-actions",
+                "GitHub.vscode-pull-request-github",
                 "hashicorp.hcl",
                 "hashicorp.terraform",
                 "streetsidesoftware.code-spell-checker",
+                "TylerHarris.terraform-link-docs",
                 "redhat.vscode-yaml",
                 "vscode-icons-team.vscode-icons"
             ],
             "settings": {
                 "cSpell.ignorePaths": [
                     ".devcontainer/devcontainer.json"
+                ],
+                "cSpell.ignoreWords": [
+                    "aztfm",
+                    "azurerm"
                 ],
                 "editor.bracketPairColorization.enabled": true,
                 "editor.formatOnSave": true,

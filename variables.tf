@@ -146,6 +146,128 @@ variable "backend_address_pools" {
   }
 }
 
+variable "default_ssl_policy" {
+  type = object({
+    policy_type          = optional(string, "Predefined")
+    policy_name          = optional(string, "AppGwSslPolicy20220101")
+    min_protocol_version = optional(string)
+    cipher_suites        = optional(list(string))
+  })
+  default     = null
+  description = "A mapping with the default ssl policy of the Application Gateway."
+
+  validation {
+    condition     = contains(["Predefined", "Custom", "CustomV2"], var.default_ssl_policy.policy_type)
+    error_message = "The policy_type must be either Predefined, Custom, or CustomV2."
+  }
+
+  validation {
+    condition     = var.default_ssl_policy.policy_type == "Predefined" ? var.default_ssl_policy.policy_name != null : true
+    error_message = "The policy_name is required when the policy_type is Predefined."
+  }
+
+  validation {
+    condition     = var.default_ssl_policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], var.default_ssl_policy.min_protocol_version) : true
+    error_message = "The min_protocol_version must be one of TLSv1_0, TLSv1_1, TLSv1_2, or TLSv1_3."
+  }
+
+  validation {
+    condition = var.default_ssl_policy.cipher_suites != null ? alltrue([for suite in var.default_ssl_policy.cipher_suites : contains([
+      "TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",
+      "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
+      "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384"
+    ], suite)]) : true
+    error_message = "All cipher_suites must be one of the supported values."
+  }
+}
+
+variable "ssl_profiles" {
+  type = list(object({
+    name                 = string
+    policy_type          = optional(string)
+    policy_name          = optional(string)
+    min_protocol_version = optional(string)
+    cipher_suites        = optional(list(string))
+  }))
+  default     = []
+  description = "List of objects that represent the configuration of each ssl policy."
+
+  validation {
+    condition     = alltrue([for policy in var.ssl_profiles : contains(["Predefined", "Custom", "CustomV2"], policy.policy_type)])
+    error_message = "The policy_type must be either Predefined, Custom, or CustomV2."
+  }
+
+  validation {
+    condition     = alltrue([for policy in var.ssl_profiles : policy.policy_type == "Predefined" ? policy.policy_name != null : true])
+    error_message = "The policy_name is required when the policy_type is Predefined."
+  }
+
+  validation {
+    condition     = alltrue([for policy in var.ssl_profiles : policy.min_protocol_version != null ? contains(["TLSv1_0", "TLSv1_1", "TLSv1_2", "TLSv1_3"], policy.min_protocol_version) : true])
+    error_message = "The min_protocol_version must be one of TLSv1_0, TLSv1_1, TLSv1_2, or TLSv1_3."
+  }
+
+  validation {
+    condition = alltrue([for policy in var.ssl_profiles :
+      alltrue([for suite in policy.cipher_suites : contains([
+        "TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+        "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
+        "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",
+        "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
+        "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",
+        "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+        "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+        "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+        "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+        "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+        "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+        "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+        "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
+        "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+        "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+        "TLS_RSA_WITH_AES_128_CBC_SHA",
+        "TLS_RSA_WITH_AES_128_CBC_SHA256",
+        "TLS_RSA_WITH_AES_128_GCM_SHA256",
+        "TLS_RSA_WITH_AES_256_CBC_SHA",
+        "TLS_RSA_WITH_AES_256_CBC_SHA256",
+        "TLS_RSA_WITH_AES_256_GCM_SHA384"
+    ], suite)]) if policy.cipher_suites != null])
+    error_message = "All cipher_suites must be one of the supported values."
+  }
+}
+
 variable "ssl_certificates" {
   type = list(object({
     name                = string

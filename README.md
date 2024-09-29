@@ -1,7 +1,12 @@
 # Azure Application Gateway - Terraform Module
 
+[devcontainer]: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/aztfm/terraform-azurerm-application-gateway
+[registry]: https://registry.terraform.io/modules/aztfm/application-gateway/azurerm/
+
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![Terraform Registry](https://img.shields.io/badge/terraform-registry-blueviolet.svg)](https://registry.terraform.io/modules/aztfm/application-gateway/azurerm/)
+[![Terraform Registry](https://img.shields.io/badge/terraform-registry-blueviolet?logo=terraform&logoColor=white)][registry]
+[![Dev Container](https://img.shields.io/badge/devcontainer-VSCode-blue?logo=linuxcontainers)][devcontainer]
+![GitHub License](https://img.shields.io/github/license/aztfm/terraform-azurerm-application-gateway)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/aztfm/terraform-azurerm-application-gateway)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/aztfm/terraform-azurerm-application-gateway?quickstart=1)
@@ -29,18 +34,17 @@ resource "azurerm_public_ip" "pip" {
   allocation_method   = "Static"
 }
 
-resource "azurerm_virtual_network" "vnet" {
+module "virtual_network" {
+  source              = "aztfm/virtual-network/azurerm"
+  version             = ">=4.0.0"
   name                = "virtual-network"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  address_space       = ["10.0.0.0/24"]
-}
-
-resource "azurerm_subnet" "snet" {
-  name                 = "virtual-subnet"
-  resource_group_name  = azurerm_virtual_network.vnet.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.0.0.0/24"]
+  address_space       = ["10.0.0.0/16"]
+  subnets = [{
+    name             = "subnet"
+    address_prefixes = ["10.0.0.0/24"]
+  }]
 }
 
 module "application_gateway_firewall_policy" {
@@ -66,8 +70,8 @@ module "application_gateway" {
   location            = azurerm_resource_group.rg.location
   sku_name            = "WAF_v2"
   firewall_policy_id  = module.application_gateway_firewall_policy.id
+  subnet_id           = module.virtual_network.subnet["subnet"].id
   capacity            = 1
-  subnet_id           = azurerm_subnet.snet.id
   frontend_ip_configuration = {
     public_ip_address_id = azurerm_public_ip.pip.id
   }
@@ -96,6 +100,8 @@ module "application_gateway" {
 }
 ```
 
+Reference to more [examples](https://github.com/aztfm/terraform-azurerm-application-gateway/tree/main/examples).
+
 <!-- BEGIN_TF_DOCS -->
 ## :arrow_forward: Parameters
 
@@ -117,6 +123,8 @@ The following parameters are supported:
 |subnet\_id|The ID of the Subnet which the Application Gateway should be connected to.|`string`|n/a|yes|
 |frontend\_ip\_configuration|A mapping with the frontend ip configuration of the Application Gateway.|`object({})`|n/a|yes|
 |backend\_address\_pools|List of objects that represent the configuration of each backend address pool.|`list(object({}))`|n/a|yes|
+|default\_ssl\_policy|A mapping with the default ssl policy of the Application Gateway.|`object({})`|`null`|no|
+|ssl\_profiles|List of objects that represent the configuration of each ssl policy.|`list(object({}))`|`[]`|no|
 |ssl\_certificates|List of objects that represent the configuration of each ssl certificate.|`list(object({}))`|`[]`|no|
 |http\_listeners|List of objects that represent the configuration of each http listener.|`list(object({}))`|n/a|yes|
 |probes|List of objects that represent the configuration of each probe.|`list(object({}))`|`[]`|no|
@@ -145,6 +153,25 @@ The `backend_address_pools` supports the following:
 |name|The name of the Backend Address Pool.|`string`|n/a|yes|
 |fqdns|A list of FQDNs which should be part of the Backend Address Pool.|`list(string)`|`null`|no|
 |private\_ip\_address|A list of IP Addresses which should be part of the Backend Address Pool.|`list(string)`|`null`|no|
+
+The `default_ssl_policy` supports the following:
+
+| Name | Description | Type | Default | Required |
+| ---- | ------------| :--: | :-----: | :------: |
+|policy\_type|The Type of the Policy. Possible values are `Predefined`, `Custom` and `CustomV2`.|`string`|`Predefined`|no|
+|policy\_name|The Name of the Policy e.g. AppGwSslPolicy20170401S. Required if policy_type is set to Predefined.|`string`|`AppGwSslPolicy20220101`|no|
+|min\_protocol\_version|The minimal TLS version. Possible values are `TLSv1_0`, `TLSv1_1`, `TLSv1_2` and `TLSv1_3`.|`string`|`null`|no|
+|cipher\_suites|A list of accepted cipher suites. Possible values are `TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_128_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_128_CBC_SHA256`, `TLS_DHE_DSS_WITH_AES_256_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_256_CBC_SHA256`, `TLS_DHE_RSA_WITH_AES_128_CBC_SHA`, `TLS_DHE_RSA_WITH_AES_128_GCM_SHA256`, `TLS_DHE_RSA_WITH_AES_256_CBC_SHA`, `TLS_DHE_RSA_WITH_AES_256_GCM_SHA384`, `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA`, `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256`, `TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256`, `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA`, `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384`, `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384`, `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA`, `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256`, `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`, `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA`, `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384`, `TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384`, `TLS_RSA_WITH_3DES_EDE_CBC_SHA`, `TLS_RSA_WITH_AES_128_CBC_SHA`, `TLS_RSA_WITH_AES_128_CBC_SHA256`, `TLS_RSA_WITH_AES_128_GCM_SHA256`, `TLS_RSA_WITH_AES_256_CBC_SHA`, `TLS_RSA_WITH_AES_256_CBC_SHA256` and `TLS_RSA_WITH_AES_256_GCM_SHA384`.|`list(string)`|`null`|no|
+
+The `ssl_profiles` supports the following:
+
+| Name | Description | Type | Default | Required |
+| ---- | ------------| :--: | :-----: | :------: |
+|name|The name of the SSL Profile that is unique within this Application Gateway.|`string`|n/a|yes|
+|policy\_type|The type of the Policy. Possible values are `Predefined`, `Custom` and `CustomV2`.|`string`|`null`|no|
+|policy\_name|The name of the SSL Profile that is unique within this Application Gateway.|`string`|`null`|no|
+|min\_protocol\_version|The minimal TLS version. Possible values are `TLSv1_0`, `TLSv1_1`, `TLSv1_2` and `TLSv1_3`.|`string`|`null`|no|
+|cipher\_suites|A list of accepted cipher suites. Possible values are `TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_128_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_128_CBC_SHA256`, `TLS_DHE_DSS_WITH_AES_256_CBC_SHA`, `TLS_DHE_DSS_WITH_AES_256_CBC_SHA256`, `TLS_DHE_RSA_WITH_AES_128_CBC_SHA`, `TLS_DHE_RSA_WITH_AES_128_GCM_SHA256`, `TLS_DHE_RSA_WITH_AES_256_CBC_SHA`, `TLS_DHE_RSA_WITH_AES_256_GCM_SHA384`, `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA`, `TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256`, `TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256`, `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA`, `TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384`, `TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384`, `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA`, `TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256`, `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`, `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA`, `TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384`, `TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384`, `TLS_RSA_WITH_3DES_EDE_CBC_SHA`, `TLS_RSA_WITH_AES_128_CBC_SHA`, `TLS_RSA_WITH_AES_128_CBC_SHA256`, `TLS_RSA_WITH_AES_128_GCM_SHA256`, `TLS_RSA_WITH_AES_256_CBC_SHA`, `TLS_RSA_WITH_AES_256_CBC_SHA256` and `TLS_RSA_WITH_AES_256_GCM_SHA384`.|`list(string)`|`null`|no|
 
 The `ssl_certificates` supports the following:
 

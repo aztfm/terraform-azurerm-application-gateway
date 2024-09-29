@@ -1,4 +1,19 @@
-<!-- markdownlint-disable MD041 -->
+## 2.1.0 (September 29, 2024)
+
+FEATURES:
+
+* **New Parameter**: `default_ssl_policy`
+* **New Parameter**: `default_ssl_policy.policy_type`
+* **New Parameter**: `default_ssl_policy.policy_name`
+* **New Parameter**: `default_ssl_policy.min_protocol_version`
+* **New Parameter**: `default_ssl_policy.cipher_suites`
+* **New Parameter**: `ssl_profiles`
+* **New Parameter**: `ssl_profiles.name`
+* **New Parameter**: `ssl_profiles.policy_type`
+* **New Parameter**: `ssl_profiles.policy_name`
+* **New Parameter**: `ssl_profiles.min_protocol_version`
+* **New Parameter**: `ssl_profiles.cipher_suites`
+
 ## 2.0.0 (August 07, 2024)
 
 BREAKING CHANGES:
