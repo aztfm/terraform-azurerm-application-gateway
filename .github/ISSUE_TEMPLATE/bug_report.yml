@@ -1,0 +1,133 @@
+name: Bug Report
+description: Report a bug or issue with the module
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below to help us understand and reproduce the issue.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: Describe what you expected...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Describe what actually happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Define module with configuration...
+        2. Run terraform plan/apply...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: terraform-config
+    attributes:
+      label: Terraform Configuration
+      description: Please provide the relevant Terraform configuration (sanitize any sensitive data)
+      placeholder: |
+        ```hcl
+        module "application_gateway" {
+          source = "aztfm/application-gateway/azurerm"
+          version = "2.1.0"
+          # ... your configuration
+        }
+        ```
+      render: hcl
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error Output
+      description: Please provide the error message or output
+      placeholder: Paste the error message here...
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: module-version
+    attributes:
+      label: Module Version
+      description: What version of the module are you using?
+      placeholder: e.g., 2.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: terraform-version
+    attributes:
+      label: Terraform Version
+      description: What version of Terraform are you using?
+      placeholder: e.g., 1.9.0
+    validations:
+      required: true
+
+  - type: input
+    id: provider-version
+    attributes:
+      label: AzureRM Provider Version
+      description: What version of the AzureRM provider are you using?
+      placeholder: e.g., 3.117.0
+    validations:
+      required: true
+
+  - type: input
+    id: azure-region
+    attributes:
+      label: Azure Region
+      description: Which Azure region are you deploying to?
+      placeholder: e.g., East US, West Europe
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for similar issues and found none
+          required: true
+        - label: I am using a supported version of the module
+          required: true
+        - label: I have removed all sensitive information from the configuration
+          required: true

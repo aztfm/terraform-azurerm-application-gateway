@@ -11,6 +11,13 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/aztfm/terraform-azurerm-application-gateway?quickstart=1)
 
+## :books: Documentation
+
+- [Contributing Guidelines](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Changelog](CHANGELOG.md)
+
 ## :gear: Version compatibility
 
 | Module version | Terraform version | AzureRM version |
@@ -244,3 +251,58 @@ The following outputs are exported:
 |backend_http_settings|Blocks containing configuration of each backend http settings.|no|
 |request_routing_rules|Blocks containing configuration of each request routing rule.|no|
 <!-- END_TF_DOCS -->
+
+## :test_tube: Testing
+
+This module includes comprehensive testing using Terraform's native test framework.
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+# Initialize Terraform
+terraform init
+
+# Run validation
+terraform validate
+
+# Run tests (requires Azure credentials)
+terraform test
+```
+
+### Test Requirements
+
+- Azure subscription with appropriate permissions
+- Azure CLI authenticated (`az login`)
+- Environment variables for authentication:
+  - `ARM_TENANT_ID`
+  - `ARM_CLIENT_ID`
+  - `ARM_SUBSCRIPTION_ID`
+
+### Local Development
+
+For local development and testing:
+
+1. Use the provided [Dev Container](.devcontainer/devcontainer.json) for a consistent development environment
+2. Install [pre-commit](https://pre-commit.com/) hooks: `pre-commit install`
+3. Run pre-commit checks: `pre-commit run --all-files`
+
+## :handshake: Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+
+- Reporting bugs
+- Suggesting enhancements
+- Submitting pull requests
+- Code style and standards
+
+Please also read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
+## :shield: Security
+
+Security is important to us. If you discover a security vulnerability, please review our [Security Policy](SECURITY.md) for information on how to report it responsibly.
+
+## :scroll: License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.

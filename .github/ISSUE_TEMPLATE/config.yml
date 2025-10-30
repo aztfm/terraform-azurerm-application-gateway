@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question or Discussion
+    url: https://github.com/aztfm/terraform-azurerm-application-gateway/discussions
+    about: Ask questions or discuss ideas with the community
+  - name: Security Vulnerability
+    url: https://github.com/aztfm/terraform-azurerm-application-gateway/security/advisories/new
+    about: Report a security vulnerability privately
+  - name: Azure Documentation
+    url: https://docs.microsoft.com/azure/application-gateway/
+    about: Official Azure Application Gateway documentation
