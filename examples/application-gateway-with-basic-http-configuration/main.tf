@@ -72,6 +72,6 @@ module "application_gateway" {
     priority                   = 100
     http_listener_name         = "http-listener"
     backend_address_pool_name  = "backend-address-pool"
-    backend_http_settings_name = "backend-http-setting"
+    backend_http_settings_name = "backend-http-setting-1"
   }]
 }

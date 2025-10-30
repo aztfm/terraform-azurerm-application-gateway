@@ -11,3 +11,9 @@ updates:
     schedule:
       interval: weekly
     labels: ["dependencies"]
+
+  - package-ecosystem: "terraform"
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels: ["dependencies"]

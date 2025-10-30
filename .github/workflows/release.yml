@@ -1,0 +1,66 @@
+name: "Release"
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          CHANGELOG_CONTENT=$(awk "/## ${VERSION//./\\.}/ {flag=1; next} /## [0-9]/ {flag=0} flag" CHANGELOG.md)
+          if [ -z "$CHANGELOG_CONTENT" ]; then
+            echo "No changelog entry found for version $VERSION"
+            CHANGELOG_CONTENT="See [CHANGELOG.md](CHANGELOG.md) for details."
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: |
+            ## Release ${{ steps.version.outputs.version }}
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ### Installation
+            
+            ```hcl
+            module "application_gateway" {
+              source  = "aztfm/application-gateway/azurerm"
+              version = "${{ steps.version.outputs.version }}"
+              
+              # ... your configuration
+            }
+            ```
+            
+            ### Full Changelog
+            
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/v${{ steps.version.outputs.version }}/CHANGELOG.md) for complete details.
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,101 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please fill out the form below to help us understand your request.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see
+      placeholder: I would like to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or features you've considered
+      placeholder: I considered...
+    validations:
+      required: false
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Usage
+      description: If applicable, provide an example of how you'd use this feature
+      placeholder: |
+        ```hcl
+        module "application_gateway" {
+          source = "aztfm/application-gateway/azurerm"
+          version = "2.1.0"
+          
+          # Example of new feature usage
+          new_feature_parameter = "value"
+        }
+        ```
+      render: hcl
+    validations:
+      required: false
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type
+      description: What type of feature is this?
+      options:
+        - New parameter/variable
+        - New resource support
+        - Enhanced validation
+        - Better documentation
+        - Performance improvement
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: azure-docs
+    attributes:
+      label: Azure Documentation Reference
+      description: If applicable, provide links to relevant Azure documentation
+      placeholder: https://docs.microsoft.com/azure/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or examples about the feature request
+      placeholder: Any additional information...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched for similar feature requests and found none
+          required: true
+        - label: This feature aligns with the module's scope and purpose
+          required: true
+        - label: I am willing to contribute to the implementation (optional)
+          required: false

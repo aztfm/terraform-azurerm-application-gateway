@@ -30,3 +30,45 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Terraform variable files (may contain sensitive data)
+*.auto.tfvars
+*.auto.tfvars.json
+
+# Terraform plan files
+*.tfplan
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS files
+Thumbs.db
+
+# Test certificates and keys (don't commit real certificates)
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+
+# Temporary files
+*.tmp
+*.bak
+.tmp/
+
+# Python (for pre-commit and tools)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/

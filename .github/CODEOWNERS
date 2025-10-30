@@ -1,0 +1,32 @@
+# This file defines code owners for the repository
+# Code owners are automatically requested for review when someone opens a pull request
+# that modifies code that they own.
+#
+# More information: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+# These owners will be requested for review when someone opens a pull request
+* @aztfm
+
+# Core Terraform files
+/*.tf @aztfm
+/variables.tf @aztfm
+/outputs.tf @aztfm
+/versions.tf @aztfm
+
+# Configuration files
+/.github/ @aztfm
+/.pre-commit-config.yaml @aztfm
+/.editorconfig @aztfm
+
+# Documentation
+/*.md @aztfm
+/SECURITY.md @aztfm
+/CONTRIBUTING.md @aztfm
+/CODE_OF_CONDUCT.md @aztfm
+
+# Examples
+/examples/ @aztfm
+
+# Tests
+/tests/ @aztfm
