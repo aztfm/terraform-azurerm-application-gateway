@@ -1,0 +1,28 @@
+name: "Update Contributors"
+
+on:
+  schedule:
+    - cron: "0 0 1 * *" # Run monthly on the 1st
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Generate contributors list
+        uses: akhilmhdh/contributors-readme-action@v2.3.10
+        with:
+          readme_path: "CONTRIBUTORS.md"
+          committer_username: "github-actions[bot]"
+          committer_email: "github-actions[bot]@users.noreply.github.com"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
